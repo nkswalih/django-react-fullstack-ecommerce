@@ -303,7 +303,7 @@ const fetchProduct = async (productId) => {
           <p className="text-gray-600 mb-6">You need to be logged in to checkout.</p>
           <button
             onClick={() => navigate('/login')}
-            className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800"
+            className="bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-400 hover:to-gray-700"
           >
             Go to Login
           </button>
@@ -320,7 +320,7 @@ const fetchProduct = async (productId) => {
           <p className="text-gray-600 mb-6">Hello, {currentUser.name}!</p>
           <button
             onClick={() => navigate('/store')}
-            className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800"
+            className="bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-400 hover:to-gray-700"
           >
             Continue Shopping
           </button>
@@ -545,7 +545,7 @@ const fetchProduct = async (productId) => {
             <button
               onClick={handlePlaceOrder}
               disabled={loading}
-              className="w-full bg-gray-900 text-white py-4 rounded-xl font-semibold hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white py-4 rounded-xl font-semibold hover:from-gray-400 hover:to-gray-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Placing Order...' : `Place Order - ₹${calculateTotal().toLocaleString('en-IN')}`}
             </button>

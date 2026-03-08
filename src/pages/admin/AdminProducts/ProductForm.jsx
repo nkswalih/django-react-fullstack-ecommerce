@@ -47,7 +47,7 @@ const ProductForm = ({
             ))}
           </select>
         </div>
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
           <select
             value={form.status}
@@ -58,7 +58,7 @@ const ProductForm = ({
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
-        </div>
+        </div> */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Price ({form.currency}) *</label>
           <input
@@ -135,50 +135,7 @@ const ProductForm = ({
           </button>
         </div>
       </div>
-
-      {/* Features Section */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Features</label>
-        <div className="space-y-2 mb-3 max-h-40 overflow-y-auto">
-          {form.features.map((feature, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-              <span>{feature}</span>
-              <button
-                type="button"
-                onClick={() => handlers.onRemoveFeature(index)}
-                className="text-red-500 hover:text-red-700"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Add a feature"
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handlers.onAddFeature(e.target.value);
-                e.target.value = '';
-              }
-            }}
-          />
-          <button
-            type="button"
-            onClick={(e) => {
-              const input = e.target.previousElementSibling;
-              handlers.onAddFeature(input.value);
-              input.value = '';
-            }}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-          >
-            Add Feature
-          </button>
-        </div>
-      </div>
-
+      
       {/* Specifications Section */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Specifications (Key-Value Pairs)</label>

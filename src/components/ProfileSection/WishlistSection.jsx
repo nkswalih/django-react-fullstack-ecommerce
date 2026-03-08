@@ -66,7 +66,7 @@ const WishlistSection = ({ user }) => {
                   {formatPrice(item.productPrice)}
                 </p>
                 <div className="flex gap-2 mt-3">
-                  <button className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+                  <button className="flex-1 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-gray-400 hover:to-gray-700 transition-colors">
                     Add to Cart
                   </button>
                   <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">

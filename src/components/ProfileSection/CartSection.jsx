@@ -83,7 +83,7 @@ const CartSection = ({ user }) => {
           </span>
           <Link
             to="/cart"
-            className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+            className="bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white px-6 py-2 rounded-lg font-medium hover:from-gray-400 hover:to-gray-700 transition-colors"
           >
             Go to Cart
           </Link>

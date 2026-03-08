@@ -79,6 +79,13 @@ const Header = ({ setSidebarOpen }) => {
     }
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('isAuthenticated')
+    localStorage.removeItem('currentUser')
+    navigate('/sign_in')
+  }
+
   const handleResultClick = (type, item) => {
     const routes = {
       user: `/admin/users/`,
@@ -296,10 +303,7 @@ const Header = ({ setSidebarOpen }) => {
                   <p className="text-sm text-gray-500">Administrator</p>
                 </div>
                 <button
-                  onClick={() => {
-                    localStorage.removeItem('user')
-                    navigate('/sign_in')
-                  }}
+                  onClick={handleLogout}
                   className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-gray-50"
                 >
                   <LogOutIcon className="w-4 h-4 mr-3" />

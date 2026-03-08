@@ -34,7 +34,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-4 left-4 z-30 w-72 m-4 bg-white rounded-3xl transform 
+        fixed inset-y-4 left-4 z-50 w-72 m-4 bg-white rounded-3xl transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:static lg:inset-0 transition-all duration-300 ease-in-out
         border 

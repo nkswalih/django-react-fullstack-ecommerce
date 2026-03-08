@@ -85,7 +85,20 @@
       "terms": true,
       "role": "User",
       "status": "Active",
-      "cart": [],
+      "cart": [
+        {
+          "id": "iphone-17-pro-256GB-",
+          "productId": "iphone-17-pro",
+          "storage": "256GB",
+          "ram": "",
+          "quantity": 1,
+          "addedAt": "2026-03-08T10:46:51.268Z",
+          "productName": "iPhone 17 Pro",
+          "productPrice": 139999,
+          "productImage": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k",
+          "productBrand": "Apple"
+        }
+      ],
       "order": [
         {
           "id": "ORD1764569516870",
@@ -124,7 +137,7 @@
           "subtotal": 209998,
           "shipping": 0,
           "total": 209998,
-          "status": "confirmed",
+          "status": "cancelled",
           "customerInfo": {
             "firstName": "swalih",
             "lastName": "Swalih",
@@ -137,7 +150,8 @@
             "paymentMethod": "card",
             "name": "swalih Swalih"
           },
-          "paymentMethod": "card"
+          "paymentMethod": "card",
+          "cancelledAt": "2026-03-08T06:02:37.228Z"
         },
         {
           "id": "ORD1764569641511",
@@ -242,6 +256,84 @@
             "name": "Mohammed  Swalih"
           },
           "paymentMethod": "upi"
+        },
+        {
+          "id": "ORD1764770023772",
+          "userId": "6d48",
+          "userName": "swalih",
+          "userEmail": "user@gmail.com",
+          "date": "2025-12-03T13:53:43.772Z",
+          "items": [
+            {
+              "id": "nothing-phone-3-128GB-",
+              "productId": "nothing-phone-3",
+              "storage": "128GB",
+              "ram": "",
+              "quantity": 1,
+              "addedAt": "2025-12-03T13:53:25.769Z",
+              "productName": "Nothing Phone 3",
+              "productPrice": 36999,
+              "productImage": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0011_Phone-3-white.png?v=1753434595",
+              "productBrand": "Nothing",
+              "itemTotal": 36999
+            }
+          ],
+          "subtotal": 36999,
+          "shipping": 99,
+          "total": 37098,
+          "status": "completed",
+          "customerInfo": {
+            "firstName": "swalih",
+            "lastName": "Swalih",
+            "email": "user@gmail.com",
+            "phone": "31692944",
+            "address": "Perunthallur",
+            "city": "Tirur",
+            "state": "Kerala",
+            "pincode": "676102",
+            "paymentMethod": "card",
+            "name": "swalih Swalih"
+          },
+          "paymentMethod": "card"
+        },
+        {
+          "id": "ORD1764770042085",
+          "userId": "6d48",
+          "userName": "swalih",
+          "userEmail": "user@gmail.com",
+          "date": "2025-12-03T13:54:02.085Z",
+          "items": [
+            {
+              "id": "iphone-air-64GB-",
+              "productId": "iphone-air",
+              "storage": "64GB",
+              "ram": "",
+              "quantity": 1,
+              "addedAt": "2025-12-03T13:53:50.117Z",
+              "productName": "iPhone Air",
+              "productPrice": 139999,
+              "productImage": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17air-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jci9mUU0zMkc5ekxlZHFEM05NWkp3NUMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTCtUZHJHS0dDSWYyeUtQd0tjOERiaFE",
+              "productBrand": "Apple",
+              "itemTotal": 139999
+            }
+          ],
+          "subtotal": 139999,
+          "shipping": 0,
+          "total": 139999,
+          "status": "completed",
+          "customerInfo": {
+            "firstName": "swalih",
+            "lastName": "Swalih",
+            "email": "user@gmail.com",
+            "phone": "13141",
+            "address": "Perunthallur",
+            "city": "Tirur",
+            "state": "Kerala",
+            "pincode": "676102",
+            "paymentMethod": "card",
+            "name": "swalih Swalih"
+          },
+          "paymentMethod": "card"
         }
       ],
       "wishlist": []
@@ -581,6 +673,59 @@
       "cart": [],
       "wishlist": [],
       "order": []
+    },
+    {
+      "id": "97cb",
+      "name": "abhi",
+      "email": "abhi@gmail.com",
+      "password": "1234",
+      "terms": true,
+      "role": "User",
+      "status": "Active",
+      "cart": [],
+      "wishlist": [],
+      "order": [
+        {
+          "id": "ORD1764745165476",
+          "userId": "97cb",
+          "userName": "abhi",
+          "userEmail": "abhi@gmail.com",
+          "date": "2025-12-03T06:59:25.476Z",
+          "items": [
+            {
+              "id": "iphone-17-pro-256GB-",
+              "productId": "iphone-17-pro",
+              "storage": "256GB",
+              "ram": "",
+              "quantity": 1,
+              "addedAt": "2025-12-03T06:58:43.071Z",
+              "productName": "iPhone 17 Pro",
+              "productPrice": 129999,
+              "productImage": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k",
+              "productBrand": "Apple",
+              "itemTotal": 129999
+            }
+          ],
+          "subtotal": 129999,
+          "shipping": 0,
+          "total": 129999,
+          "status": "cancelled",
+          "customerInfo": {
+            "firstName": "abhi",
+            "lastName": "Swalih",
+            "email": "abhi@gmail.com",
+            "phone": "23354565",
+            "address": "efdfytgfuyegfreopkmopki",
+            "city": "Tirur",
+            "state": "Kerala",
+            "pincode": "676102",
+            "paymentMethod": "card",
+            "name": "abhi Swalih"
+          },
+          "paymentMethod": "card",
+          "cancelledAt": "2025-12-03T06:59:50.145Z"
+        }
+      ]
     }
   ],
   "orders": [
@@ -621,7 +766,7 @@
       "subtotal": 209998,
       "shipping": 0,
       "total": 209998,
-      "status": "confirmed",
+      "status": "cancelled",
       "customerInfo": {
         "firstName": "swalih",
         "lastName": "Swalih",
@@ -634,7 +779,8 @@
         "paymentMethod": "card",
         "name": "swalih Swalih"
       },
-      "paymentMethod": "card"
+      "paymentMethod": "card",
+      "cancelledAt": "2026-03-08T06:02:37.177Z"
     },
     {
       "id": "ORD1764569641511",
@@ -1064,6 +1210,124 @@
         "name": "Mohammed  Swalih"
       },
       "paymentMethod": "upi"
+    },
+    {
+      "id": "ORD1764745165476",
+      "userId": "97cb",
+      "userName": "abhi",
+      "userEmail": "abhi@gmail.com",
+      "date": "2025-12-03T06:59:25.476Z",
+      "items": [
+        {
+          "id": "iphone-17-pro-256GB-",
+          "productId": "iphone-17-pro",
+          "storage": "256GB",
+          "ram": "",
+          "quantity": 1,
+          "addedAt": "2025-12-03T06:58:43.071Z",
+          "productName": "iPhone 17 Pro",
+          "productPrice": 129999,
+          "productImage": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k",
+          "productBrand": "Apple",
+          "itemTotal": 129999
+        }
+      ],
+      "subtotal": 129999,
+      "shipping": 0,
+      "total": 129999,
+      "status": "cancelled",
+      "customerInfo": {
+        "firstName": "abhi",
+        "lastName": "Swalih",
+        "email": "abhi@gmail.com",
+        "phone": "23354565",
+        "address": "efdfytgfuyegfreopkmopki",
+        "city": "Tirur",
+        "state": "Kerala",
+        "pincode": "676102",
+        "paymentMethod": "card",
+        "name": "abhi Swalih"
+      },
+      "paymentMethod": "card",
+      "cancelledAt": "2025-12-03T06:59:50.136Z"
+    },
+    {
+      "id": "ORD1764770023772",
+      "userId": "6d48",
+      "userName": "swalih",
+      "userEmail": "user@gmail.com",
+      "date": "2025-12-03T13:53:43.772Z",
+      "items": [
+        {
+          "id": "nothing-phone-3-128GB-",
+          "productId": "nothing-phone-3",
+          "storage": "128GB",
+          "ram": "",
+          "quantity": 1,
+          "addedAt": "2025-12-03T13:53:25.769Z",
+          "productName": "Nothing Phone 3",
+          "productPrice": 36999,
+          "productImage": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0011_Phone-3-white.png?v=1753434595",
+          "productBrand": "Nothing",
+          "itemTotal": 36999
+        }
+      ],
+      "subtotal": 36999,
+      "shipping": 99,
+      "total": 37098,
+      "status": "completed",
+      "customerInfo": {
+        "firstName": "swalih",
+        "lastName": "Swalih",
+        "email": "user@gmail.com",
+        "phone": "31692944",
+        "address": "Perunthallur",
+        "city": "Tirur",
+        "state": "Kerala",
+        "pincode": "676102",
+        "paymentMethod": "card",
+        "name": "swalih Swalih"
+      },
+      "paymentMethod": "card"
+    },
+    {
+      "id": "ORD1764770042085",
+      "userId": "6d48",
+      "userName": "swalih",
+      "userEmail": "user@gmail.com",
+      "date": "2025-12-03T13:54:02.085Z",
+      "items": [
+        {
+          "id": "iphone-air-64GB-",
+          "productId": "iphone-air",
+          "storage": "64GB",
+          "ram": "",
+          "quantity": 1,
+          "addedAt": "2025-12-03T13:53:50.117Z",
+          "productName": "iPhone Air",
+          "productPrice": 139999,
+          "productImage": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17air-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jci9mUU0zMkc5ekxlZHFEM05NWkp3NUMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTCtUZHJHS0dDSWYyeUtQd0tjOERiaFE",
+          "productBrand": "Apple",
+          "itemTotal": 139999
+        }
+      ],
+      "subtotal": 139999,
+      "shipping": 0,
+      "total": 139999,
+      "status": "completed",
+      "customerInfo": {
+        "firstName": "swalih",
+        "lastName": "Swalih",
+        "email": "user@gmail.com",
+        "phone": "13141",
+        "address": "Perunthallur",
+        "city": "Tirur",
+        "state": "Kerala",
+        "pincode": "676102",
+        "paymentMethod": "card",
+        "name": "swalih Swalih"
+      },
+      "paymentMethod": "card"
     }
   ],
   "products": [
@@ -1074,7 +1338,7 @@
       "brand": "Apple",
       "price": 129999,
       "currency": "INR",
-      "stock": 17,
+      "stock": 16,
       "images": [
         "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k",
         "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-1-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJeFptNC9yejJUMWI2dmhrTGRMd2F4ZjhpVENtU1Jsa01tcGtZS0IwM01XVkVaMm9lVjZWaGFvQVRMeWxLakVNdXRpc2lSR1BSMzNQQm5UMU83ZFVxQmFYSVI4ZkRTLy83YU5OdEFVT1FiTW9R",
@@ -1200,7 +1464,7 @@
       "brand": "Apple",
       "price": 139999,
       "currency": "INR",
-      "stock": 47,
+      "stock": 39,
       "images": [
         "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17air-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jci9mUU0zMkc5ekxlZHFEM05NWkp3NUMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTCtUZHJHS0dDSWYyeUtQd0tjOERiaFE",
         "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-1-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwRzYrc3EwZ1VoVGgyY0J1bS9COCtuZ1lMQnk0NlU1Q0YrZ2hIbjFrUkVtaGQ5S3Q4dnBGQmd2K0NENXJLTFNwNzhmSGN3NTUxbDRHZDZXK1V3b1o4a1MzQ2RtWllHVXFBTG9GU1VuVXUrcFpGQlRRRytmTHd2bTlDU2RZMUtqVTRR",
@@ -1278,7 +1542,7 @@
       "brand": "Nothing",
       "price": 36999,
       "currency": "INR",
-      "stock": 28,
+      "stock": 27,
       "images": [
         "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0011_Phone-3-white.png?v=1753434595",
         "https://nothingtech-in.myshopify.com/cdn/shop/files/phone-3.jpg?v=1752562421",
@@ -2081,32 +2345,6 @@
       "status": "active"
     },
     {
-      "id": "i-phone-13-pro-1764653541567",
-      "name": "I Phone 13 pro",
-      "category": "Smartphone",
-      "brand": "Apple",
-      "price": 49999,
-      "currency": "INR",
-      "stock": 20,
-      "images": [
-        "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k"
-      ],
-      "shortDescription": "Budget Friendly ",
-      "features": [],
-      "specs": {
-        "display": "",
-        "chip": "",
-        "mainCamera": "",
-        "material": "",
-        "os": ""
-      },
-      "variants": {
-        "storage": [],
-        "colors": []
-      },
-      "status": "active"
-    },
-    {
       "id": "dejo-phones-1764682195617",
       "name": "dejo phones",
       "category": "Smartphone",
@@ -2250,8 +2488,8 @@
         ]
       },
       {
-        "id": "tablet",
-        "name": "Echoo Pad",
+        "id": "Pad",
+        "name": "Echo Pad",
         "icon": "📟",
         "topics": [
           "Echoo Pad setup",
@@ -2264,7 +2502,7 @@
       },
       {
         "id": "watch",
-        "name": "Echoo Time",
+        "name": "Echoo Watch",
         "icon": "⌚",
         "topics": [
           "Pair Echoo Time",

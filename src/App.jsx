@@ -37,14 +37,14 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div>
-          
+        <div className='bg-white'>
+
           <Routes>
             {/* Public routes - accessible without login */}
             <Route path="/sign_up" element={<Register />} />
             <Route path="/sign_in" element={<Login />} />
             <Route path="/terms_conditions" element={<Terms />} />
-            
+
             {/* Protected user routes - requires login with user role */}
             <Route path="/" element={
               <ProtectedRoute requiredRole="User">
@@ -90,10 +90,10 @@ function App() {
           </Routes>
 
           <ToastContainer
-            position="top-center"
-            autoClose={2000}
+            position="top-right"
+            autoClose={3000}
             hideProgressBar={false}
-            newestOnTop={false}
+            newestOnTop
             closeOnClick
             rtl={false}
             pauseOnFocusLoss

@@ -1,284 +1,162 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
-import OfferBanner from '../../components/Header/offer1';
+
+const colorMap = {
+  'black': 'bg-gray-900', 'blue': 'bg-blue-500', 'white': 'bg-white border border-gray-300',
+  'gold': 'bg-amber-200', 'green': 'bg-green-500', 'graphite': 'bg-gray-700',
+  'silver': 'bg-gray-300', 'sky': 'bg-sky-400', 'pink': 'bg-pink-400',
+  'orange': 'bg-orange-500', 'red': 'bg-red-500', 'deep blue': 'bg-blue-700',
+  'lavender': 'bg-purple-300', 'sage': 'bg-green-300', 'teal': 'bg-teal-500',
+  'space gray': 'bg-zinc-600', 'midnight': 'bg-slate-900', 'starlight': 'bg-amber-50',
+  'titanium': 'bg-stone-400', 'natural': 'bg-stone-200',
+};
+const getCls = (c) => colorMap[c?.toLowerCase()?.trim()] || 'bg-gray-300';
+const fmt = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
+const bubbleBtn = 'bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white hover:from-gray-400 hover:to-gray-700 hover:scale-105 active:scale-95';
+const disabledBtn = 'bg-white/30 border border-white/50 text-gray-300 cursor-not-allowed';
+
+const ProductCard = ({ product }) => {
+  const [hovered, setHovered] = useState(false);
+  const [imgIdx, setImgIdx] = useState(0);
+  const stockStatus = product.stock > 10
+    ? { label: 'In Stock', dot: 'bg-emerald-400' }
+    : product.stock > 0 ? { label: 'Limited', dot: 'bg-orange-400' }
+      : { label: 'Sold Out', dot: 'bg-red-400' };
+
+  return (
+    <Link to={`/product/${product.id}`}
+      onMouseEnter={() => { setHovered(true); if (product.images?.length > 1) setImgIdx(1); }}
+      onMouseLeave={() => { setHovered(false); setImgIdx(0); }}>
+      <motion.div className="group bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.10)] transition-shadow duration-300 flex flex-col h-full cursor-pointer"
+        whileHover={{ y: -4 }} transition={{ duration: 0.22 }}>
+        <div className="relative bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] aspect-square flex items-center justify-center overflow-hidden p-5">
+          <motion.img key={imgIdx} src={product.images?.[imgIdx] || product.images?.[0]} alt={product.name}
+            className="w-full h-full object-contain mix-blend-multiply"
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: hovered ? 1.05 : 1 }} transition={{ duration: 0.3 }} />
+          <div className="absolute top-3 left-3">
+            <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/60 backdrop-blur-md border border-white/80 text-[10px] font-bold text-gray-700 shadow-sm">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${stockStatus.dot}`}></span>{stockStatus.label}
+            </span>
+          </div>
+          <AnimatePresence>{hovered && (
+            <motion.div className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md border border-white/60"
+              initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}>
+              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </motion.div>
+          )}</AnimatePresence>
+        </div>
+        <div className="p-4 flex flex-col gap-1 flex-1">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{product.brand}</p>
+          <h3 className="text-sm font-semibold text-gray-900 line-clamp-1">{product.name}</h3>
+          <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">{product.shortDescription}</p>
+          <div className="flex items-center justify-between mt-auto pt-3">
+            <span className="text-base font-bold text-gray-900">{fmt(product.price || 0)}</span>
+            {product.variants?.colors?.length > 0 && (
+              <div className="flex gap-1">
+                {product.variants.colors.slice(0, 4).map((c, i) => <div key={i} className={`w-3 h-3 rounded-full ${getCls(c)} shadow-sm`} title={c} />)}
+                {product.variants.colors.length > 4 && <span className="text-[10px] text-gray-400 self-center">+{product.variants.colors.length - 4}</span>}
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
+
+const Section = ({ title, subtitle, products, idx, setIdx }) => {
+  if (!products.length) return null;
+  const perPage = 4;
+  const total = Math.ceil(products.length / perPage);
+  const visible = products.slice(idx * perPage, idx * perPage + perPage);
+  return (
+    <section className="mb-16">
+      <div className="flex items-end justify-between mb-6">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">{subtitle}</p>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight">{title}</h2>
+          <p className="text-sm text-gray-500 mt-1">{products.length} products</p>
+        </div>
+        {total > 1 && (
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-400 font-medium">{idx + 1} / {total}</span>
+            <button onClick={() => setIdx(i => Math.max(0, i - 1))} disabled={idx === 0}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${idx === 0 ? disabledBtn : bubbleBtn}`}>
+              <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <button onClick={() => setIdx(i => Math.min(total - 1, i + 1))} disabled={idx === total - 1}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${idx === total - 1 ? disabledBtn : bubbleBtn}`}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        )}
+      </div>
+      <motion.div key={idx} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+        {visible.map(p => <ProductCard key={p.id} product={p} />)}
+      </motion.div>
+      {total > 1 && (
+        <div className="flex justify-center gap-2 mt-6">
+          {Array.from({ length: total }, (_, i) => (
+            <button key={i} onClick={() => setIdx(i)}
+              className={`h-1.5 rounded-full transition-all ${i === idx ? 'w-6 bg-gray-700' : 'w-1.5 bg-gray-300 hover:bg-gray-400'}`} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};
 
 const LaptopPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-  // Current index for each category
-  const [appleIndex, setAppleIndex] = useState(0);
-  const [gamingIndex, setGamingIndex] = useState(0);
-  const [otherIndex, setOtherIndex] = useState(0);
-
-  // Items per view based on screen size
-  const [itemsPerView, setItemsPerView] = useState(3);
+  const [macIdx, setMacIdx] = useState(0);
+  const [gamingIdx, setGamingIdx] = useState(0);
+  const [otherIdx, setOtherIdx] = useState(0);
 
   useEffect(() => {
-    const updateItemsPerView = () => {
-      if (window.innerWidth >= 1280) {
-        setItemsPerView(4);
-      } else if (window.innerWidth >= 1024) {
-        setItemsPerView(3);
-      } else if (window.innerWidth >= 768) {
-        setItemsPerView(2);
-      } else {
-        setItemsPerView(1);
-      }
-    };
-
-    updateItemsPerView();
-    window.addEventListener('resize', updateItemsPerView);
-    return () => window.removeEventListener('resize', updateItemsPerView);
+    axios.get('http://localhost:3000/products')
+      .then(r => { setProducts(Array.isArray(r.data) ? r.data : r.data.products || []); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/products');
-        const productsData = Array.isArray(response.data) 
-          ? response.data 
-          : response.data.products || [];
-        
-        setProducts(productsData);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to fetch products');
-        setLoading(false);
-      }
-    };
+  const macs = products.filter(p => p.brand === 'Apple' && p.category === 'Laptop');
+  const gaming = products.filter(p => p.category === 'Laptop' && p.name?.toLowerCase().includes('gaming') && p.brand !== 'Apple');
+  const other = products.filter(p => p.category === 'Laptop' && !p.name?.toLowerCase().includes('gaming') && p.brand !== 'Apple');
 
-    fetchProducts();
-  }, []);
-
-  // Filter laptops by category and brand
-  const appleLaptops = products?.filter(product => 
-    product?.brand === 'Apple' && product?.category === 'Laptop'
-  ) || [];
-
-  const gamingLaptops = products?.filter(product => 
-    product?.category === 'Laptop' && 
-    ['Acer', 'Lenovo', 'ASUS', 'HP'].includes(product?.brand) &&
-    product?.name.toLowerCase().includes('gaming')
-  ) || [];
-
-  const otherLaptops = products?.filter(product => 
-    product?.category === 'Laptop' && 
-    !['Apple'].includes(product?.brand) &&
-    !product?.name.toLowerCase().includes('gaming')
-  ) || [];
-
-  // Navigation handlers slide
-  const nextSlide = (products, currentIndex, setIndex) => {
-    if (currentIndex < Math.ceil(products.length / itemsPerView) - 1) {
-      setIndex(currentIndex + 1);
-    }
-  };
-
-  const prevSlide = (currentIndex, setIndex) => {
-    if (currentIndex > 0) {
-      setIndex(currentIndex - 1);
-    }
-  };
-
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading laptops...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-xl text-red-600">{error}</div>
-      </div>
-    );
-  }
-
-  const ProductCard = ({ product }) => (
-    <div 
-      className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full cursor-pointer"
-      onClick={() => handleProductClick(product.id)}
-    >
-      <div className="p-6 flex-1">
-        <div className="h-48 flex items-center justify-center mb-4">
-          <img 
-            src={product.images?.[0] || '/placeholder-image.jpg'} 
-            alt={product.name}
-            className="max-h-full max-w-full object-contain"
-            onError={(e) => {
-              e.target.src = '/placeholder-image.jpg';
-            }}
-          />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.shortDescription}</p>
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-2xl font-bold text-gray-900">
-            ₹{(product.price || 0).toLocaleString()}
-          </span>
-        </div>
-        {product.stock === 0 && (
-          <div className="mt-2 text-sm text-red-600 font-medium">Out of Stock</div>
-        )}
+  if (loading) return (
+    <div className="min-h-screen bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 rounded-full border-4 border-gray-300 border-t-gray-700 animate-spin"></div>
+        <p className="text-gray-500 text-sm font-medium">Loading laptops...</p>
       </div>
     </div>
   );
 
-  const ProductGridSection = ({ 
-    title, 
-    products, 
-    currentIndex, 
-    onNext, 
-    onPrev 
-  }) => {
-    if (products.length === 0) return null;
-
-    const totalSlides = Math.ceil(products.length / itemsPerView);
-    const startIndex = currentIndex * itemsPerView;
-    const visibleProducts = products.slice(startIndex, startIndex + itemsPerView);
-
-    return (
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-4xl font-bold text-gray-900">{title}</h2>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500">
-              {currentIndex + 1} of {totalSlides}
-            </span>
-            <div className="flex space-x-3">
-              <button
-                onClick={onPrev}
-                disabled={currentIndex === 0}
-                className={`p-4 rounded-2xl transition-all duration-200 ${
-                  currentIndex === 0 
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                    : 'bg-gray-800 text-white hover:bg-gray-900 transform hover:scale-105'
-                }`}
-              >
-                <ChevronLeftIcon className="w-6 h-6" />
-              </button>
-              <button
-                onClick={onNext}
-                disabled={currentIndex === totalSlides - 1}
-                className={`p-4 rounded-2xl transition-all duration-200 ${
-                  currentIndex === totalSlides - 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-800 text-white hover:bg-gray-900 transform hover:scale-105'
-                }`}
-              >
-                <ChevronRightIcon className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Product Grid */}
-        <div className={`grid gap-6 ${
-          itemsPerView === 4 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' :
-          itemsPerView === 3 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' :
-          itemsPerView === 2 ? 'grid-cols-1 md:grid-cols-2' :
-          'grid-cols-1'
-        }`}>
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-
-        {/* Dots Indicator */}
-        {totalSlides > 1 && (
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: totalSlides }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  if (title === 'MacBook') setAppleIndex(index);
-                  else if (title === 'Gaming Laptops') setGamingIndex(index);
-                  else setOtherIndex(index);
-                }}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentIndex 
-                    ? 'bg-gray-800 w-8' 
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white">
-        <OfferBanner/>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold font-dm-sans text-gray-900 mb-6">
-            The latest Laptops
-          </h1>
-        </div>
-        
-        <div className="flex justify-start">
-        </div>
-
-        <div className="text-3xl inline-flex font-semibold font-dm-sans text-gray-500 max-w-4xl mx-auto">
-          <p className='text-3xl inline-flex font-semibold font-dm-sans text-gray-900 max-w-4xl mx-auto'>Powerful Performance. </p>&nbsp;Find the perfect laptop for your needs.
-        </div>
-
-        {/* MacBook */}
-        <ProductGridSection
-          title="MacBook"
-          products={appleLaptops}
-          currentIndex={appleIndex}
-          onNext={() => nextSlide(appleLaptops, appleIndex, setAppleIndex)}
-          onPrev={() => prevSlide(appleIndex, setAppleIndex)}
-        />
-
-        {/* Gaming Laptops */}
-        <ProductGridSection
-          title="Gaming Laptops"
-          products={gamingLaptops}
-          currentIndex={gamingIndex}
-          onNext={() => nextSlide(gamingLaptops, gamingIndex, setGamingIndex)}
-          onPrev={() => prevSlide(gamingIndex, setGamingIndex)}
-        />
-
-        {/* Other Laptops */}
-        <ProductGridSection
-          title="Professional Laptops"
-          products={otherLaptops}
-          currentIndex={otherIndex}
-          onNext={() => nextSlide(otherLaptops, otherIndex, setOtherIndex)}
-          onPrev={() => prevSlide(otherIndex, setOtherIndex)}
-        />
-
-        {/* Empty State */}
-        {appleLaptops.length === 0 && gamingLaptops.length === 0 && otherLaptops.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-2xl text-gray-600">No laptops found.</p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] pt-20 pb-16"
+      style={{ fontFamily: "'SF Pro Display', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 pt-6 pb-10">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Echoo Laptops</p>
+        <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-gray-900 leading-none mb-3">The latest Laptops.</h1>
+        <p className="text-gray-500 text-lg font-light">Powerful Performance. <span className="text-gray-900 font-medium">Find the perfect laptop for your needs.</span></p>
+      </div>
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 mb-10"><div className="h-px bg-white/60 rounded-full"></div></div>
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6">
+        <Section title="MacBook" subtitle="Apple" products={macs} idx={macIdx} setIdx={setMacIdx} />
+        <Section title="Gaming Laptops" subtitle="For Power Users" products={gaming} idx={gamingIdx} setIdx={setGamingIdx} />
+        <Section title="Professional Laptops" subtitle="Work & Productivity" products={other} idx={otherIdx} setIdx={setOtherIdx} />
+        {!macs.length && !gaming.length && !other.length && (
+          <div className="text-center py-24"><p className="text-2xl font-medium text-gray-500">No laptops available.</p></div>
         )}
-      </main>
-      <SimpleFooter/>
+      </div>
+      <div className="mt-10"><SimpleFooter /></div>
     </div>
   );
 };

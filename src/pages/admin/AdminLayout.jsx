@@ -10,7 +10,7 @@ const AdminLayout
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  // Double check if user is admin (extra security)
+  // Double check if user is admin
   if (!isAdmin()) {
     toast.error("Access denied!");
     navigate("/");

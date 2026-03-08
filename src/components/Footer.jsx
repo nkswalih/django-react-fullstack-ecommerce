@@ -1,111 +1,106 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Github, Instagram, Linkedin, Twitter, ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Footer = () => {
-  const location = useLocation();
-
   return (
-    <footer className="bg-gray-50 border-t border-gray-200">
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12 ">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <motion.footer 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="bg-[#0f0f11] text-neutral-300 py-16 px-6 sm:px-10 lg:px-16 mt-32 rounded-t-[3rem] relative overflow-hidden font-sans border-t border-white/5 shadow-[0_[-20px]_50px_rgba(0,0,0,0.5)]"
+    >
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-white/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* Main Grid structure like the reference image */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 pb-16 border-b border-white/10">
           
-          {/* Brand Section */}
-          <div className="md:col-span-1">
-            <Link to="/" className="flex items-center space-x-2">
-              <img
-                alt="EchOo."
-                src="/src/assets/images/Echoo-transparent.png"
-                className="h-7 w-auto"
-              />
-              <span className="text-xl font-semibold text-gray-900">echOo</span>
-            </Link>
-            <p className="mt-4 text-gray-600 text-sm leading-relaxed">
-              Innovative technology for a connected future. 
-              Experience the next generation of smart devices.
-            </p>
+          {/* Left Section: Logo & Newsletter */}
+          <div className="lg:col-span-5 flex flex-col justify-between pr-0 lg:pr-12">
+            <div>
+                <Link to="/" className="flex items-center gap-3 mb-8">
+                  <img
+                    alt="EchOo."
+                    src="/src/assets/images/Echoo-transparent.png"
+                    className="h-8 w-auto filter invert opacity-90"
+                  />
+                  <span className="text-2xl font-semibold tracking-tight text-white">echOo</span>
+                </Link>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-neutral-200 leading-[1.15] mb-12 max-w-sm">
+                  Imaginative minds<br/>for imaginative brands.
+                </h2>
+            </div>
+            
+            {/* Newsletter Input */}
+            <div>
+              <p className="text-sm font-medium text-neutral-400 mb-4 tracking-wide">Subscribe to our newsletter</p>
+              <div className="relative max-w-sm">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-6 pr-14 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
+                />
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gradient-to-b from-gray-600 to-gray-800 shadow-md border border-white/10 flex items-center justify-center text-white hover:scale-105 transition-transform">
+                  <ArrowUpRight strokeWidth={2.5} size={18} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Products */}
-          <div>
-            <h3 className="text-gray-900 font-semibold mb-4">Products</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link 
-                  to="/iphone-air" 
-                  className={`text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm ${
-                    location.pathname === '/iphone-air' ? 'text-gray-900 font-medium' : ''
-                  }`}
-                >
-                  iPhone Air
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/iphone-pro" 
-                  className={`text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm ${
-                    location.pathname === '/iphone-pro' ? 'text-gray-900 font-medium' : ''
-                  }`}
-                >
-                  iPhone Pro
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/accessories" 
-                  className={`text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm ${
-                    location.pathname === '/accessories' ? 'text-gray-900 font-medium' : ''
-                  }`}
-                >
-                  Accessories
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/compare" 
-                  className={`text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm ${
-                    location.pathname === '/compare' ? 'text-gray-900 font-medium' : ''
-                  }`}
-                >
-                  Compare
-                </Link>
-              </li>
-            </ul>
+          {/* Right Section: Links & Socials */}
+          <div className="lg:col-span-7 flex flex-col sm:flex-row justify-between pt-4 lg:pt-0 gap-12 lg:gap-0 lg:pl-12 lg:border-l lg:border-white/10">
+            
+            {/* Links Columns */}
+            <div className="grid grid-cols-2 gap-x-12 sm:gap-x-24 gap-y-6 text-base font-medium text-neutral-400">
+              <div className="flex flex-col gap-5">
+                <Link to="/services" className="hover:text-white transition-colors">Our services +</Link>
+                <Link to="/projects" className="hover:text-white transition-colors">Projects</Link>
+                <Link to="/process" className="hover:text-white transition-colors">Our Process</Link>
+                <Link to="/referral" className="hover:text-white transition-colors">Referral Program</Link>
+              </div>
+              <div className="flex flex-col gap-5">
+                <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+                <Link to="/resources" className="hover:text-white transition-colors">Resources</Link>
+                <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+                <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+              </div>
+            </div>
+
+            {/* Social Icons (Vertical like the reference) */}
+            <div className="flex sm:flex-col gap-4 sm:border-l sm:border-white/10 sm:pl-12">
+              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <Twitter size={18} strokeWidth={2} />
+              </a>
+              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <Instagram size={18} strokeWidth={2} />
+              </a>
+              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <Linkedin size={18} strokeWidth={2} />
+              </a>
+              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <Github size={18} strokeWidth={2} />
+              </a>
+            </div>
           </div>
 
-      
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-500 text-sm mb-4 md:mb-0">
-              © 2024 echOo Inc. All rights reserved.
-            </div>
-            <div className="flex space-x-6">
-              <Link 
-                to="/privacy" 
-                className="text-gray-500 hover:text-gray-700 transition-colors duration-200 text-sm"
-              >
-                Privacy Policy
-              </Link>
-              <Link 
-                to="/terms" 
-                className="text-gray-500 hover:text-gray-700 transition-colors duration-200 text-sm"
-              >
-                Terms of Use
-              </Link>
-              <Link 
-                to="/sitemap" 
-                className="text-gray-500 hover:text-gray-700 transition-colors duration-200 text-sm"
-              >
-                Site Map
-              </Link>
-            </div>
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-neutral-500 tracking-wide">
+          <p>© {new Date().getFullYear()} EchOo Studio. All rights reserved.</p>
+          <div className="flex gap-8">
+            <Link to="/privacy" className="hover:text-neutral-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-neutral-300 transition-colors">Terms of Service</Link>
           </div>
         </div>
+
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

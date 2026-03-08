@@ -5,32 +5,24 @@ import IphoneAir from '../../components/Hero Section/ProductHero2';
 import MainHero from '../../components/Hero Section/Hero';
 import AppleMac from '../../components/Hero Section/ProductHero3';
 import SimpleFooter from '../../components/SimpleFoot';
-import HomeOffer from '../../components/Header/HomeOffer';
+
 
 const Home = () => {
 
 
   return (
-    <div className="min-h-screen bg-white text-white">
-      <HomeOffer/>
-      <MainHero/>
+    <div className="min-h-screen bg-gradient-to-b from-[#f0f2f5] to-[#e2e5e9] text-gray-900 font-sans">
+      <MainHero />
+      {/* <Overlay className=" z-50"/> */}
 
-      {/* Featured Products Section */}
-    
-
-      {/* Product Showcase Sections */}
       <section className="py-5">
         {/* iPhone Air Section */}
-        <IphoneAir/>
-        <AppleMac/>
-     
-      </section>
+        <IphoneAir />
+        <AppleMac />
 
-      {/* Third Section
-      <section className="py-20 bg-gray-900">
-      </section> */}
+      </section>
       <div className='text-black'>
-      <SimpleFooter/>
+        <Footer />
       </div>
     </div>
   );

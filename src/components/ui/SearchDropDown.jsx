@@ -21,18 +21,22 @@ const SearchDropdown = () => {
       const searchProducts = async () => {
         try {
           const response = await axios.get('http://localhost:3000/products')
-          const products = Array.isArray(response.data) ? response.data : response.data.products || []
-          
-          const filtered = products.filter(product => 
+          const products = Array.isArray(response.data)
+            ? response.data
+            : response.data.products || []
+
+          const filtered = products.filter(product =>
             product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
             product.brand.toLowerCase().includes(searchQuery.toLowerCase())
           )
+
           setSearchResults(filtered.slice(0, 5))
         } catch (error) {
           console.error('Search error:', error)
         }
       }
+
       searchProducts()
     } else {
       setSearchResults([])
@@ -40,8 +44,7 @@ const SearchDropdown = () => {
   }, [searchQuery])
 
   const handleProductClick = (productId, close) => {
-    console.log('Navigating to:', `/product/${productId}`)
-    close() // Close the popover first
+    close()
     setTimeout(() => {
       navigate(`/product/${productId}`)
       setSearchQuery('')
@@ -49,7 +52,7 @@ const SearchDropdown = () => {
   }
 
   const handleQuickLinkClick = (path, close) => {
-    close() // Close the popover first
+    close()
     setTimeout(() => {
       navigate(path)
       setSearchQuery('')
@@ -58,37 +61,61 @@ const SearchDropdown = () => {
 
   return (
     <Popover className="relative">
-      {({ open, close }) => (
-        <>
-          <Popover.Button className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors hover:cursor-pointer">
-            <MagnifyingGlassIcon className="size-4 stroke-gray-700"/>
-          </Popover.Button>
+      {({ open, close }) => {
 
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 translate-y-1"
-            enterTo="opacity-100 translate-y-0"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 translate-y-1"
-          >
-            <Popover.Panel className="absolute right-0 top-full mt-2 w-96 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-              <div className="font-dm-sans">
-                {/* Search Header */}
-                <div className="p-4 border-b border-gray-100">
-                  <div className="flex items-center gap-3 p-0">
+        /* 🔒 LOCK BODY SCROLL WHEN SEARCH IS OPEN */
+        useEffect(() => {
+          if (open) {
+            document.body.style.overflow = 'hidden'
+          } else {
+            document.body.style.overflow = ''
+          }
+
+          return () => {
+            document.body.style.overflow = ''
+          }
+        }, [open])
+
+        return (
+          <>
+            <Popover.Button className="flex items-center py-2 text-gray-700 hover:text-gray-900">
+              <MagnifyingGlassIcon className="size-5 stroke-gray-900" />
+            </Popover.Button>
+
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-200"
+              enterFrom="opacity-0 translate-y-1"
+              enterTo="opacity-100 translate-y-0"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-1"
+            >
+              <Popover.Panel
+                className="
+                  fixed top-16
+                  left-1/2 -translate-x-1/2
+                  w-[calc(100vw-2rem)] max-w-[18rem]
+                  sm:max-w-[24rem]
+                  lg:left-auto lg:translate-x-0 lg:right-8 lg:w-96
+                  bg-white rounded-xl shadow-xl border border-gray-200
+                  z-50 overflow-hidden
+                "
+              >
+                <div className="font-dm-sans">
+                  {/* Search Header */}
+                  <div className="p-4 border-b border-gray-100 flex items-center gap-3">
                     <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       placeholder="Search echoo.com"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="flex-1 bg-transparent font-bold border-none outline-none text-lg placeholder-gray-500"
+                      className="flex-1 bg-transparent font-bold outline-none text-lg"
                       autoFocus
                     />
                     {searchQuery && (
-                      <button 
+                      <button
                         onClick={() => setSearchQuery('')}
                         className="p-1 hover:bg-gray-100 rounded-full"
                       >
@@ -96,85 +123,65 @@ const SearchDropdown = () => {
                       </button>
                     )}
                   </div>
-                </div>
 
-                {/* Search Results or Quick Links */}
-                <div className="max-h-96 overflow-y-auto">
-                  {searchQuery.length > 0 ? (
-                    // Search Results
-                    <div className="p-2">
-                      {searchResults.length > 0 ? (
-                        <>
-                          <div className="px-3 py-2 text-sm font-semibold text-gray-500">
-                            Products
-                          </div>
-                          {searchResults.map((product) => (
-                            <button
-                              key={product.id}
-                              onClick={() => handleProductClick(product.id, close)}
-                              className="flex items-center gap-3 w-full p-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                            >
-                              <img 
-                                src={product.images?.[0]} 
-                                alt={product.name}
-                                className="w-10 h-10 object-contain rounded"
-                                onError={(e) => {
-                                  e.target.src = '/placeholder-image.jpg'
-                                }}
-                              />
-                              <div className="flex-1">
-                                <div className="font-medium text-gray-900">
-                                  {product.name}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  {product.brand} • {product.category}
-                                </div>
+                  {/* Results */}
+                  <div className="max-h-96 overflow-y-auto">
+                    {searchQuery ? (
+                      <div className="p-2">
+                        {searchResults.map(product => (
+                          <button
+                            key={product.id}
+                            onClick={() => handleProductClick(product.id, close)}
+                            className="w-full p-3 flex gap-3 hover:bg-gray-50 rounded-lg text-left"
+                          >
+                            <img
+                              src={product.images?.[0]}
+                              alt={product.name}
+                              className="w-10 h-10 object-contain"
+                            />
+                            <div className="flex-1">
+                              <div className="font-medium">{product.name}</div>
+                              <div className="text-sm text-gray-500">
+                                {product.brand} • {product.category}
                               </div>
-                              <div className="text-sm font-semibold text-gray-900">
-                                ₹{product.price?.toLocaleString()}
-                              </div>
-                            </button>
-                          ))}
-                        </>
-                      ) : (
-                        <div className="px-3 py-4 text-center text-gray-500">
-                          No results found for "{searchQuery}"
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    // Quick Links
-                    <div className="p-4">
-                      <div className="text-sm font-semibold text-gray-500 mb-3">
-                        Quick Links
+                            </div>
+                            <div className="font-semibold">
+                              ₹{product.price?.toLocaleString()}
+                            </div>
+                          </button>
+                        ))}
                       </div>
-                      <div className="space-y-1">
-                        {quickLinks.map((link) => (
+                    ) : (
+                      <div className="p-4">
+                        <div className="text-sm font-semibold text-gray-500 mb-2">
+                          Quick Links
+                        </div>
+                        {quickLinks.map(link => (
                           <button
                             key={link.name}
                             onClick={() => handleQuickLinkClick(link.path, close)}
-                            className="block w-full text-left px-3 py-2 hover:cursor-pointer text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                            className="block w-full text-left px-3 py-2 hover:bg-gray-50 rounded"
                           >
                             {link.name}
                           </button>
                         ))}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
+              </Popover.Panel>
+            </Transition>
 
-          {/* Backdrop blur */}
-          {open && (
-            <div 
-              className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40" 
-              onClick={close}
-            />
-          )}
-        </>
-      )}
+            {/* BACKDROP */}
+            {open && (
+              <div
+                className="fixed inset-0 z-40 bg-black/10 backdrop-blur-md"
+                onClick={close}
+              />
+            )}
+          </>
+        )
+      }}
     </Popover>
   )
 }

@@ -69,7 +69,7 @@ export default function useApi(endpoint, id = null) {
   const deleteData = async (itemId) => {
     try {
       setLoading(true);
-      await api.delete(endpoint, itemId);
+      await api.remove(endpoint, itemId);
       
       // Update local state
       if (!id) {

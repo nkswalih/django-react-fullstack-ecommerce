@@ -50,7 +50,7 @@ const OrdersSection = ({ user }) => {
       });
 
       toast.success("Order cancelled successfully!");
-      
+
       // Reload the page to reflect changes
       setTimeout(() => {
         window.location.reload();
@@ -119,7 +119,7 @@ const OrdersSection = ({ user }) => {
           </p>
           <Link
             to="/store"
-            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+            className="inline-block bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-400 hover:to-gray-700 transition-colors"
           >
             Start shopping
           </Link>
@@ -133,12 +133,12 @@ const OrdersSection = ({ user }) => {
       <h3 className="text-lg font-dm-sans font-semibold text-gray-900 mb-6">
         Order History ({orders.length})
       </h3>
-      
+
       <div className="space-y-4">
         {orders.map((order) => {
           const canCancel = canCancelOrder(order);
           const cancellationMessage = getCancellationMessage(order);
-          
+
           return (
             <div
               key={order.id}
@@ -170,7 +170,7 @@ const OrdersSection = ({ user }) => {
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                     {getStatusText(order.status)}
                   </span>
-                  
+
                   {cancellationMessage && (
                     <span className="text-xs text-gray-500 text-right max-w-[150px]">
                       {cancellationMessage}

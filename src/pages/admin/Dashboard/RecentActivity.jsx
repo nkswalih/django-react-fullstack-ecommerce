@@ -10,6 +10,8 @@ const RecentActivity = ({ recentOrders, stats, formatCurrency, navigate }) => {
       case 'processing': return 'bg-yellow-100 text-yellow-800'
       case 'confirmed': return 'bg-green-100 text-green-800'
       case 'pending': return 'bg-yellow-100 text-yellow-800'
+      case 'cancelled': return 'bg-red-100 text-red-800'
+      case 'completed': return 'bg-teal-100 text-teal-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -76,13 +78,13 @@ const RecentActivity = ({ recentOrders, stats, formatCurrency, navigate }) => {
             <p className="text-sm text-gray-500 mt-1">Total revenue divided by total orders</p>
           </div>
 
-          <div>
+          {/* <div>
             <h4 className="text-sm font-medium text-gray-900 mb-2">Conversion Rate</h4>
             <div className="text-2xl font-bold text-gray-900">
               {((stats.totalOrders / stats.totalUsers) * 100).toFixed(1)}%
             </div>
             <p className="text-sm text-gray-500 mt-1">Orders per user</p>
-          </div>
+          </div> */}
 
           <div>
             <h4 className="text-sm font-medium text-gray-900 mb-2">Items per Order</h4>

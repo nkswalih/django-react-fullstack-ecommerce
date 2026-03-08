@@ -1,4 +1,4 @@
-import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import { ArrowUpRightIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SimpleFooter from "../../components/SimpleFoot";
@@ -27,7 +27,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.terms) {
       toast.success("Please accept the terms and Conditions");
       return;
@@ -44,27 +43,24 @@ const Register = () => {
         return;
       }
 
-      // Register new user
       await axios.post("http://localhost:3000/users", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         terms: formData.terms,
-        role:"User",
-        status:"Active",
-        cart:[],
-        wishlist:[],
-        order:[],
+        role: "User",
+        status: "Active",
+        cart: [],
+        wishlist: [],
+        order: [],
       });
 
-
       login({
-        name: formData.name, 
+        name: formData.name,
         email: formData.email,
       });
 
       navigate("/sign_in");
-      
     } catch (error) {
       console.log("Registration Error:", error);
     }
@@ -74,144 +70,130 @@ const Register = () => {
     !formData.name || !formData.email || !formData.password || !formData.terms;
 
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <div className="flex flex-row justify-center items-center pt-4 py-20 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="flex justify-center">
+    <div className="min-h-screen bg-neutral-200 flex items-center justify-center p-4 lg:p-4">
+      {/* Main Container with 40px rounded corners */}
+      <div className="bg-white w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-[40px] overflow-hidden min-h-[650px]">
+        
+        {/* Left Side: Dark Branding Section */}
+        <div className="hidden md:flex md:w-1/2 bg-[#1a1a1a] p-12 flex-col justify-between relative overflow-hidden">
+          <div className="z-10">
+            <p className="text-gray-400 text-sm mb-20">Join the EchOo community – start your journey today.</p>
+            <h1 className="text-white text-6xl font-bold leading-tight tracking-tight max-w-xs">
+              Create <br /> your account
+            </h1>
           </div>
-          <img
-            alt="EchOo."
-            src="/src/assets/images/Echoo-transparent.png"
-            className="h-10 w-auto absolute"
-          />
-          <h2 className="mt-8 text-center text-3xl font-dm-sans font-bold tracking-tight text-black">
-            Create Your Echoo Account.
-          </h2>
-          <p className="mt-3 text-center text-base font-serif text-gray-600">
-            Or{" "}
-            <Link
-              to="/sign_in"
-              className=" inline-flex items-center gap-1 font-vent-sans text-blue-600 hover:text-gray-700 transition-colors"
-            >
-              sign in to your existing account
-              <ArrowUpRightIcon className="size-3" />
-            </Link>
-          </p>
+
+          {/* Visual Graphic Area */}
+          <div className="absolute bottom-0 right-0 w-3/4 translate-y-20 translate-x-10 opacity-40">
+             <div className="w-full aspect-[9/16] bg-gradient-to-tr from-neutral-800 to-neutral-700 rounded-t-[40px] border-t border-l border-neutral-600 shadow-2xl"></div>
+          </div>
+
+          <div className="z-10 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center text-[10px] text-gray-400">
+                ©
+            </div>
+            <span className="text-gray-500 text-xs">2025-2026 EchOo Inc.</span>
+          </div>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-10 px-8 shadow-sm border border-gray-100 rounded-2xl">
-            <form onSubmit={handleSubmit} className="space-y-7">
-              <div className="grid grid-cols-1 gap-5">
-                <div>
-                  <label
-                    htmlFor="yourName"
-                    className="block text-sm font-normal text-gray-700 mb-2"
-                  >
-                    Full Name
-                  </label>
-                  <div>
-                    <input
-                      id="yourName"
-                      name="name"
-                      type="text"
-                      autoComplete="given-name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-900 transition-colors"
-                      placeholder="name"
-                      onChange={handleChange}
-                      value={formData.name}
-                      required
-                    />
-                  </div>
-                </div>
+        {/* Right Side: Form Section */}
+        <div className="w-full md:w-1/2 p-8 lg:p-16 flex flex-col relative">
+          
+          {/* Top Header inside Form */}
+          <div className="flex justify-between items-center mb-10">
+            <img
+              alt="EchOo."
+              src="/src/assets/images/Echoo-transparent.png"
+              className="h-8 w-auto"
+            />
+            <Link
+              to="/sign_in"
+              className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
+            >
+              Sign In
+              <div className="bg-gray-100 p-1 rounded-full ml-1">
+                 <ArrowUpRightIcon className="size-3" />
               </div>
+            </Link>
+          </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-normal text-gray-700 mb-2"
-                >
-                  Email address
-                </label>
-                <div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-900 transition-colors"
-                    placeholder="name@gmail.com"
-                    onChange={handleChange}
-                    value={formData.email}
-                    required
-                  />
-                </div>
-              </div>
+          <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+            <h2 className="text-4xl font-bold text-gray-900 mb-8">Sign Up</h2>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-normal text-gray-700 mb-2"
-                >
-                  Password
-                </label>
-                <div>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-900 transition-colors"
-                    placeholder="password"
-                    onChange={handleChange}
-                    value={formData.password}
-                    required
-                  />
-                </div>
-                <p className="mt-2 text-sm text-gray-500 font-light">
-                  Must be at least 8 characters long
-                </p>
-              </div>
-
-              <div className="flex items-start space-x-3">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full Name Input */}
+              <div className="space-y-1">
                 <input
-                  id="agree-terms"
+                  name="name"
+                  type="text"
+                  required
+                  className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                  placeholder="Full Name"
+                  onChange={handleChange}
+                  value={formData.name}
+                />
+              </div>
+
+              {/* Email Input */}
+              <div className="space-y-1">
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                  placeholder="Email Address"
+                  onChange={handleChange}
+                  value={formData.email}
+                />
+              </div>
+
+              {/* Password Input */}
+              <div className="relative">
+                <input
+                  name="password"
+                  type="password"
+                  required
+                  className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  value={formData.password}
+                />
+              </div>
+
+              {/* Terms Checkbox */}
+              <div className="flex items-start gap-3 py-2">
+                <input
+                  id="terms"
                   name="terms"
                   type="checkbox"
-                  className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded mt-0.5"
+                  className="h-5 w-5 mt-0.5 accent-black border-gray-300 rounded-md"
                   onChange={handleChange}
                   checked={formData.terms}
                 />
-                <label
-                  htmlFor="agree-terms"
-                  className="block text-sm text-gray-700 font-normal leading-5"
-                >
-                  I agree to the{" "}
-                  <a
-                    href="/terms_conditions"
-                    className="text-gray-900 hover:text-gray-700 transition-colors underline"
-                  >
-                    Terms and Conditions
-                  </a>
+                <label htmlFor="terms" className="text-sm text-gray-500 leading-tight">
+                  I agree to the <a href="terms_conditions" className="text-gray-900 font-medium hover:underline">Terms & Conditions</a> and Privacy Policy.
                 </label>
               </div>
 
-              <div>
-               
+              {/* Submit Button */}
+              <div className="pt-4">
                 <button
                   type="submit"
                   disabled={isSubmitDisable}
-                  className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl text-base font-normal text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors shadow-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white rounded-full text-base font-semibold hover:from-gray-400 hover:to-gray-700 transition-all hover:shadow-xl disabled:bg-gray-300 disabled:from-gray-300 disabled:to-gray-300 disabled:shadow-none disabled:ring-0 disabled:cursor-not-allowed"
                 >
-                  Create account
+                  <span className="translate-x-3">Create account</span>
+                  <div className="ml-auto bg-white/20 p-1 rounded-full">
+                    <ArrowUpRightIcon className="size-4" />
+                  </div>
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      <SimpleFooter />
     </div>
   );
-}; 
+};
+
 export default Register;

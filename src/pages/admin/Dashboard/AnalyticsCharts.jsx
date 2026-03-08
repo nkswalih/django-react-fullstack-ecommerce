@@ -38,7 +38,7 @@ const AnalyticsTooltip = ({ active, payload, label, formatCurrency }) => {
           {revenueData && (
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 mr-2.5 shadow-md"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-purple-600 mr-2.5 shadow-md"></div>
                 <span className="text-sm font-medium text-gray-700">Revenue</span>
               </div>
               <span className="text-sm font-bold text-gray-900">
@@ -50,7 +50,7 @@ const AnalyticsTooltip = ({ active, payload, label, formatCurrency }) => {
           {ordersData && (
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2.5 shadow-md"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-cyan-500 mr-2.5 shadow-md"></div>
                 <span className="text-sm font-medium text-gray-700">Order Volume</span>
               </div>
               <span className="text-sm font-bold text-gray-900">
@@ -199,7 +199,7 @@ const AnalyticsCharts = ({ monthlySales, categoryData, statusData, topProducts, 
               <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="none" fill="url(#revenueArea)" fillOpacity={1} animationDuration={1500} />
               <Area yAxisId="right" type="monotone" dataKey="orders" stroke="none" fill="url(#ordersArea)" fillOpacity={1} animationDuration={1500} />
               <Line yAxisId="left" type="monotone" dataKey="revenue" stroke="url(#revenueLine)" strokeWidth={3.5} dot={false} activeDot={{ r: 7, strokeWidth: 3, stroke: "#ffffff", fill: "#a855f7", style: { filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.8))' } }} strokeLinecap="round" animationDuration={1500} />
-              <Line yAxisId="right" type="monotone" dataKey="orders" stroke="url(#ordersLine)" strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 3, stroke: "#ffffff", fill: "#06b6d4", style: { filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.8))' } }} strokeLinecap="round" strokeDasharray="6 3" animationDuration={1500} />
+              <Line yAxisId="right" type="monotone" dataKey="orders" stroke="url(#ordersLine)" strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 3, stroke: "#ffffff", fill: "#06b6d4", style: { filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.8))' } }} strokeLinecap="round" animationDuration={1500} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

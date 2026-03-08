@@ -53,7 +53,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // Generate analytics from real data
+  
   const generateAnalyticsFromData = ({ users, orders, products }) => {
     // Calculate basic stats
     const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0)
@@ -68,14 +68,13 @@ const AdminDashboard = () => {
       })
     })
 
-    // Generate daily sales data (last 7 days)
+   
     const dailySales = []
     const ordersByDay = {}
     
-    // Get today's date
     const today = new Date()
     
-    // Create array of last 7 days
+    //array of last 7 days
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today)
       date.setDate(date.getDate() - i)
@@ -107,7 +106,7 @@ const AdminDashboard = () => {
       }
     })
     
-    // Convert to array sorted by date
+    // Convertto array sorting by date
     Object.values(ordersByDay)
       .sort((a, b) => a.date - b.date)
       .forEach(dayData => {
@@ -119,17 +118,18 @@ const AdminDashboard = () => {
         })
       })
 
-    // If we don't have data for all days, fill with zeros or estimate
+    // If don't have data for all days, fill with zeros or estimate one
+
     if (dailySales.length === 0 || dailySales.every(day => day.revenue === 0)) {
       // Show last 7 days with sample data based on averages
       const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       const dailyAverageRevenue = totalOrders > 0 ? totalRevenue / 7 : 0
       const dailyAverageOrders = totalOrders > 0 ? totalOrders / 7 : 0
       
-      dailySales.length = 0 // Clear array
+      dailySales.length = 0
       
       daysOfWeek.forEach((day, index) => {
-        // Create realistic-looking data with some variation
+        
         const variation = 0.7 + Math.random() * 0.6 // 0.7 to 1.3
         dailySales.push({
           name: day,
@@ -140,11 +140,11 @@ const AdminDashboard = () => {
       })
     }
 
-    // Generate category data from product sales
+    
     const categoryData = []
     const categoryMap = {}
     
-    // Calculate sales by category
+   
     orders.forEach(order => {
       order.items.forEach(item => {
         const product = products.find(p => p.id === item.productId)

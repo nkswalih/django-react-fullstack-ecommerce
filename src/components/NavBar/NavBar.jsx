@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-
 import {
   Bars3Icon,
-  MagnifyingGlassIcon,
   ShoppingBagIcon,
   UserCircleIcon,
   XMarkIcon,
@@ -12,10 +9,37 @@ import {
 import AuthButton from "../ui/AuthButton";
 import SearchDropdown from "../ui/SearchDropDown.jsx";
 
+// Nav item
+const NavItem = ({ to, label }) => {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `relative text-sm font-medium px-3 py-1.5 rounded-full transition-all duration-300
+        ${isActive
+          ? "text-white bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600"
+          : "text-gray-900 hover:bg-gray-100/50"
+        }`
+      }
+    >
+      {label}
+    </NavLink>
+  );
+};
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const { isAuthenticated, user } = useAuth(); // ✅ Fixed spelling
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { path: "/store", label: "Store" },
@@ -25,145 +49,110 @@ export default function Navbar() {
     { path: "/support", label: "Support" },
   ];
 
-  const NavLinkStyle = ({ isActive }) =>
-    `text-xs font-normal transition-colors duration-200 ${
-      isActive
-        ? "text-gray-700 border-gray-900"
-        : "text-gray-700 hover:text-gray-900 border-transparent"
-    }`;
+  /* 🔑 IMPORTANT PART */
+  const navContainerClasses = `
+    fixed top-0 left-0 right-0 z-[999999] transition-all duration-500 ease-out
+    ${scrolled && !mobileMenuOpen
+      ? `
+          bg-white/40 backdrop-blur-md shadow-xl
+          rounded-2xl mx-4 mt-2
+          lg:rounded-full lg:mx-44
+        `
+      : `
+          bg-transparent
+          mx-0 mt-0
+        `
+    }
+  `;
 
   return (
-    <div className="bg-white/70 sticky top-0 z-50 shadow-sm border-b border-gray-100/15 lg:backdrop-blur-sm">
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-11 items-center justify-between">
-          <div className="flex justify-center items-center gap-10">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
+    <div className={navContainerClasses}>
+      <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14">
+        <div className="flex h-14 items-center justify-between">
+          {/* LEFT */}
+          <div className="flex items-center gap-10">
+            <Link to="/">
               <img
-                alt="EchOo."
                 src="/src/assets/images/Echoo-transparent.png"
-                className="h-6 w-auto"
+                alt="EchOo"
+                className="h-7"
               />
             </Link>
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-9">
+
+            <div className="hidden lg:flex gap-2">
               {navItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={NavLinkStyle}
-                >
-                  {item.label}
-                </NavLink>
+                <NavItem key={item.path} to={item.path} label={item.label} />
               ))}
             </div>
           </div>
 
-          {/* Right side items */}
-          <div className="flex items-center">
-            <div className="flex items-center gap-5">
-              {/* SEARCH BAR */}
-              <Link
-                className="p-1.5 text-gray-400 hover:text-gray-500 transition-colors flex items-center justify-center"
-              >
-                <SearchDropdown/>
+          {/* RIGHT */}
+          <div className="flex items-center gap-5">
+            <SearchDropdown />
+
+            <Link to="/cart">
+              <ShoppingBagIcon className="h-5 w-5 stroke-gray-900" />
+            </Link>
+
+            {isAuthenticated ? (
+              <Link to="/profile">
+                <UserCircleIcon className="h-5 w-5 stroke-gray-900" />
               </Link>
+            ) : (
+              <AuthButton />
+            )}
 
-              <Link
-                to="/cart"
-                className="p-1.5 text-gray-400 hover:text-gray-500 transition-colors flex items-center justify-center"
-              >
-                <ShoppingBagIcon className="size-4 stroke-gray-700" />
-              </Link>
-
-              {/* Authentication button */}
-              <div className="nav-auth-section flex items-center justify-center">
-                {isAuthenticated ? ( // ✅ Fixed spelling
-                  <Link
-                    to="/profile" // ✅ Changed from "/cart" to "/profile"
-                    className="p-1.5 text-gray-400 hover:text-gray-500 transition-colors flex items-center justify-center"
-                  >
-                    <UserCircleIcon className="size-4 stroke-gray-700" />
-                  </Link>
-                ) : (
-                  <AuthButton />
-                )}
-              </div>
-            </div>
-
-            {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-1.5 text-gray-400 hover:text-gray-500 transition-colors ml-4"
+              className="lg:hidden"
             >
-              <Bars3Icon className="size-5" />
+              <Bars3Icon className="h-6 w-6 stroke-gray-900" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU — UNCHANGED */}
       {mobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-opacity-25"
+          className="lg:hidden fixed inset-0 z-[60] bg-black/20"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div
-            className="fixed inset-y-0 right-0 w-64 bg-white shadow-xl"
             onClick={(e) => e.stopPropagation()}
+            className="
+              fixed right-4 top-20 z-[70]
+              w-60 rounded-3xl
+              bg-white/30 backdrop-blur-xl
+              shadow-2xl ring-1 ring-white/30
+              p-4
+            "
           >
-            <div className="p-4 border-b border-gray-200">
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-gray-500"
-              >
-                <XMarkIcon className="size-5" />
+            <div className="flex justify-end">
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
-            <div className="p-4 space-y-4">
+
+            <div className="mt-4 space-y-3">
               {navItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `block py-2 text-sm font-normal ${
-                      isActive
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900"
-                    }`
-                  }
+                  className="block text-gray-800"
                 >
                   {item.label}
                 </NavLink>
               ))}
 
-              {/* AuthenticationNav */}
-              <div className="pt-4 border-t border-gray-200 space-y-2">
-                {isAuthenticated ? ( // ✅ Fixed spelling for mobile too
-                  <Link
-                    to="/profile"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-sm text-gray-600 hover:text-gray-900"
-                  >
-                    Profile
-                  </Link>
+              <div className="pt-4 border-t">
+                {isAuthenticated ? (
+                  <Link to="/profile">Profile</Link>
                 ) : (
                   <>
-                    <Link
-                      to="/sign_in"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block py-2 text-sm text-gray-600 hover:text-gray-900"
-                    >
-                      Sign in
-                    </Link>
-                    <Link
-                      to="/sign_up"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block py-2 text-sm text-gray-600 hover:text-gray-900"
-                    >
-                      Create account
-                    </Link>
+                    <Link to="/sign_in">Sign in</Link>
+                    <Link to="/sign_up">Create account</Link>
                   </>
                 )}
               </div>
