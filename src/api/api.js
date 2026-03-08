@@ -1,7 +1,7 @@
 // api/api.js
 import axios from "axios";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000"; // ← only this line changes
 
 export const api = {
   getAll: (endpoint) => axios.get(`${API_BASE}/${endpoint}`),
@@ -13,7 +13,6 @@ export const api = {
   update: (endpoint, id, data) => 
     axios.put(`${API_BASE}/${endpoint}/${id}`, data),
 
-  // Add PATCH method for partial updates
   patch: (endpoint, id, data) => 
     axios.patch(`${API_BASE}/${endpoint}/${id}`, data),
 
