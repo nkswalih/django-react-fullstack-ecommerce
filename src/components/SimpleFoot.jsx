@@ -10,7 +10,7 @@ const SimpleFooter = () => {
                   <Link to="/" className="flex items-center">
                     <img
                       alt="EchOo."
-                      src="/src/assets/images/Echoo-transparent.png"
+                      src="/Echoo-transparent.png"
                       className="h-6 w-auto"
                     />
                     <span className="ml-2 text-lg font-light text-gray-600">EchOo.</span>
