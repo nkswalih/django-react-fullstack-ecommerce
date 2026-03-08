@@ -31,7 +31,6 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminProducts from './pages/admin/AdminProducts/AdminProducts'
 import UserLayout from './pages/user/UserLayout'
 import AdminOrders from './pages/admin/AdminOrders/AdminOrder'
-import Navbar from './components/NavBar/Navbar/'
 
 function App() {
   return (
