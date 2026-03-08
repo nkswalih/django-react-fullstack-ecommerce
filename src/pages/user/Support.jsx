@@ -163,7 +163,7 @@ const EchooSupport = () => {
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Name *</label>
                     <input
                       type="text"
-                      name="from_name"
+                      name="name"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                       placeholder="Your full name"
@@ -175,7 +175,7 @@ const EchooSupport = () => {
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email *</label>
                     <input
                       type="email"
-                      name="reply_to"
+                      name="email"
                       value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                       placeholder="your@email.com"
