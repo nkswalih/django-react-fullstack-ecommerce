@@ -11,7 +11,7 @@ const CheckoutPage = () => {
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
   
   const navigate = useNavigate();
-  const API_URL = 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
   const [formData, setFormData] = useState({
     firstName: '',

@@ -3,6 +3,7 @@ import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { api } from "../../api/api"
 
 const SearchDropdown = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -20,7 +21,7 @@ const SearchDropdown = () => {
     if (searchQuery.length > 1) {
       const searchProducts = async () => {
         try {
-          const response = await axios.get('http://localhost:3000/products')
+          const response = await api.getAll("products")
           const products = Array.isArray(response.data)
             ? response.data
             : response.data.products || []

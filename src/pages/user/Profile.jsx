@@ -11,7 +11,7 @@ import SimpleFooter from "../../components/SimpleFoot";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const API_URL = "http://localhost:3000";
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
   const getStoredUser = () => {
     try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); }

@@ -1,7 +1,7 @@
 // api/api.js
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000"; // ← only this line changes
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const api = {
   getAll: (endpoint) => axios.get(`${API_BASE}/${endpoint}`),
