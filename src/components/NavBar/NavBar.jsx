@@ -73,7 +73,7 @@ export default function Navbar() {
           <div className="flex items-center gap-10">
             <Link to="/">
               <img
-                src="/src/assets/images/Echoo-transparent.png"
+                src="/Echoo-transparent.png"
                 alt="EchOo"
                 className="h-7"
               />

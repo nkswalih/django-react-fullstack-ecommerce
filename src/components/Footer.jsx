@@ -26,7 +26,7 @@ const Footer = () => {
                 <Link to="/" className="flex items-center gap-3 mb-8">
                   <img
                     alt="EchOo."
-                    src="/src/assets/images/Echoo-transparent.png"
+                    src="/Echoo-transparent.png"
                     className="h-8 w-auto filter invert opacity-90"
                   />
                   <span className="text-2xl font-semibold tracking-tight text-white">echOo</span>

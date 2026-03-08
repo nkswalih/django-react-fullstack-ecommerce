@@ -133,7 +133,7 @@ const Login = () => {
           <div className="flex justify-between items-center mb-16">
             <img
               alt="EchOo."
-              src="/src/assets/images/Echoo-transparent.png"
+              src="/Echoo-transparent.png"
               className="h-8 w-auto"
             />
             <Link

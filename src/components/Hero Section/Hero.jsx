@@ -34,18 +34,19 @@ const MainHero = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#63f7c8] via-[#cceaf7] to-[#f0f2f5] min-h-screen text-gray-900 font-sans relative">
+    <div className="bg-gradient-to-b from-[#d3fcff] via-[#cceaf7] to-[#f0f2f5] min-h-screen text-gray-900 font-sans relative">
       <Overlay className="z-0 opacity-40 pointer-events-none" />
 
       {/* Hero Section Container with extra top padding for nav gap */}
       <section className="relative pt-32 md:pt-48 pb-16 px-4 max-w-7xl mx-auto flex flex-col items-center justify-center overflow-hidden min-h-[90vh]">
         
         {/* Giant Background Text utilizing modern Anton font */}
-        <div className="absolute top-20 md:top-36 left-0 right-0 z-0 flex justify-center w-full overflow-hidden pointer-events-none uppercase">
-          <h1 className="text-[13vw] font-normal tracking-normal text-[#0f172a] leading-none select-none" style={{ fontFamily: '"Anton", sans-serif', transform: 'scaleY(1.15)' }}>
-            AESTHETIC UNBOUND
-          </h1>
-        </div>
+        <div className="absolute top-12 md:top-36 left-0 right-0 z-0 flex justify-center w-full overflow-hidden pointer-events-none uppercase">
+            <h1 className="text-[22vw] md:text-[13vw] font-normal tracking-normal text-[#0f172a] leading-none select-none text-center" 
+                style={{ fontFamily: '"Anton", sans-serif', transform: 'scaleY(1.15)' }}>
+                AESTHETIC<br className="md:hidden" /> UNBOUND
+            </h1>
+            </div>
 
         {/* Central Layout Container */}
         <div className="relative z-10 w-full flex flex-col md:flex-row justify-between items-center mt-20 md:mt-24">
@@ -65,13 +66,13 @@ const MainHero = () => {
                 <img 
                     src="https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0021_Headphone1-white.png?v=1753757251" 
                     alt="Nothing Headphone" 
-                    className="w-[300px] h-[300px] md:w-[600px] md:h-[600px] object-contain drop-shadow-2xl animate-[float_6s_ease-in-out_infinite]"
+                    className="w-[420px] h-[420px] md:w-[600px] md:h-[600px] object-contain drop-shadow-2xl animate-[float_6s_ease-in-out_infinite]"
                 />
                 
                 {/* Action Button Overlapping Image */}
                  <div className="absolute top-[45%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-md rounded-[2rem] pr-2 pl-6 py-2 flex items-center gap-4 shadow-xl border border-white/50 whitespace-nowrap z-30">
                     <span className="text-sm font-bold tracking-wide text-gray-800">Shop Now</span>
-                    <button onClick={handleShopNowClick} className="w-10 h-10 rounded-full bg-[#cdf54c] shadow-sm flex items-center justify-center hover:scale-105 transition-transform text-black">
+                    <button onClick={handleShopNowClick} className="w-10 h-10 rounded-full bg-gradient-to-b from-green-200 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 flex items-center justify-center text-white hover:from-gray-400 hover:to-gray-700 transition-colors z-10">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </button>
                 </div>
@@ -114,29 +115,64 @@ const MainHero = () => {
                 
                 <h3 className="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300 inline-block">Our mission</h3>
                 
-                <div className="flex flex-col sm:flex-row gap-8 mt-4">
-                    <div className="flex-1">
+                {/* Mission Cards — horizontal scroll on mobile */}
+                <div className="flex flex-row gap-4 mt-4 overflow-x-auto pb-2 sm:overflow-visible snap-x snap-mandatory">
+                    <div className="flex-none w-[75vw] sm:flex-1 snap-start bg-white/50 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-sm">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-b from-[#d4df31] to-[#b3be28] shadow-md flex items-center justify-center mb-4">
-                             <svg className="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                            <svg className="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                         </div>
                         <h4 className="font-semibold text-gray-900 mb-2">Transforming Of<br/>Digital Product</h4>
                         <p className="text-xs text-gray-500 leading-relaxed">we aim to enable businesses to thrive online by delivering tailored web development that lead to measurable results</p>
                     </div>
                     
-                    <div className="flex-1">
+                    <div className="flex-none w-[75vw] sm:flex-1 snap-start bg-white/50 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-sm">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-b from-[#8ab4f8] to-[#4285f4] shadow-md flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                         </div>
                         <h4 className="font-semibold text-gray-900 mb-2">Empowering<br/>digital growth</h4>
                         <p className="text-xs text-gray-500 leading-relaxed">we aim to enable businesses to thrive online by delivering tailored web development that lead to measurable results</p>
                     </div>
+
+                    {/* Extra card only on mobile */}
+                    <div className="flex-none w-[75vw] sm:hidden snap-start bg-white/50 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-b from-[#f8a4b8] to-[#f43f5e] shadow-md flex items-center justify-center mb-4">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                        </div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Premium<br/>Quality</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed">we deliver only the best products with top quality standards and customer satisfaction guaranteed</p>
+                    </div>
                 </div>
+
+                {/* Scroll hint on mobile */}
+                <p className="text-xs text-gray-400 mt-3 sm:hidden flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                    Swipe to see more
+                </p>
             </div>
 
-            {/* Right VR Image Box */}
-             <div className="lg:w-1/3 w-full bg-[#f4f4f4] rounded-3xl overflow-hidden p-6 flex items-center justify-center relative">
-                 <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/vision-pro-hero-202401?wid=932&hei=932&fmt=jpeg&qlt=90&.v=1704255018659" alt="VR Headset user" className="w-full h-auto object-cover rounded-2xl mix-blend-multiply" />
-             </div>
+            {/* Right VR Image Box — hidden on mobile, show stats instead */}
+            <div className="lg:w-1/3 w-full">
+                {/* Stats row — mobile only */}
+                <div className="grid grid-cols-3 gap-3 mb-6 lg:hidden">
+                    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-4 text-center border border-white/60 shadow-sm">
+                        <p className="text-2xl font-bold text-gray-900">50+</p>
+                        <p className="text-[10px] text-gray-500 mt-1">Products</p>
+                    </div>
+                    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-4 text-center border border-white/60 shadow-sm">
+                        <p className="text-2xl font-bold text-gray-900">4.9★</p>
+                        <p className="text-[10px] text-gray-500 mt-1">Rating</p>
+                    </div>
+                    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-4 text-center border border-white/60 shadow-sm">
+                        <p className="text-2xl font-bold text-gray-900">24/7</p>
+                        <p className="text-[10px] text-gray-500 mt-1">Support</p>
+                    </div>
+                </div>
+
+                {/* VR image — desktop only */}
+                <div className="hidden lg:flex bg-[#f4f4f4] rounded-3xl overflow-hidden p-6 items-center justify-center relative">
+                    <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/vision-pro-hero-202401?wid=932&hei=932&fmt=jpeg&qlt=90&.v=1704255018659" alt="VR Headset user" className="w-full h-auto object-cover rounded-2xl mix-blend-multiply" />
+                </div>
+            </div>
         </div>
       </section>
 
