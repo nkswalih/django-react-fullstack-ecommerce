@@ -23,7 +23,7 @@ const ProductImages = ({ product, selectedColor }) => {
   };
 
   // Filter out empty image URLs
-  const validImages = product.images?.filter(img => img && img.trim() !== '') || [];
+  const validImages = product.images?.map(img => img.image_url)?.filter(url =>url && url.trim() !== '') || [];
 
   return (
     <div className="lg:w-1/2">

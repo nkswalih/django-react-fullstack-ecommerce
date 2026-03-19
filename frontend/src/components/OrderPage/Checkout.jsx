@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getUserById, patchUser, getProductById, patchProduct, createOrder } from '../../api/apiService';
 import { toast } from 'react-toastify';
 
 const CheckoutPage = () => {
@@ -11,7 +11,6 @@ const CheckoutPage = () => {
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
   
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -61,7 +60,7 @@ const CheckoutPage = () => {
   const fetchCartItems = async (userId) => {
     try {
       setLoadingCart(true);
-      const response = await axios.get(`${API_URL}/users/${userId}`);
+      const response = await getUserById(userId);
       
       // Set cart items from user's cart
       const userCart = response.data?.cart || [];
@@ -112,7 +111,7 @@ const CheckoutPage = () => {
   // Fetch product data to check real-time stock
 const fetchProduct = async (productId) => {
   try {
-    const response = await axios.get(`${API_URL}/products/${productId}`);
+    const response = await getProductById(productId);
     if (!response.data) {
       throw new Error(`Product ${productId} not found`);
     }
@@ -129,7 +128,7 @@ const fetchProduct = async (productId) => {
   // Update product stock
   const updateStock = async (productId, newStock) => {
     try {
-      await axios.patch(`${API_URL}/products/${productId}`, {
+      await patchProduct(productId, {
         stock: newStock 
       });
     } catch (error) {
@@ -144,7 +143,7 @@ const fetchProduct = async (productId) => {
     
     try {
       // Update user's cart to empty array
-      await axios.patch(`${API_URL}/users/${currentUser.id}`, {
+      await patchUser(currentUser.id, {
         cart: []
       });
       
@@ -238,15 +237,15 @@ const fetchProduct = async (productId) => {
     };
 
     // Save order to server
-    await axios.post(`${API_URL}/orders`, order);
+    await createOrder(order);
 
     //  Also add order to user's orders array
     try {
-      const userResponse = await axios.get(`${API_URL}/users/${currentUser.id}`);
+      const userResponse = await getUserById(currentUser.id);
       const user = userResponse.data;
       const updatedUserOrders = [...(user.order || []), order];
       
-      await axios.patch(`${API_URL}/users/${currentUser.id}`, {
+      await patchUser(currentUser.id, {
         order: updatedUserOrders
       });
     } catch (error) {

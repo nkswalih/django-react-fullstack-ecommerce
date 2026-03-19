@@ -2,7 +2,7 @@ import { ShieldUserIcon, BellIcon, SearchIcon, LogOutIcon, XIcon } from 'lucide-
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import axios from "axios"
+import { getUsers, getProducts, getOrders } from '../../api/apiService'
 
 const Header = ({ setSidebarOpen }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -36,14 +36,14 @@ const Header = ({ setSidebarOpen }) => {
     setLoading(true)
     try {
       const [usersRes, productsRes, ordersRes] = await Promise.all([
-        axios.get('http://localhost:3000/users'),
-        axios.get('http://localhost:3000/products'),
-        axios.get('http://localhost:3000/orders')
+        getUsers(),
+        getProducts(),
+        getOrders()
       ])
 
-      const users = await usersRes.json()
-      const products = await productsRes.json()
-      const orders = await ordersRes.json()
+      const users = usersRes.data
+      const products = productsRes.data
+      const orders = ordersRes.data
 
       const term = query.toLowerCase()
       

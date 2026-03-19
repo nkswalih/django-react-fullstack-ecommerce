@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { getProducts } from '../../api/apiService';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
@@ -7,15 +7,33 @@ import SimpleFooter from '../../components/SimpleFoot';
 const PRODUCTS_PER_PAGE = 12;
 
 const colorMap = {
-  'black': 'bg-gray-900', 'blue': 'bg-blue-500', 'white': 'bg-white border border-gray-300',
-  'gold': 'bg-amber-200', 'green': 'bg-green-500', 'graphite': 'bg-gray-700',
-  'silver': 'bg-gray-300', 'sky': 'bg-sky-400', 'pink': 'bg-pink-400',
-  'orange': 'bg-orange-500', 'red': 'bg-red-500', 'deep blue': 'bg-blue-700',
-  'lavender': 'bg-purple-300', 'sage': 'bg-green-300', 'mist blue': 'bg-blue-200',
-  'light gold': 'bg-amber-100', 'teal': 'bg-teal-500', 'purple': 'bg-purple-500',
-  'yellow': 'bg-yellow-300', 'titanium': 'bg-stone-400', 'natural': 'bg-stone-200',
-  'space gray': 'bg-zinc-600', 'midnight': 'bg-slate-900', 'starlight': 'bg-amber-50',
-  'sierra blue': 'bg-sky-300', 'alpine green': 'bg-green-700', 'brown': 'bg-amber-700',
+  'black': 'bg-gradient-to-br from-gray-700 to-black',
+  'blue': 'bg-gradient-to-br from-blue-600 to-blue-900',
+  'white': 'bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-300',
+  'gold': 'bg-gradient-to-br from-amber-300 to-yellow-600',
+  'green': 'bg-gradient-to-br from-green-500 to-green-800',
+  'graphite': 'bg-gradient-to-br from-gray-600 to-gray-800',
+  'silver': 'bg-gradient-to-br from-gray-200 to-gray-400',
+  'sky': 'bg-gradient-to-br from-sky-300 to-sky-600',
+  'pink': 'bg-gradient-to-br from-pink-400 to-pink-600',
+  'orange': 'bg-gradient-to-br from-orange-400 to-orange-600',
+  'red': 'bg-gradient-to-br from-red-500 to-red-800',
+  'deep blue': 'bg-gradient-to-br from-blue-800 to-blue-950',
+  'lavender': 'bg-gradient-to-br from-purple-300 to-purple-500',
+  'sage': 'bg-gradient-to-br from-green-300 to-green-500',
+  'mist blue': 'bg-gradient-to-br from-blue-200 to-blue-400',
+  'light gold': 'bg-gradient-to-br from-amber-100 to-amber-300',
+  'teal': 'bg-gradient-to-br from-teal-400 to-teal-700',
+  'purple': 'bg-gradient-to-br from-purple-500 to-purple-800',
+  'yellow': 'bg-gradient-to-br from-yellow-300 to-yellow-500',
+  'titanium': 'bg-gradient-to-br from-stone-400 to-stone-600',
+  'natural': 'bg-gradient-to-br from-stone-200 to-stone-400',
+  'space gray': 'bg-gradient-to-br from-zinc-600 to-zinc-800',
+  'midnight': 'bg-gradient-to-br from-slate-800 to-slate-950',
+  'starlight': 'bg-gradient-to-br from-amber-50 to-gray-200',
+  'sierra blue': 'bg-gradient-to-br from-sky-300 to-blue-300',
+  'alpine green': 'bg-gradient-to-br from-green-600 to-green-800',
+  'brown': 'bg-gradient-to-br from-amber-700 to-amber-900',
 };
 
 const getCls = (c) => colorMap[c?.toLowerCase()?.trim()] || 'bg-gray-300';
@@ -57,7 +75,7 @@ const ProductCard = ({ product }) => {
       : { label: 'Sold Out', dot: 'bg-red-400' };
 
   return (
-    <Link to={`/product/${product.id}`}>
+    <Link to={`/product/${product.slug}`}>
       <motion.div
         className="group relative bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.10)] transition-all duration-300 cursor-pointer flex flex-col"
         onMouseEnter={handleMouseEnter}
@@ -69,7 +87,11 @@ const ProductCard = ({ product }) => {
         <div className="relative bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] aspect-square flex items-center justify-center overflow-hidden p-4">
           <motion.img
             key={imgIdx}
-            src={product.images?.[imgIdx] || product.images?.[0]}
+            src={
+                product.images?.[imgIdx]?.image_url ||
+                product.images?.[0]?.image_url ||
+                "/no-image.png"
+              }
             alt={product.name}
             className="w-full h-full object-contain mix-blend-multiply"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -143,7 +165,7 @@ const StorePage = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/products')
+    getProducts()
       .then(res => { setProducts(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);

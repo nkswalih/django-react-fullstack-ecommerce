@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getProductBySlug, getUserById, patchUser } from '../../api/apiService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import SimpleFooter from '../../components/SimpleFoot';
 
 const ProductPage = () => {
-  const { productId } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,12 +22,12 @@ const ProductPage = () => {
 
   useEffect(() => {
     fetchProduct();
-  }, [productId]);
+  }, [slug]);
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/products');
-      const foundProduct = response.data.find(p => p.id === productId);
+      const response = await getProductBySlug(slug);
+      const foundProduct = response.data;
 
       if (foundProduct) {
         setProduct(foundProduct);
@@ -100,7 +100,7 @@ const ProductPage = () => {
 
       let userData;
       try {
-        const userResponse = await axios.get(`http://localhost:3000/users/${userId}`);
+        const userResponse = await getUserById(userId);
         userData = userResponse.data;
       } catch (err) {
         if (err.response?.status === 404) {
@@ -126,7 +126,7 @@ const ProductPage = () => {
         updatedCart = [...currentCart, cartItem];
       }
 
-      await axios.patch(`http://localhost:3000/users/${userId}`, {
+      await patchUser(userId, {
         cart: updatedCart
       });
 
@@ -143,33 +143,33 @@ const ProductPage = () => {
     if (!colorName) return 'bg-gray-400';
     const c = colorName.toLowerCase().trim();
     const colorMap = {
-      'black': 'bg-gray-900',
-      'blue': 'bg-blue-500',
-      'white': 'bg-white border border-gray-300',
-      'gold': 'bg-amber-200',
-      'green': 'bg-green-500',
-      'graphite': 'bg-gray-700',
-      'silver': 'bg-gray-300',
-      'sky': 'bg-sky-400',
-      'pink': 'bg-pink-400',
-      'orange': 'bg-orange-500',
-      'red': 'bg-red-500',
-      'deep blue': 'bg-blue-700',
-      'lavender': 'bg-purple-300',
-      'sage': 'bg-green-300',
-      'mist blue': 'bg-blue-200',
-      'light gold': 'bg-amber-100',
-      'teal': 'bg-teal-500',
-      'purple': 'bg-purple-500',
-      'yellow': 'bg-yellow-300',
-      'titanium': 'bg-stone-400',
-      'natural': 'bg-stone-200',
-      'space gray': 'bg-zinc-600',
-      'midnight': 'bg-slate-900',
-      'starlight': 'bg-amber-50',
-      'sierra blue': 'bg-sky-300',
-      'alpine green': 'bg-green-700',
-      'brown': 'bg-amber-700',
+      'black': 'bg-gradient-to-br from-gray-700 to-black',
+      'blue': 'bg-gradient-to-br from-blue-600 to-blue-900',
+      'white': 'bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-300',
+      'gold': 'bg-gradient-to-br from-amber-300 to-yellow-600',
+      'green': 'bg-gradient-to-br from-green-500 to-green-800',
+      'graphite': 'bg-gradient-to-br from-gray-600 to-gray-800',
+      'silver': 'bg-gradient-to-br from-gray-200 to-gray-400',
+      'sky': 'bg-gradient-to-br from-sky-300 to-sky-600',
+      'pink': 'bg-gradient-to-br from-pink-400 to-pink-600',
+      'orange': 'bg-gradient-to-br from-orange-400 to-orange-600',
+      'red': 'bg-gradient-to-br from-red-500 to-red-800',
+      'deep blue': 'bg-gradient-to-br from-blue-800 to-blue-950',
+      'lavender': 'bg-gradient-to-br from-purple-300 to-purple-500',
+      'sage': 'bg-gradient-to-br from-green-300 to-green-500',
+      'mist blue': 'bg-gradient-to-br from-blue-200 to-blue-400',
+      'light gold': 'bg-gradient-to-br from-amber-100 to-amber-300',
+      'teal': 'bg-gradient-to-br from-teal-400 to-teal-700',
+      'purple': 'bg-gradient-to-br from-purple-500 to-purple-800',
+      'yellow': 'bg-gradient-to-br from-yellow-300 to-yellow-500',
+      'titanium': 'bg-gradient-to-br from-stone-400 to-stone-600',
+      'natural': 'bg-gradient-to-br from-stone-200 to-stone-400',
+      'space gray': 'bg-gradient-to-br from-zinc-600 to-zinc-800',
+      'midnight': 'bg-gradient-to-br from-slate-800 to-slate-950',
+      'starlight': 'bg-gradient-to-br from-amber-50 to-gray-200',
+      'sierra blue': 'bg-gradient-to-br from-sky-300 to-blue-300',
+      'alpine green': 'bg-gradient-to-br from-green-600 to-green-800',
+      'brown': 'bg-gradient-to-br from-amber-700 to-amber-900',
     };
     return colorMap[c] || 'bg-gray-400';
   };
@@ -190,7 +190,7 @@ const ProductPage = () => {
     );
   }
 
-  const basePrice = product.price || 0;
+  const basePrice = parseFloat(product.price) || 0;
   let extraCost = 0;
   if (selectedOptions.storage) {
     if (selectedOptions.storage.includes('256')) extraCost += 10000;
@@ -206,7 +206,7 @@ const ProductPage = () => {
   const activeImageIndex = (product.images && product.images.length > selectedOptions.imageIndex)
     ? selectedOptions.imageIndex
     : 0;
-  const activeImage = product.images?.[activeImageIndex] || 'https://via.placeholder.com/600x600?text=No+Image';
+  const activeImage = product.images?.[activeImageIndex]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image';
 
   const bubbleButtonClass = "bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white transition-all hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-700 hover:scale-105 active:scale-95";
 
@@ -272,7 +272,7 @@ const ProductPage = () => {
               src={activeImage}
               alt={product.name}
               onClick={() => setIsZoomed(true)}
-              className="absolute z-10 w-[80%] h-[80%] object-contain drop-shadow-[0_40px_30px_rgba(0,0,0,0.15)] mix-blend-multiply cursor-zoom-in"
+              className="absolute z-10 w-[80%] h-[80%] object-contain mix-blend-multiply cursor-zoom-in"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}

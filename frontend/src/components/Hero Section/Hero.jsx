@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getProducts } from '../../api/apiService';
 import { Facebook, Instagram, Dribbble, Quote } from 'lucide-react';
 import Overlay from '../ui/Overlay';
 
@@ -12,7 +12,7 @@ const MainHero = () => {
     // Fetch products
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/products');
+        const response = await getProducts();
         // Get 4 random or top popular products (for this demo, we take first 4)
         if (response.data && response.data.length > 0) {
           setFeaturedProducts(response.data.slice(0, 4));
@@ -198,7 +198,11 @@ const MainHero = () => {
                         {/* Inner gradient container replacing basic gray background */}
                         <div className="w-full h-48 bg-gradient-to-b from-[#e8eaed] to-[#f8f9fa] rounded-[1.5rem] mb-6 flex items-center justify-center p-4 relative overflow-hidden">
                             <img 
-                                src={product.images?.[0] || product.productImage} 
+                                src={
+                                    product.images?.length > 0
+                                        ? product.images[0].image_url
+                                        : "/no-image.png"
+                                }
                                 alt={product.name} 
                                 className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
                                 onError={(e) => {
@@ -223,7 +227,7 @@ const MainHero = () => {
                             <div className="flex justify-between items-center mt-4">
                                <p className="font-bold text-gray-900">₹{product.price?.toLocaleString() || 999}</p>
                                <button 
-                                 onClick={() => handleFeaturedClick(product.id)}
+                                 onClick={() => handleFeaturedClick(product.slug)}
                                  className="w-10 h-10 rounded-full bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 flex items-center justify-center text-white hover:from-gray-400 hover:to-gray-700 transition-colors z-10"
                                 >
                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>

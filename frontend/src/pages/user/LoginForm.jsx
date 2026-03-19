@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import SimpleFooter from "../../components/SimpleFoot";
-import axios from "axios";
+import { getUsers } from "../../api/apiService";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 
@@ -44,7 +44,7 @@ const Login = () => {
 
     try {
       // Get all users from json
-      const response = await axios.get("http://localhost:3000/users");
+      const response = await getUsers();
       const users = response.data;
 
       // Finding user with matched email and password

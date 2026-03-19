@@ -11,7 +11,6 @@ import Home from './pages/user/Home'
 import Register from './pages/user/RegisterForm'
 import Login from './pages/user/LoginForm'
 import Terms from './pages/user/Terms'
-import Store from './pages/user/Store'
 import Apple from './pages/user/Apple'
 import Laptop from './pages/user/Laptop'
 import Test from './pages/user/Test'
@@ -31,6 +30,7 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminProducts from './pages/admin/AdminProducts/AdminProducts'
 import UserLayout from './pages/user/UserLayout'
 import AdminOrders from './pages/admin/AdminOrders/AdminOrder'
+import TestApi from './api/test';
 
 function App() {
   return (
@@ -51,24 +51,25 @@ function App() {
               </ProtectedRoute>
             }>
               <Route index element={<Home />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/store" element={<Store />} />
-              <Route path="/apple" element={<Apple />} />
-              <Route path="/lap" element={<Laptop />} />
-              <Route path="/test" element={<Test />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/overview" element={<Profile />} />
-              <Route path="/profile/orders" element={<Profile />} />
-              <Route path="/profile/wishlist" element={<Profile />} />
-              <Route path="/profile/cart" element={<Profile />} />
-              <Route path="/product/:productId" element={<ProductPage />} />
-              <Route path="/store" element={<StorePage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/laptop" element={<Laptop />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-              <Route path="/accessories" element={<AccessoriesPage />} />
-              <Route path="/support" element={<EchooSupport />} />
+              <Route path="home" element={<Home />} />
+              <Route path="store" element={<StorePage />} />
+              <Route path="apple" element={<Apple  />} />
+              <Route path="lap" element={<Laptop />} />
+              <Route path="test" element={<Test />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="profile/overview" element={<Profile />} />
+              <Route path="profile/orders" element={<Profile />} />
+              <Route path="profile/wishlist" element={<Profile />} />
+              <Route path="profile/cart" element={<Profile />} />
+              <Route path="product/:slug" element={<ProductPage />} />
+              <Route path="store" element={<StorePage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="laptop" element={<Laptop />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="order-confirmation/:orderId" element={<OrderConfirmation />} />
+              <Route path="accessories" element={<AccessoriesPage />} />
+              <Route path="support" element={<EchooSupport />} />
+              <Route path="testapi" element={<TestApi/>}/>
             </Route>
 
             {/* Admin routes - requires login with admin role */}

@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getProducts } from '../../api/apiService';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
 
 const colorMap = {
-  'black': 'bg-gray-900', 'blue': 'bg-blue-500', 'white': 'bg-white border border-gray-300',
-  'gold': 'bg-amber-200', 'green': 'bg-green-500', 'graphite': 'bg-gray-700',
-  'silver': 'bg-gray-300', 'sky': 'bg-sky-400', 'pink': 'bg-pink-400',
-  'orange': 'bg-orange-500', 'red': 'bg-red-500', 'deep blue': 'bg-blue-700',
-  'lavender': 'bg-purple-300', 'sage': 'bg-green-300', 'mist blue': 'bg-blue-200',
-  'light gold': 'bg-amber-100', 'teal': 'bg-teal-500', 'purple': 'bg-purple-500',
-  'yellow': 'bg-yellow-300', 'titanium': 'bg-stone-400', 'midnight': 'bg-slate-900',
-  'starlight': 'bg-amber-50', 'space gray': 'bg-zinc-600', 'natural': 'bg-stone-200',
+  'black': 'bg-gradient-to-br from-gray-700 to-black',
+  'blue': 'bg-gradient-to-br from-blue-600 to-blue-900',
+  'white': 'bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-300',
+  'gold': 'bg-gradient-to-br from-amber-300 to-yellow-600',
+  'green': 'bg-gradient-to-br from-green-500 to-green-800',
+  'graphite': 'bg-gradient-to-br from-gray-600 to-gray-800',
+  'silver': 'bg-gradient-to-br from-gray-200 to-gray-400',
+  'sky': 'bg-gradient-to-br from-sky-300 to-sky-600',
+  'pink': 'bg-gradient-to-br from-pink-400 to-pink-600',
+  'orange': 'bg-gradient-to-br from-orange-400 to-orange-600',
+  'red': 'bg-gradient-to-br from-red-500 to-red-800',
+  'deep blue': 'bg-gradient-to-br from-blue-800 to-blue-950',
+  'lavender': 'bg-gradient-to-br from-purple-300 to-purple-500',
+  'sage': 'bg-gradient-to-br from-green-300 to-green-500',
+  'mist blue': 'bg-gradient-to-br from-blue-200 to-blue-400',
+  'light gold': 'bg-gradient-to-br from-amber-100 to-amber-300',
+  'teal': 'bg-gradient-to-br from-teal-400 to-teal-700',
+  'purple': 'bg-gradient-to-br from-purple-500 to-purple-800',
+  'yellow': 'bg-gradient-to-br from-yellow-300 to-yellow-500',
+  'titanium': 'bg-gradient-to-br from-stone-400 to-stone-600',
+  'midnight': 'bg-gradient-to-br from-slate-800 to-slate-950',
+  'starlight': 'bg-gradient-to-br from-amber-50 to-gray-200',
+  'space gray': 'bg-gradient-to-br from-zinc-600 to-zinc-800',
+  'natural': 'bg-gradient-to-br from-stone-200 to-stone-400',
 };
 const getCls = (c) => colorMap[c?.toLowerCase()?.trim()] || 'bg-gray-300';
 const fmt = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -33,7 +49,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={`/product/${product.slug}`}
       onMouseEnter={() => { setHovered(true); if (product.images?.length > 1) setImgIdx(1); }}
       onMouseLeave={() => { setHovered(false); setImgIdx(0); }}
     >
@@ -45,7 +61,7 @@ const ProductCard = ({ product }) => {
         <div className="relative bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] aspect-square flex items-center justify-center overflow-hidden p-5">
           <motion.img
             key={imgIdx}
-            src={product.images?.[imgIdx] || product.images?.[0]}
+            src={product.images?.[imgIdx]?.image_url || product.images?.[0]}
             alt={product.name}
             className="w-full h-full object-contain mix-blend-multiply"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -166,7 +182,7 @@ const AppleProductsPage = () => {
   const [accIdx, setAccIdx] = useState(0);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/products')
+    getProducts()
       .then(r => { setProducts(Array.isArray(r.data) ? r.data : r.data.products || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);

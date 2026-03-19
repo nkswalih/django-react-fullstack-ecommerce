@@ -54,7 +54,7 @@ export default function Navbar() {
     fixed top-0 left-0 right-0 z-[999999] transition-all duration-500 ease-out
     ${scrolled && !mobileMenuOpen
       ? `
-          bg-white/40 backdrop-blur-md shadow-xl
+          bg-white shadow-xl
           rounded-2xl mx-4 mt-2
           lg:rounded-full lg:mx-44
         `
@@ -123,8 +123,8 @@ export default function Navbar() {
             className="
               fixed right-4 top-20 z-[70]
               w-60 rounded-3xl
-              bg-white/30 backdrop-blur-xl
-              shadow-2xl ring-1 ring-white/30
+              bg-white
+              shadow-2xl ring-1 ring-black/5
               p-4
             "
           >

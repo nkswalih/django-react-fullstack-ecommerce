@@ -5,23 +5,23 @@ import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 const ProductGrid = ({ products }) => {
   const getColorClass = (color) => {
     const colorMap = {
-      'black': 'bg-gray-900',
-      'sky blue': 'bg-sky-200',
-      'white': 'bg-white border border-gray-300',
-      'gold': 'bg-amber-200',
-      'green': 'bg-green-500',
-      'graphite': 'bg-gray-700',
-      'silver': 'bg-gray-300',
-      'sky': 'bg-sky-400',
-      'pink': 'bg-pink-400',
-      'lavender': 'bg-fuchsia-200',
-      'orange': 'bg-orange-600',
-      'teal': 'bg-teal-600',
-      'deep blue': 'bg-blue-950',
-      'light gold': 'bg-amber-100',
-      'sage': 'bg-lime-200',
-      'mist blue': 'bg-blue-300',
-      'blue': 'bg-blue-500',
+      'black': 'bg-gradient-to-br from-gray-700 to-black',
+      'sky blue': 'bg-gradient-to-br from-sky-300 to-sky-600',
+      'white': 'bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-300',
+      'gold': 'bg-gradient-to-br from-amber-300 to-yellow-600',
+      'green': 'bg-gradient-to-br from-green-500 to-green-800',
+      'graphite': 'bg-gradient-to-br from-gray-600 to-gray-800',
+      'silver': 'bg-gradient-to-br from-gray-200 to-gray-400',
+      'sky': 'bg-gradient-to-br from-sky-300 to-sky-600',
+      'pink': 'bg-gradient-to-br from-pink-400 to-pink-600',
+      'lavender': 'bg-gradient-to-br from-purple-300 to-purple-500',
+      'orange': 'bg-gradient-to-br from-orange-400 to-orange-600',
+      'teal': 'bg-gradient-to-br from-teal-400 to-teal-700',
+      'deep blue': 'bg-gradient-to-br from-blue-800 to-blue-950',
+      'light gold': 'bg-gradient-to-br from-amber-100 to-amber-300',
+      'sage': 'bg-gradient-to-br from-green-300 to-green-500',
+      'mist blue': 'bg-gradient-to-br from-blue-200 to-blue-400',
+      'blue': 'bg-gradient-to-br from-blue-600 to-blue-900',
     };
     return colorMap[color.toLowerCase()] || 'bg-gray-200';
   };
@@ -39,14 +39,14 @@ const ProductGrid = ({ products }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {products.map((product) => (
           <Link
-            key={product.id}
-            to={`/product/${product.id}`}
+            key={product.slug}
+            to={`/product/${product.slug}`}
             className="group bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
           >
             <div className="relative mb-4 overflow-hidden rounded-xl">
               <div className="aspect-square bg-white flex items-center justify-center p-0 w-auto h-auto">
                 <img
-                  src={product.images[0]}
+                  src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300'}
                   alt={product.name}
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
@@ -90,7 +90,7 @@ const ProductGrid = ({ products }) => {
                 {product.brand}
               </span>
               
-              <Link to={`/product/${product.id}`}>
+              <Link to={`/product/${product.slug}`}>
                 <h3 className="font-medium text-gray-900 line-clamp-1 group-hover:text-gray-700 transition-colors">
                   {product.name}
                 </h3>

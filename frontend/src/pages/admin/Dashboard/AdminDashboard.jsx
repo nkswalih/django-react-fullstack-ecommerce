@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import DashboardStats from './DashboardStats'
 import AnalyticsCharts from './AnalyticsCharts'
 import RecentActivity from './RecentActivity'
+import { getUsers, getOrders, getProducts } from '../../../api/apiService'
 
 const AdminDashboard = () => {
   const navigate = useNavigate()
@@ -29,18 +30,18 @@ const AdminDashboard = () => {
       
       // Fetch data from JSON Server
       const [usersRes, ordersRes, productsRes] = await Promise.all([
-        fetch('http://localhost:3000/users'),
-        fetch('http://localhost:3000/orders'),
-        fetch('http://localhost:3000/products')
+        getUsers(),
+        getOrders(),
+        getProducts()
       ])
 
-      if (!usersRes.ok || !ordersRes.ok || !productsRes.ok) {
+      if (!usersRes.data || !ordersRes.data || !productsRes.data) {
         throw new Error('Failed to fetch data')
       }
 
-      const users = await usersRes.json()
-      const orders = await ordersRes.json()
-      const products = await productsRes.json()
+      const users = usersRes.data
+      const orders = ordersRes.data
+      const products = productsRes.data
 
       // Process the data to generate analytics
       const analyticsData = generateAnalyticsFromData({ users, orders, products })

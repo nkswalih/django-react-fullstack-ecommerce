@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { getUserById } from "../../api/apiService";
 import { ArrowPathIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import ProfileSidebar from "../../components/ProfileSection/ProfileSidebar";
 import OverviewSection from "../../components/ProfileSection/OverviewSection";
@@ -11,7 +11,7 @@ import SimpleFooter from "../../components/SimpleFoot";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 
   const getStoredUser = () => {
     try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); }
@@ -41,7 +41,7 @@ const Profile = () => {
   const fetchUserData = async (id) => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${API_URL}/users/${id}`);
+      const { data } = await getUserById(id);
       localStorage.setItem('currentUser', JSON.stringify(data));
       setCurrentUser(data);
     } catch (e) { console.error(e); }

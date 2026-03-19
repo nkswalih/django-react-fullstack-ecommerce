@@ -2,7 +2,7 @@ import { ArrowUpRightIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SimpleFooter from "../../components/SimpleFoot";
-import axios from "axios";
+import { getUsers, createUser } from "../../api/apiService";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 
@@ -33,7 +33,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/users");
+      const response = await getUsers();
       const existingUser = response.data.find(
         (user) => user.email === formData.email
       );
@@ -43,7 +43,7 @@ const Register = () => {
         return;
       }
 
-      await axios.post("http://localhost:3000/users", {
+      await createUser({
         name: formData.name,
         email: formData.email,
         password: formData.password,

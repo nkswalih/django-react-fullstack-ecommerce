@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBagIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
+import { patchOrder, patchUser } from "../../api/apiService";
 import { toast } from "react-toastify";
 
 const OrdersSection = ({ user }) => {
@@ -34,7 +34,7 @@ const OrdersSection = ({ user }) => {
 
     try {
       // First, update the order in orders collection
-      await axios.patch(`http://localhost:3000/orders/${orderId}`, {
+      await patchOrder(orderId, {
         status: "cancelled",
         cancelledAt: new Date().toISOString()
       });
@@ -45,7 +45,7 @@ const OrdersSection = ({ user }) => {
       );
 
       // Update user's orders in the database
-      await axios.patch(`http://localhost:3000/users/${user.id}`, {
+      await patchUser(user.id, {
         order: updatedOrders
       });
 

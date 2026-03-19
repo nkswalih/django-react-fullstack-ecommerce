@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBagIcon, HeartIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import { getUserById, patchUser } from '../../api/apiService';
 
 const ProductActions = ({ product, selectedOptions, quantity, onQuantityChange }) => {
   const [addingToCart, setAddingToCart] = useState(false);
@@ -35,14 +35,14 @@ const ProductActions = ({ product, selectedOptions, quantity, onQuantityChange }
         addedAt: new Date().toISOString(),
         productName: product.name,
         productPrice: product.price,
-        productImage: product.images?.[0] || '',
+        productImage: product.images?.[0]?.image_url || '/no-image.png',
         productBrand: product.brand
       };
 
       // Get current user data from server
       let userData;
       try {
-        const userResponse = await axios.get(`http://localhost:3000/users/${userId}`);
+        const userResponse = await getUserById(userId);
         userData = userResponse.data;
       } catch (err) {
         if (err.response?.status === 404) {
@@ -74,7 +74,7 @@ const ProductActions = ({ product, selectedOptions, quantity, onQuantityChange }
       }
 
       // Update user's cart on server
-      await axios.patch(`http://localhost:3000/users/${userId}`, {
+      await patchUser(userId, {
         cart: updatedCart
       });
 

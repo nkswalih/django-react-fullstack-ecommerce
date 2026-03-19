@@ -132,11 +132,11 @@ const SearchDropdown = () => {
                         {searchResults.map(product => (
                           <button
                             key={product.id}
-                            onClick={() => handleProductClick(product.id, close)}
+                            onClick={() => handleProductClick(product.slug, close)}
                             className="w-full p-3 flex gap-3 hover:bg-gray-50 rounded-lg text-left"
                           >
                             <img
-                              src={product.images?.[0]}
+                              src={product.images?.[0]?.image_url || 'https://via.placeholder.com/50x50'}
                               alt={product.name}
                               className="w-10 h-10 object-contain"
                             />

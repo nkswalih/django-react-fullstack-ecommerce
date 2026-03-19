@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getUserById, patchUser } from '../../api/apiService';
 import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 const fmt = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
 
 const CartPage = () => {
@@ -21,7 +19,7 @@ const CartPage = () => {
       const stored = localStorage.getItem('currentUser');
       if (!stored) { setLoading(false); return; }
       const u = JSON.parse(stored);
-      const { data } = await axios.get(`${API_URL}/users/${u.id}`);
+      const { data } = await getUserById(u.id);
       localStorage.setItem('currentUser', JSON.stringify(data));
       setCurrentUser(data);
       setCartItems(data.cart || []);
@@ -35,7 +33,7 @@ const CartPage = () => {
     if (!currentUser) return;
     setCartItems(newCart);
     try {
-      await axios.patch(`${API_URL}/users/${currentUser.id}`, { cart: newCart });
+      await patchUser(currentUser.id, { cart: newCart });
       const updated = { ...currentUser, cart: newCart };
       setCurrentUser(updated);
       localStorage.setItem('currentUser', JSON.stringify(updated));
