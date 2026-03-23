@@ -121,7 +121,7 @@ const ProductList = ({
                         <div className="h-12 w-12 flex-shrink-0">
                           <img
                             className="h-12 w-12 rounded-lg object-cover border"
-                            src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'}
+                            src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
                             alt={product.name}
                             onError={(e) => { e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
                           />

@@ -1,21 +1,11 @@
 import { useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
-import { useAuth } from '../../contexts/AuthContext'
 
 const AdminLayout
  = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user, isAdmin } = useAuth();
-  const navigate = useNavigate();
-
-  // Double check if user is admin
-  if (!isAdmin()) {
-    toast.error("Access denied!");
-    navigate("/");
-    return null;
-  }
 
   return (
     <div className="flex h-screen bg-gray-900 bg-gradient-to-t from-gray-700 to-gray-900  font-sans">

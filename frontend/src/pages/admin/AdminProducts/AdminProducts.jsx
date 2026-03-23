@@ -68,9 +68,8 @@ const AdminProducts = () => {
         ...editForm,
         price: Number(editForm.price),
         stock: Number(editForm.stock),
-        id: editingProduct.id
       };
-      await patchData(editingProduct.id, formattedData);
+      await patchData(editingProduct.slug, formattedData);
       toast.success('Product updated successfully!');
       setShowEditModal(false);
       setEditingProduct(null);
@@ -84,7 +83,7 @@ const AdminProducts = () => {
   const handleDelete = async (product) => {
     if (!window.confirm(`Are you sure you want to delete "${product.name}"?`)) return;
     try {
-      await deleteData(product.id);
+      await deleteData(product.slug);
       toast.success(`Product "${product.name}" deleted successfully!`);
     } catch (error) {
       toast.error('Failed to delete product');
@@ -99,13 +98,13 @@ const AdminProducts = () => {
 
   const handleSaveNewProduct = async () => {
     try {
-      const productId = `${addForm.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
       const newProduct = {
         ...addForm,
-        id: productId,
+        slug: `${addForm.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now()}`,
         price: Number(addForm.price),
         stock: Number(addForm.stock),
-        images: addForm.images.length > 0 ? addForm.images : ['https://via.placeholder.com/300x300?text=No+Image']
+        images: addForm.images.length > 0 ? addForm.images : ["https://via.placeholder.com/300x300?text=No+Image"],
+        status: addForm.status === "new" ? "active" : addForm.status,
       };
       await createData(newProduct);
       toast.success('Product added successfully!');

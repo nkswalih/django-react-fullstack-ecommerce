@@ -1,14 +1,32 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { toast } from 'react-toastify';
+import React, { useEffect, useRef } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { useAuth } from "../contexts/AuthContext";
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
   const { isAuthenticated, user, authLoading } = useAuth();
   const location = useLocation();
+  const warnedRef = useRef("");
 
-  //WAIT until auth is fully loaded from localStorage
-  
+  const needsAdmin = requiredRole === "Admin" && user?.role !== "Admin";
+  const needsUser = requiredRole === "User" && user?.role !== "User";
+
+  useEffect(() => {
+    if (!needsAdmin) {
+      warnedRef.current = "";
+      return;
+    }
+
+    const warningKey = `${location.pathname}-admin`;
+    if (warnedRef.current === warningKey) {
+      return;
+    }
+
+    warnedRef.current = warningKey;
+    toast.error("Access denied! Admin privileges required.");
+  }, [location.pathname, needsAdmin]);
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -18,27 +36,18 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
     );
   }
 
-  // Not authenticated? → send back to login
-
   if (!isAuthenticated) {
     return <Navigate to="/sign_in" state={{ from: location }} replace />;
   }
 
-  //If this route needs a specific role
-  if (requiredRole) {
-    // --- Admin only pages ---
-    if (requiredRole === 'Admin' && user?.role !== 'Admin') {
-      toast.error("Access denied! Admin privileges required.");
-      return <Navigate to="/" replace />;
-    }
-
-    // --- User only pages ---
-    if (requiredRole === 'User' && user?.role !== 'User') {
-      return <Navigate to="/admin" replace />;
-    }
+  if (needsAdmin) {
+    return <Navigate to="/" replace />;
   }
 
-  // 4. Access granted
+  if (needsUser) {
+    return <Navigate to="/admin" replace />;
+  }
+
   return children;
 };
 

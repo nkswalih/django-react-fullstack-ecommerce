@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductBySlug, getUserById, patchUser } from '../../api/apiService';
+import { addToCart, getProductBySlug } from '../../api/apiService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import SimpleFooter from '../../components/SimpleFoot';
@@ -82,58 +82,17 @@ const ProductPage = () => {
         return;
       }
 
-      const currentUser = JSON.parse(currentUserString);
-      const userId = currentUser.id;
-
-      const cartItem = {
-        id: `${product.id}-${selectedOptions.storage}-${selectedOptions.ram}`,
-        productId: product.id,
+      await addToCart({
+        product_id: product.id,
         storage: selectedOptions.storage,
         ram: selectedOptions.ram,
-        quantity: quantity,
-        addedAt: new Date().toISOString(),
-        productName: product.name,
-        productPrice: totalPrice,
-        productImage: activeImage,
-        productBrand: product.brand
-      };
-
-      let userData;
-      try {
-        const userResponse = await getUserById(userId);
-        userData = userResponse.data;
-      } catch (err) {
-        if (err.response?.status === 404) {
-          toast.error("User not found. Please log in again.");
-          setAddingToCart(false);
-          return;
-        } else {
-          throw err;
-        }
-      }
-
-      const currentCart = userData.cart || [];
-      const existingIndex = currentCart.findIndex(item => item.id === cartItem.id);
-
-      let updatedCart;
-      if (existingIndex > -1) {
-        updatedCart = currentCart.map((item, index) =>
-          index === existingIndex
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      } else {
-        updatedCart = [...currentCart, cartItem];
-      }
-
-      await patchUser(userId, {
-        cart: updatedCart
+        quantity,
       });
 
       toast.success(`${quantity} ${product.name} added to cart!`);
     } catch (error) {
       console.error('Cart error:', error);
-      toast.error('Failed to add item to cart. Please try again.');
+      toast.error(error.response?.data?.error || 'Failed to add item to cart. Please try again.');
     } finally {
       setAddingToCart(false);
     }

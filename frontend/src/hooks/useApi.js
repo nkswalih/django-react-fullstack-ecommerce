@@ -1,122 +1,145 @@
-import { useState, useEffect, useCallback } from "react";
-import { api } from "../api/api";
+import { useCallback, useEffect, useState } from "react";
+import {
+  adminDeleteUser,
+  adminGetOrders,
+  adminGetUsers,
+  adminPatchOrder,
+  adminPatchUser,
+  createProduct,
+  deleteProduct,
+  getProducts,
+  patchProduct,
+} from "../api/apiService";
 
-export default function useApi(endpoint, id = null) {
+const resourceMap = {
+  products: {
+    list: getProducts,
+    create: createProduct,
+    patch: patchProduct,
+    remove: deleteProduct,
+  },
+  users: {
+    list: adminGetUsers,
+    patch: adminPatchUser,
+    remove: adminDeleteUser,
+  },
+  orders: {
+    list: adminGetOrders,
+    patch: adminPatchOrder,
+  },
+};
+
+const normalizeError = (error) =>
+  error?.response?.data?.detail ||
+  error?.response?.data?.error ||
+  error?.message ||
+  "Request failed";
+
+export default function useApi(resource) {
+  const config = resourceMap[resource];
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data
   const fetchData = useCallback(async () => {
+    if (!config?.list) {
+      setError(`Unsupported resource: ${resource}`);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
-      
-      const response = id 
-        ? await api.getById(endpoint, id)
-        : await api.getAll(endpoint);
-      
+      const response = await config.list();
       setData(response.data);
     } catch (err) {
-      setError(err.message || "Failed to fetch data");
+      setError(normalizeError(err));
     } finally {
       setLoading(false);
     }
-  }, [endpoint, id]);
+  }, [config, resource]);
 
-  // Create new item
-  const createData = async (newData) => {
-    try {
-      setLoading(true);
-      const response = await api.create(endpoint, newData);
-      await fetchData(); // Refresh data
-      return response.data;
-    } catch (err) {
-      setError(err.message || "Failed to create data");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const createData = useCallback(
+    async (payload) => {
+      if (!config?.create) {
+        throw new Error(`Create not supported for ${resource}`);
+      }
 
-  // Update item
-  const updateData = async (itemId, updatedData) => {
-    try {
-      setLoading(true);
-      const response = await api.update(endpoint, itemId, updatedData);
-      
-      // Update local state immediately for better UX
-      if (!id) { // Only update if we're fetching all items
-        setData(prevData => 
-          prevData.map(item => 
-            item.id === itemId ? { ...item, ...updatedData } : item
-          )
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await config.create(payload);
+        await fetchData();
+        return response.data;
+      } catch (err) {
+        const message = normalizeError(err);
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [config, fetchData, resource],
+  );
+
+  const patchData = useCallback(
+    async (id, payload) => {
+      if (!config?.patch) {
+        throw new Error(`Patch not supported for ${resource}`);
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await config.patch(id, payload);
+        setData((prev) =>
+          Array.isArray(prev)
+            ? prev.map((item) => {
+                if (item.id === id || item.slug === id) {
+                  return response.data;
+                }
+                return item;
+              })
+            : response.data,
         );
-      } else {
-        setData(prevData => ({ ...prevData, ...updatedData }));
+        return response.data;
+      } catch (err) {
+        const message = normalizeError(err);
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
       }
-      
-      return response.data;
-    } catch (err) {
-      setError(err.message || "Failed to update data");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [config, resource],
+  );
 
-  // Delete item
-  const deleteData = async (itemId) => {
-    try {
-      setLoading(true);
-      await api.remove(endpoint, itemId);
-      
-      // Update local state
-      if (!id) {
-        setData(prevData => prevData.filter(item => item.id !== itemId));
-      } else {
-        setData([]);
+  const deleteData = useCallback(
+    async (id) => {
+      if (!config?.remove) {
+        throw new Error(`Delete not supported for ${resource}`);
       }
-    } catch (err) {
-      setError(err.message || "Failed to delete data");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // Patch item (partial update)
-  const patchData = async (itemId, patchData) => {
-    try {
-      setLoading(true);
-      const response = await api.patch(endpoint, itemId, patchData);
-      
-      // Update local state
-      if (!id) {
-        setData(prevData => 
-          prevData.map(item => 
-            item.id === itemId ? { ...item, ...patchData } : item
-          )
+      try {
+        setLoading(true);
+        setError(null);
+        await config.remove(id);
+        setData((prev) =>
+          Array.isArray(prev)
+            ? prev.filter((item) => item.id !== id && item.slug !== id)
+            : [],
         );
-      } else {
-        setData(prevData => ({ ...prevData, ...patchData }));
+      } catch (err) {
+        const message = normalizeError(err);
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
       }
-      
-      return response.data;
-    } catch (err) {
-      setError(err.message || "Failed to patch data");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Reset state
-  const reset = () => {
-    setData([]);
-    setError(null);
-    setLoading(true);
-  };
+    },
+    [config, resource],
+  );
 
   useEffect(() => {
     fetchData();
@@ -128,9 +151,7 @@ export default function useApi(endpoint, id = null) {
     error,
     refetch: fetchData,
     createData,
-    updateData,
     patchData,
     deleteData,
-    reset
   };
 }
