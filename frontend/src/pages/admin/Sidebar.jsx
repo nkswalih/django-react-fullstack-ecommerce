@@ -34,14 +34,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-4 left-4 z-50 w-72 m-4 bg-white rounded-3xl transform 
+        fixed inset-y-4 left-4 z-50 w-72 m-4 bg-white/50 backdrop-blur-xl rounded-[2rem] transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:static lg:inset-0 transition-all duration-300 ease-in-out
-        border 
+        border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)]
       `}>
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b ">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
           <div className="flex items-center space-x-3 hover:cursor-pointer"  onClick={() => Navigate("/admin")}>
             <img
                 alt="EchOo."
@@ -77,8 +77,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     flex items-center justify-between px-4 py-3 rounded-2xl 
                     transition-all duration-200 group
                     ${isActive 
-                      ? 'bg-gradient-to-r from-gray-700 to-gray-800 text-white shadow-lg shadow-blue-500/25' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm'
+                      ? 'bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white' 
+                      : 'text-gray-600 hover:bg-white/60 hover:text-gray-900 border border-transparent hover:border-white/50 hover:shadow-sm'
                     }
                   `}
                   onClick={() => setSidebarOpen(false)}
@@ -121,7 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(true)}
-        className="lg:hidden fixed top-6 left-6 z-40 p-3 bg-white rounded-2xl shadow-lg border border-gray-200"
+        className="lg:hidden fixed top-6 left-6 z-40 p-3 bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/60"
       >
         <Menu className="w-5 h-5 text-gray-600" />
       </button>

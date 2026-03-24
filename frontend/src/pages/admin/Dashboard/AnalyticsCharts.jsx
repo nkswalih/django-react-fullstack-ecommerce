@@ -28,7 +28,7 @@ const AnalyticsTooltip = ({ active, payload, label, formatCurrency }) => {
     const ordersData = payload.find(p => p.dataKey === 'orders')
 
     return (
-      <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-4 transition-all duration-300 backdrop-blur-sm bg-opacity-95 font-inter">
+      <div className="bg-white/80 border border-white/60 shadow-xl rounded-2xl p-4 transition-all duration-300 backdrop-blur-md font-inter">
         <div className="mb-3">
           <p className="text-sm font-bold text-gray-900">{label}</p>
           <p className="text-xs text-gray-500">Daily Performance Metrics</p>
@@ -85,7 +85,7 @@ const PieTooltip = ({ active, payload }) => {
     const percent = total > 0 ? ((data.value / total) * 100).toFixed(1) : 0;
 
     return (
-      <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-3 backdrop-blur-sm bg-opacity-95 font-inter">
+      <div className="bg-white/80 border border-white/60 shadow-xl rounded-2xl p-3 backdrop-blur-md font-inter">
         <p className="text-sm font-bold text-gray-900">{data.name}</p>
         <p className="text-xs text-gray-700 mt-1">
           <span className="font-semibold">{data.value}</span> units
@@ -104,7 +104,7 @@ const BarTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     return (
-      <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-3 backdrop-blur-sm bg-opacity-95 font-inter">
+      <div className="bg-white/80 border border-white/60 shadow-xl rounded-2xl p-3 backdrop-blur-md font-inter">
         <p className="text-sm font-bold text-gray-900">{label}</p>
         <p className="text-xs text-gray-700 mt-1">
           <span className="font-semibold" style={{ color: data.color }}>{data.value}</span> {data.name}
@@ -135,7 +135,7 @@ const AnalyticsCharts = ({ monthlySales, categoryData, statusData, topProducts, 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 font-inter">
       {/* Revenue Performance Chart (Composed Chart) - Original Logic Maintained */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-lg p-6">
+      <div className="bg-white/40 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-bold text-gray-900">Revenue Analytics</h3>
@@ -229,7 +229,7 @@ const AnalyticsCharts = ({ monthlySales, categoryData, statusData, topProducts, 
       </div>
 
       {/* Category Distribution Pie Chart (MODERN DONUT STYLE) */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+      <div className="bg-white/40 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6">
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-900">Sales by Category</h3>
           <p className="text-sm text-gray-500">Product category distribution</p>
@@ -283,7 +283,7 @@ const AnalyticsCharts = ({ monthlySales, categoryData, statusData, topProducts, 
 
       {/* Order Status Distribution Bar Chart */}
       
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+      <div className="bg-white/40 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6">
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-900">Order Status</h3>
           <p className="text-sm text-gray-500">Distribution of order statuses</p>
@@ -326,7 +326,7 @@ const AnalyticsCharts = ({ monthlySales, categoryData, statusData, topProducts, 
       </div>
 
       {/* Top Products - Original Style Maintained */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+      <div className="bg-white/40 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6">
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-900">Top Selling Products</h3>
           <p className="text-sm text-gray-500">By revenue and units sold</p>

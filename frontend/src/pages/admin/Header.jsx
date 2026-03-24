@@ -89,9 +89,9 @@ const Header = ({ setSidebarOpen }) => {
 
   return (
     <>
-      {searchOpen && <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20" onClick={() => setSearchOpen(false)} />}
+      {searchOpen && <div className="fixed inset-0 bg-black/10 backdrop-blur-[2px] z-20" onClick={() => setSearchOpen(false)} />}
 
-      <header className="bg-white shadow-sm border-b border-gray-200 z-30 sticky top-0">
+      <header className="bg-transparent border-b border-gray-200/50 z-30 sticky top-0">
         <div className="flex items-center justify-end h-16 px-4 md:px-6">
           <div className="flex items-center space-x-3">
             <button
@@ -113,8 +113,8 @@ const Header = ({ setSidebarOpen }) => {
               </button>
 
               {searchOpen && (
-                <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
-                  <div className="p-4 border-b border-gray-200">
+                <div className="absolute right-0 mt-2 w-96 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50">
+                  <div className="p-4 border-b border-gray-200/50">
                     <div className="flex items-center">
                       <SearchIcon className="w-5 h-5 text-gray-400 mr-3" />
                       <input
@@ -122,7 +122,7 @@ const Header = ({ setSidebarOpen }) => {
                         value={searchQuery}
                         onChange={handleSearchChange}
                         placeholder="Search users, products, orders..."
-                        className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm"
+                        className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm bg-transparent"
                         autoFocus
                       />
                       {searchQuery && (
@@ -254,12 +254,12 @@ const Header = ({ setSidebarOpen }) => {
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
-                  <div className="p-4 border-b border-gray-200">
+                <div className="absolute right-0 mt-2 w-52 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50 overflow-hidden">
+                  <div className="p-4 border-b border-gray-200/50">
                     <p className="font-semibold text-gray-900">{user?.name}</p>
                     <p className="text-sm text-gray-500">Administrator</p>
                   </div>
-                  <button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-gray-50">
+                  <button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-white/50 transition-colors">
                     <LogOutIcon className="w-4 h-4 mr-3" />
                     Sign out
                   </button>
