@@ -33,7 +33,7 @@ DEBUG = env_bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = env_list(
     "ALLOWED_HOSTS",
-    default=["127.0.0.1", "localhost"],
+    default=["127.0.0.1", "localhost", "testserver"],
 )
 
 CORS_ALLOWED_ORIGINS = env_list(

@@ -55,8 +55,19 @@ const AdminProducts = () => {
   });
 
   const handleEdit = (product) => {
+    const normalizedImages = Array.isArray(product.images)
+      ? product.images
+          .map((image) => (typeof image === "string" ? image : image?.image_url || image?.url))
+          .filter(Boolean)
+      : [];
+
     setEditingProduct(product);
-    setEditForm({ ...initialAddForm, ...product });
+    setEditForm({
+      ...initialAddForm,
+      ...product,
+      images: normalizedImages,
+      shortDescription: product.shortDescription ?? product.short_description ?? '',
+    });
     setShowEditModal(true);
     toast.info(`Editing product: ${product.name}`);
   };
@@ -75,7 +86,7 @@ const AdminProducts = () => {
       setEditingProduct(null);
       setEditForm(initialAddForm);
     } catch (error) {
-      toast.error('Failed to update product');
+      toast.error(error?.response?.data ? 'Failed to update product. Check the form values.' : 'Failed to update product');
       console.error('Error updating product:', error);
     }
   };
@@ -112,7 +123,7 @@ const AdminProducts = () => {
       setAddForm(initialAddForm);
       refetch();
     } catch (error) {
-      toast.error('Failed to add product');
+      toast.error(error?.response?.data ? 'Failed to add product. Check the form values.' : 'Failed to add product');
       console.error('Error adding product:', error);
     }
   };

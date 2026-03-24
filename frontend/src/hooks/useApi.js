@@ -29,11 +29,24 @@ const resourceMap = {
   },
 };
 
-const normalizeError = (error) =>
-  error?.response?.data?.detail ||
-  error?.response?.data?.error ||
-  error?.message ||
-  "Request failed";
+const normalizeError = (error) => {
+  const data = error?.response?.data;
+
+  if (typeof data?.detail === "string") return data.detail;
+  if (typeof data?.error === "string") return data.error;
+  if (typeof data === "string") return data;
+
+  if (data && typeof data === "object") {
+    return Object.entries(data)
+      .map(([field, value]) => {
+        const message = Array.isArray(value) ? value.join(", ") : String(value);
+        return `${field}: ${message}`;
+      })
+      .join(" | ");
+  }
+
+  return error?.message || "Request failed";
+};
 
 export default function useApi(resource) {
   const config = resourceMap[resource];

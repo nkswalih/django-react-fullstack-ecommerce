@@ -93,6 +93,19 @@ class CreateOrderSerializer(serializers.Serializer):
     state = serializers.CharField()
     pincode = serializers.CharField()
 
+    def _get_cart_queryset(self, user):
+        return (
+            CartItem.objects
+            .filter(user=user)
+            .select_related('product')
+            .prefetch_related(
+                Prefetch(
+                    'product__images',
+                    queryset=ProductImage.objects.order_by('-is_primary', 'order', 'id')
+                )
+            )
+        )
+
     def validate(self, data):
         user = self.context['request'].user
         cart_items = CartItem.objects.select_related('product').prefetch_related(
@@ -102,20 +115,31 @@ class CreateOrderSerializer(serializers.Serializer):
         if not cart_items.exists():
             raise serializers.ValidationError("Cart is empty")
 
+        errors = []
         for item in cart_items:
             if item.product.stock < item.quantity:
-                raise serializers.ValidationError(f'{item.product.name} is out of stock')
+                errors.append(
+                    f'"{item.product.name}": only {item.product.stock} left, you requested {item.quantity}'
+                )
+        if errors:
+            raise serializers.ValidationError(errors)
 
-        data['cart_items'] = cart_items
         return data
 
     @transaction.atomic
     def create(self, validated_data):
         user = self.context['request'].user
 
-        cart_items = CartItem.objects.select_related('product').prefetch_related(
-            Prefetch('product__images', queryset=ProductImage.objects.order_by('-is_primary', 'order', 'id'))
-        ).select_for_update().filter(user=user)
+        cart_items = (
+            self._get_cart_queryset(user)
+            .select_for_update()
+        )
+
+        for item in cart_items:
+            if item.product.stock < item.quantity:
+                raise serializers.ValidationError(
+                    f'"{item.product.name}" just went out of stock. Please update your cart.'
+                )
 
         subtotal = sum(item.product.price * item.quantity for item in cart_items)
         shipping = 0 if subtotal > 50000 else 99
@@ -141,6 +165,8 @@ class CreateOrderSerializer(serializers.Serializer):
         )
 
         order_items = []
+        product_ids_to_deduct = {}
+
         for item in cart_items:
             product = item.product
             images = list(product.images.all())
@@ -161,11 +187,13 @@ class CreateOrderSerializer(serializers.Serializer):
                     item_total=product.price * item.quantity,
                 )
             )
+            product_ids_to_deduct[item.product.id] = item.quantity
 
         OrderItem.objects.bulk_create(order_items)
 
-        for item in cart_items:
-            type(item.product).objects.filter(id=item.product.id).update(stock=F('stock') - item.quantity)
+        for product_id, qty in product_ids_to_deduct.items():
+            from products.models import Product
+            Product.objects.filter(pk=product_id).update(stock=F('stock') - qty)
 
         cart_items.delete()
         return order

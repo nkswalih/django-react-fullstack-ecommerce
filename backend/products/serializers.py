@@ -11,6 +11,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+    short_description = serializers.CharField(required=False, allow_blank=True)
     shortDescription = serializers.CharField(source="short_description", required=False)
     primaryImage = serializers.SerializerMethodField()
 
