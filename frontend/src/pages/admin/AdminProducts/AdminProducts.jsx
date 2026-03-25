@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import useApi from '../../../hooks/useApi'
-import { useNavigate } from 'react-router-dom'
 import ProductStats from './ProductStats'
 import ProductList from './ProductList'
 import ProductForm from './ProductForm'
+import { getCategoryKey, isCategoryMatch, normalizeText } from '../../../utils/productCatalog'
 
 const AdminProducts = () => {
-  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -15,23 +14,24 @@ const AdminProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  
-  // Temp states for form inputs
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [tempSpecKey, setTempSpecKey] = useState('');
   const [tempSpecValue, setTempSpecValue] = useState('');
   const [tempVariantKey, setTempVariantKey] = useState('');
   const [tempVariantValue, setTempVariantValue] = useState('');
 
-  const { 
-    data: products = [], 
-    loading, 
-    error, 
+  const {
+    data,
+    loading,
+    error,
     refetch,
     createData,
     patchData,
-    deleteData 
+    deleteData,
   } = useApi("products");
+
+  const products = Array.isArray(data) ? data : data?.results || [];
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const initialAddForm = {
     name: '', category: 'Smartphone', brand: '', price: 0, currency: 'INR',
@@ -46,13 +46,22 @@ const AdminProducts = () => {
     if (userData) setCurrentUser(JSON.parse(userData));
   }, []);
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.brand.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesStatus = selectedStatus === 'all' || product.status === selectedStatus;
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch = normalizeText(deferredSearchTerm);
+
+    return products.filter((product) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        normalizeText(product.name).includes(normalizedSearch) ||
+        normalizeText(product.brand).includes(normalizedSearch) ||
+        normalizeText(product.category).includes(normalizedSearch);
+
+      const matchesCategory = isCategoryMatch(product.category, selectedCategory);
+      const matchesStatus = selectedStatus === 'all' || product.status === selectedStatus;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [deferredSearchTerm, products, selectedCategory, selectedStatus]);
 
   const handleEdit = (product) => {
     const normalizedImages = Array.isArray(product.images)
@@ -74,12 +83,14 @@ const AdminProducts = () => {
 
   const handleSaveEdit = async () => {
     if (!editingProduct) return;
+
     try {
       const formattedData = {
         ...editForm,
         price: Number(editForm.price),
         stock: Number(editForm.stock),
       };
+
       await patchData(editingProduct.slug, formattedData);
       toast.success('Product updated successfully!');
       setShowEditModal(false);
@@ -93,6 +104,7 @@ const AdminProducts = () => {
 
   const handleDelete = async (product) => {
     if (!window.confirm(`Are you sure you want to delete "${product.name}"?`)) return;
+
     try {
       await deleteData(product.slug);
       toast.success(`Product "${product.name}" deleted successfully!`);
@@ -117,6 +129,7 @@ const AdminProducts = () => {
         images: addForm.images.length > 0 ? addForm.images : ["https://via.placeholder.com/300x300?text=No+Image"],
         status: addForm.status === "new" ? "active" : addForm.status,
       };
+
       await createData(newProduct);
       toast.success('Product added successfully!');
       setShowAddModal(false);
@@ -128,7 +141,6 @@ const AdminProducts = () => {
     }
   };
 
-  // Helper functions adapted to work with specific forms
   const handleAddFeature = (formType, feature) => {
     const form = formType === 'edit' ? editForm : addForm;
     const setForm = formType === 'edit' ? setEditForm : setAddForm;
@@ -177,6 +189,7 @@ const AdminProducts = () => {
   const handleAddVariant = (formType, variantType) => {
     const form = formType === 'edit' ? editForm : addForm;
     const setForm = formType === 'edit' ? setEditForm : setAddForm;
+
     if (tempVariantKey.trim() && tempVariantValue.trim()) {
       const currentVariants = { ...form.variants };
       if (!currentVariants[variantType]) currentVariants[variantType] = [];
@@ -204,19 +217,30 @@ const AdminProducts = () => {
     }).format(price);
   };
 
-  const categories = ['all', ...new Set(products.map(p => p.category))];
+  const categories = useMemo(() => {
+    const uniqueCategories = new Map();
+
+    products.forEach((product) => {
+      const categoryKey = getCategoryKey(product.category);
+      if (!uniqueCategories.has(categoryKey)) {
+        uniqueCategories.set(categoryKey, true);
+      }
+    });
+
+    return ['all', ...uniqueCategories.keys()];
+  }, [products]);
+
   const statuses = ['all', 'new', 'active', 'out-of-stock', 'inactive', 'coming-soon'];
 
-  // Prop generators for the Form Component
   const getFormProps = (type) => ({
     form: type === 'edit' ? editForm : addForm,
     setForm: type === 'edit' ? setEditForm : setAddForm,
     tempState: {
-      imageUrl: tempImageUrl, specKey: tempSpecKey, specValue: tempSpecValue, 
+      imageUrl: tempImageUrl, specKey: tempSpecKey, specValue: tempSpecValue,
       variantKey: tempVariantKey, variantValue: tempVariantValue
     },
     setTempState: {
-      setImageUrl: setTempImageUrl, setSpecKey: setTempSpecKey, setSpecValue: setTempSpecValue, 
+      setImageUrl: setTempImageUrl, setSpecKey: setTempSpecKey, setSpecValue: setTempSpecValue,
       setVariantKey: setTempVariantKey, setVariantValue: setTempVariantValue
     },
     handlers: {
@@ -259,7 +283,7 @@ const AdminProducts = () => {
 
       <ProductStats products={products} formatPrice={formatPrice} />
 
-      <ProductList 
+      <ProductList
         filteredProducts={filteredProducts}
         searchTerm={searchTerm} setSearchTerm={setSearchTerm}
         selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
@@ -269,7 +293,6 @@ const AdminProducts = () => {
         handleEdit={handleEdit} handleDelete={handleDelete} handleAddProduct={handleAddProduct}
       />
 
-      {/* Edit Modal */}
       {showEditModal && editingProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -282,7 +305,7 @@ const AdminProducts = () => {
                   </svg>
                 </button>
               </div>
-              
+
               <ProductForm {...getFormProps('edit')} />
 
               <div className="flex justify-end space-x-3 pt-6 border-t mt-6">
@@ -294,7 +317,6 @@ const AdminProducts = () => {
         </div>
       )}
 
-      {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">

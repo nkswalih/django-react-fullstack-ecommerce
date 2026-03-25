@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getProducts } from '../../api/apiService';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
+import { getProductsFromResponse, isBrandMatch, isCategoryMatch } from '../../utils/productCatalog';
 
 const colorMap = {
   'black': 'bg-gradient-to-br from-gray-700 to-black',
@@ -39,7 +40,16 @@ const disabledBtn = 'bg-white/30 border border-white/50 text-gray-300 cursor-not
 // ─── Shared Product Card ───────────────────────────────────────────────────────
 const ProductCard = ({ product }) => {
   const [hovered, setHovered] = useState(false);
-  const [imgIdx, setImgIdx] = useState(0);
+  const [showAltImage, setShowAltImage] = useState(false);
+  const hoverTimerRef = useRef(null);
+  const primaryImage = product.images?.[0]?.image_url || product.images?.[0] || "/no-image.png";
+  const secondaryImage = product.images?.[1]?.image_url || product.images?.[1];
+
+  useEffect(() => () => {
+    if (hoverTimerRef.current) {
+      window.clearTimeout(hoverTimerRef.current);
+    }
+  }, []);
 
   const stockStatus = product.stock > 10
     ? { label: 'In Stock', dot: 'bg-emerald-400' }
@@ -50,8 +60,22 @@ const ProductCard = ({ product }) => {
   return (
     <Link
       to={`/product/${product.slug}`}
-      onMouseEnter={() => { setHovered(true); if (product.images?.length > 1) setImgIdx(1); }}
-      onMouseLeave={() => { setHovered(false); setImgIdx(0); }}
+      onMouseEnter={() => {
+        setHovered(true);
+        if (secondaryImage) {
+          hoverTimerRef.current = window.setTimeout(() => {
+            setShowAltImage(true);
+          }, 220);
+        }
+      }}
+      onMouseLeave={() => {
+        if (hoverTimerRef.current) {
+          window.clearTimeout(hoverTimerRef.current);
+          hoverTimerRef.current = null;
+        }
+        setHovered(false);
+        setShowAltImage(false);
+      }}
     >
       <motion.div
         className="group bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.10)] transition-shadow duration-300 flex flex-col h-full cursor-pointer"
@@ -60,15 +84,19 @@ const ProductCard = ({ product }) => {
       >
         <div className="relative bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] aspect-square flex items-center justify-center overflow-hidden p-5">
           <motion.img
-            key={imgIdx}
-            src={product.images?.[imgIdx]?.image_url || product.images?.[0]}
+            src={primaryImage}
             alt={product.name}
-            className="w-full h-full object-contain mix-blend-multiply"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: hovered ? 1.05 : 1 }}
-            transition={{ duration: 0.3 }}
+            className={`absolute inset-0 h-full w-full object-contain mix-blend-multiply transition-all duration-500 ${showAltImage ? 'scale-[1.03] opacity-0 blur-[2px]' : 'scale-100 opacity-100 blur-0'}`}
             onError={(e) => { e.target.style.display = 'none'; }}
           />
+          {secondaryImage && (
+            <motion.img
+              src={secondaryImage}
+              alt={product.name}
+              className={`absolute inset-0 h-full w-full object-contain mix-blend-multiply transition-all duration-500 ${showAltImage ? 'scale-[1.05] opacity-100 blur-0' : 'scale-[1.01] opacity-0 blur-[6px]'}`}
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          )}
           {/* Glass stock badge */}
           <div className="absolute top-3 left-3">
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/60 backdrop-blur-md border border-white/80 text-[10px] font-bold text-gray-700 shadow-sm">
@@ -183,13 +211,13 @@ const AppleProductsPage = () => {
 
   useEffect(() => {
     getProducts()
-      .then(r => { setProducts(Array.isArray(r.data) ? r.data : r.data.products || []); setLoading(false); })
+      .then((r) => { setProducts(getProductsFromResponse(r.data)); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  const iphones = products.filter(p => p.brand === 'Apple' && p.category === 'Smartphone');
-  const macs = products.filter(p => p.brand === 'Apple' && p.category === 'Laptop');
-  const accessories = products.filter(p => p.brand === 'Apple' && p.category === 'Accessory');
+  const iphones = products.filter((p) => isBrandMatch(p.brand, 'Apple') && isCategoryMatch(p.category, 'smartphone'));
+  const macs = products.filter((p) => isBrandMatch(p.brand, 'Apple') && isCategoryMatch(p.category, 'laptop'));
+  const accessories = products.filter((p) => isBrandMatch(p.brand, 'Apple') && isCategoryMatch(p.category, 'accessory'));
 
   if (loading) return (
     <div className="min-h-screen bg-gradient-to-br from-[#d9e8f5] via-[#e2ebf4] to-[#f4f7fa] flex items-center justify-center">

@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 import { getProducts } from "../../api/apiService";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const PopoverBodyLock = ({ open }) => {
   useEffect(() => {
@@ -27,31 +28,29 @@ const SearchDropdown = () => {
     { name: "Support", path: "/support" },
   ]);
   const navigate = useNavigate();
+  const debouncedSearchQuery = useDebounce(searchQuery, 250);
 
   useEffect(() => {
-    if (searchQuery.length <= 1) {
+    if (debouncedSearchQuery.trim().length <= 1) {
       setSearchResults([]);
       return;
     }
 
     const searchProducts = async () => {
       try {
-        const response = await getProducts();
-        const products = Array.isArray(response.data) ? response.data : response.data?.products || [];
-        const filtered = products.filter(
-          (product) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.brand.toLowerCase().includes(searchQuery.toLowerCase()),
-        );
-        setSearchResults(filtered.slice(0, 5));
+        const res = await getProducts({
+          q: debouncedSearchQuery.trim(),
+          limit: 5,
+        });
+
+        setSearchResults(res.data.results || []);
       } catch (error) {
-        console.error("Search error:", error);
+        console.error(error);
       }
     };
 
     searchProducts();
-  }, [searchQuery]);
+  }, [debouncedSearchQuery]);
 
   const handleProductClick = (productId, close) => {
     close();

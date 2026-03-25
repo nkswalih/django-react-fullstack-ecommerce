@@ -30,9 +30,6 @@ const ProfileSidebar = ({ user, activeSection, setActiveSection }) => {
           </div>
           <h2 className="text-base font-bold text-gray-900 leading-tight">{user?.name || 'User'}</h2>
           <p className="text-xs text-gray-500 mt-0.5 truncate max-w-full px-2">{user?.email}</p>
-          {user?.role && (
-            <span className="mt-2 px-3 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-widest">{user.role}</span>
-          )}
         </div>
 
         {/* Stats Row */}

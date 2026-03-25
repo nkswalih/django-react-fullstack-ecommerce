@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getProducts } from "../api/apiService";
+import { getProductsFromResponse } from "../utils/productCatalog";
 
 export default function useProducts() {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ export default function useProducts() {
   const fetchProducts = async () => {
     try {
       const response = await getProducts();
-      setProducts(response.data);
+      setProducts(getProductsFromResponse(response.data));
       setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);

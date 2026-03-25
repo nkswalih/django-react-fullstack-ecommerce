@@ -5,6 +5,7 @@ import { getOrders, getProducts, getUsers } from "../../../api/apiService";
 import AnalyticsCharts from "./AnalyticsCharts";
 import DashboardStats from "./DashboardStats";
 import RecentActivity from "./RecentActivity";
+import { getProductsFromResponse } from "../../../utils/productCatalog";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const AdminDashboard = () => {
       setAnalytics(generateAnalyticsFromData({
         users: usersRes.data,
         orders: ordersRes.data,
-        products: productsRes.data,
+        products: getProductsFromResponse(productsRes.data),
       }));
     } catch (error) {
       console.error("Error fetching analytics:", error);

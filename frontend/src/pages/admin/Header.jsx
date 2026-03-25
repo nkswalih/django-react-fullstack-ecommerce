@@ -4,16 +4,20 @@ import { useNavigate } from "react-router-dom";
 
 import { clearAuth, getOrders, getProducts, getUsers } from "../../api/apiService";
 import { useAuth } from "../../contexts/AuthContext";
+import { useDebounce } from "../../hooks/useDebounce";
+import { getProductsFromResponse, normalizeText } from "../../utils/productCatalog";
 
 const Header = ({ setSidebarOpen }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState({ users: [], products: [], orders: [] });
+  const [searchData, setSearchData] = useState({ users: [], products: [], orders: [] });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const { user, logout } = useAuth();
+  const debouncedSearchQuery = useDebounce(searchQuery, 250);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,49 +30,74 @@ const Header = ({ setSidebarOpen }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const performSearch = async (query) => {
-    if (!query.trim()) {
+  useEffect(() => {
+    if (!searchOpen || searchData.users.length || searchData.products.length || searchData.orders.length) {
+      return;
+    }
+
+    let ignore = false;
+
+    const loadSearchData = async () => {
+      setLoading(true);
+      try {
+        const [usersRes, productsRes, ordersRes] = await Promise.all([getUsers(), getProducts(), getOrders()]);
+
+        if (ignore) return;
+
+        setSearchData({
+          users: Array.isArray(usersRes.data) ? usersRes.data : [],
+          products: getProductsFromResponse(productsRes.data),
+          orders: Array.isArray(ordersRes.data) ? ordersRes.data : [],
+        });
+      } catch (error) {
+        if (!ignore) {
+          console.error("Search error:", error);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadSearchData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [searchData.orders.length, searchData.products.length, searchData.users.length, searchOpen]);
+
+  useEffect(() => {
+    const query = normalizeText(debouncedSearchQuery);
+
+    if (!query) {
       setSearchResults({ users: [], products: [], orders: [] });
       return;
     }
 
-    setLoading(true);
-    try {
-      const [usersRes, productsRes, ordersRes] = await Promise.all([getUsers(), getProducts(), getOrders()]);
-      const term = query.toLowerCase();
+    const users = searchData.users.filter(
+      (item) =>
+        normalizeText(item.name).includes(query) ||
+        normalizeText(item.email).includes(query),
+    ).slice(0, 5);
 
-      const users = usersRes.data.filter(
-        (item) => item.name.toLowerCase().includes(term) || item.email.toLowerCase().includes(term),
-      ).slice(0, 5);
+    const products = searchData.products.filter(
+      (item) =>
+        normalizeText(item.name).includes(query) ||
+        normalizeText(item.category).includes(query) ||
+        normalizeText(item.brand).includes(query),
+    ).slice(0, 5);
 
-      const products = productsRes.data.filter(
-        (item) =>
-          item.name.toLowerCase().includes(term) ||
-          item.category.toLowerCase().includes(term) ||
-          item.brand.toLowerCase().includes(term),
-      ).slice(0, 5);
+    const orders = searchData.orders.filter(
+      (item) =>
+        normalizeText(item.id).includes(query) ||
+        normalizeText(item.userName).includes(query) ||
+        normalizeText(item.userEmail).includes(query) ||
+        normalizeText(item.status).includes(query),
+    ).slice(0, 5);
 
-      const orders = ordersRes.data.filter(
-        (item) =>
-          String(item.id).toLowerCase().includes(term) ||
-          item.userName?.toLowerCase().includes(term) ||
-          item.userEmail?.toLowerCase().includes(term) ||
-          item.status?.toLowerCase().includes(term),
-      ).slice(0, 5);
-
-      setSearchResults({ users, products, orders });
-    } catch (error) {
-      console.error("Search error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearchChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-    performSearch(query);
-  };
+    setSearchResults({ users, products, orders });
+  }, [debouncedSearchQuery, searchData]);
 
   const handleLogout = () => {
     logout();
@@ -82,6 +111,7 @@ const Header = ({ setSidebarOpen }) => {
       product: "/admin/products/",
       order: "/admin/orders/",
     };
+
     navigate(routes[type]);
     setSearchOpen(false);
     setSearchQuery("");
@@ -120,7 +150,7 @@ const Header = ({ setSidebarOpen }) => {
                       <input
                         type="text"
                         value={searchQuery}
-                        onChange={handleSearchChange}
+                        onChange={(event) => setSearchQuery(event.target.value)}
                         placeholder="Search users, products, orders..."
                         className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm bg-transparent"
                         autoFocus
@@ -134,7 +164,7 @@ const Header = ({ setSidebarOpen }) => {
                   </div>
 
                   <div className="max-h-[400px] overflow-y-auto">
-                    {loading ? (
+                    {loading && !searchData.users.length && !searchData.products.length && !searchData.orders.length ? (
                       <div className="p-8 text-center">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
                         <p className="mt-2 text-gray-500 text-sm">Searching...</p>

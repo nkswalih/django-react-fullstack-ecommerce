@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProducts } from '../../api/apiService';
 import { Facebook, Instagram, Dribbble, Quote } from 'lucide-react';
 import Overlay from '../ui/Overlay';
+import { getProductsFromResponse } from '../../utils/productCatalog';
 
 const MainHero = () => {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ const MainHero = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProducts();
+        const products = getProductsFromResponse(response.data);
         // Get 4 random or top popular products (for this demo, we take first 4)
-        if (response.data && response.data.length > 0) {
-          setFeaturedProducts(response.data.slice(0, 4));
+        if (products.length > 0) {
+          setFeaturedProducts(products.slice(0, 4));
         }
       } catch (error) {
         console.error('Error fetching featured products:', error);
@@ -53,8 +55,8 @@ const MainHero = () => {
             
             {/* Left Box (Small Image block from mockup) */}
             <div className="hidden md:flex flex-col bg-white/30 backdrop-blur-md p-3 rounded-3xl shadow-lg border border-white/50 relative hover:-translate-y-2 transition-transform duration-300">
-                <div className="w-28 h-28 bg-gradient-to-br from-[#d4faeb] to-[#bcf8e2] rounded-2xl flex items-center justify-center overflow-hidden relative">
-                   <img src="https://cdn.sanity.io/images/gtd4w1cq/production/892ca1fee54f0c221d55289e8072c84df0537aa2-396x396.jpg?auto=format" alt="Earbud" className="w-[85%] h-[85%] object-cover mix-blend-multiply" />
+                <div className="w-28 h-28 bg-gradient-to-br from-[#ceffe0] to-[#9dffef] rounded-xl flex items-center justify-center overflow-hidden relative">
+                   <img src="https://cdn.sanity.io/images/gtd4w1cq/production/892ca1fee54f0c221d55289e8072c84df0537aa2-396x396.jpg?auto=format" alt="Earbud" className="w-[85%] h-[85%] object-cover mix-blend-multiply rounded-xl" />
                    <button className="absolute inset-0 m-auto w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transform transition-transform hover:scale-110">
                        <svg className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
                    </button>
@@ -81,7 +83,7 @@ const MainHero = () => {
             {/* Right Socials & Quote Box */}
             <div className="hidden md:flex flex-col gap-10 w-64 items-end">
                 {/* Social Icons list with proper SVG icons */}
-                <div className="flex gap-3 justify-end">
+                {/* <div className="flex gap-3 justify-end">
                     <a href="#" className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-black hover:scale-110 transition-all">
                         <Dribbble size={18} strokeWidth={2} />
                     </a>
@@ -94,7 +96,7 @@ const MainHero = () => {
                     <a href="#" className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-black hover:scale-110 transition-all">
                         <Instagram size={18} strokeWidth={2} />
                     </a>
-                </div>
+                </div> */}
 
                 {/* Quote Text */}
                  <div className="text-left mt-6 max-w-[180px] flex flex-col items-start mr-4">
@@ -189,11 +191,11 @@ const MainHero = () => {
                     <div key={product.id} className="group relative bg-white/40 backdrop-blur-sm border border-gray-200 rounded-[2rem] p-6 hover:shadow-xl transition-all duration-300 flex flex-col">
                         
                         {/* Favorite Button */}
-                        <div className="absolute top-4 right-4 z-10">
+                        {/* <div className="absolute top-4 right-4 z-10">
                             <button className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors border border-gray-100">
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
                             </button>
-                        </div>
+                        </div> */}
                         
                         {/* Inner gradient container replacing basic gray background */}
                         <div className="w-full h-48 bg-gradient-to-b from-[#e8eaed] to-[#f8f9fa] rounded-[1.5rem] mb-6 flex items-center justify-center p-4 relative overflow-hidden">
@@ -215,14 +217,14 @@ const MainHero = () => {
                         
                         <div className="mt-auto">
                             <h3 className="font-semibold text-gray-900 text-lg leading-tight mb-2 line-clamp-2">{product.name}</h3>
-                            <div className="flex items-center gap-1 mb-3">
+                            {/* <div className="flex items-center gap-1 mb-3">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className={`w-3 h-3 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
                                 ))}
                                 <span className="text-[10px] text-gray-400 ml-1">(2836 total review)</span>
-                            </div>
+                            </div> */}
                             
                             <div className="flex justify-between items-center mt-4">
                                <p className="font-bold text-gray-900">₹{product.price?.toLocaleString() || 999}</p>

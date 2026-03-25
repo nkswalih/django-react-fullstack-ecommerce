@@ -48,6 +48,21 @@ const normalizeError = (error) => {
   return error?.message || "Request failed";
 };
 
+const updateCollection = (prev, updater) => {
+  if (Array.isArray(prev)) {
+    return updater(prev);
+  }
+
+  if (Array.isArray(prev?.results)) {
+    return {
+      ...prev,
+      results: updater(prev.results),
+    };
+  }
+
+  return prev;
+};
+
 export default function useApi(resource) {
   const config = resourceMap[resource];
   const [data, setData] = useState([]);
@@ -106,16 +121,14 @@ export default function useApi(resource) {
         setLoading(true);
         setError(null);
         const response = await config.patch(id, payload);
-        setData((prev) =>
-          Array.isArray(prev)
-            ? prev.map((item) => {
-                if (item.id === id || item.slug === id) {
-                  return response.data;
-                }
-                return item;
-              })
-            : response.data,
-        );
+        setData((prev) => updateCollection(prev, (items) =>
+          items.map((item) => {
+            if (item.id === id || item.slug === id) {
+              return response.data;
+            }
+            return item;
+          }),
+        ));
         return response.data;
       } catch (err) {
         const message = normalizeError(err);
@@ -138,11 +151,9 @@ export default function useApi(resource) {
         setLoading(true);
         setError(null);
         await config.remove(id);
-        setData((prev) =>
-          Array.isArray(prev)
-            ? prev.filter((item) => item.id !== id && item.slug !== id)
-            : [],
-        );
+        setData((prev) => updateCollection(prev, (items) =>
+          items.filter((item) => item.id !== id && item.slug !== id),
+        ));
       } catch (err) {
         const message = normalizeError(err);
         setError(message);

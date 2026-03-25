@@ -1,4 +1,5 @@
 import React from 'react'
+import { getCategoryName } from '../../../utils/productCatalog'
 
 const ProductList = ({ 
   filteredProducts, 
@@ -59,7 +60,7 @@ const ProductList = ({
             >
               {categories.map(category => (
                 <option key={category} value={category}>
-                  {category === 'all' ? 'All Categories' : category}
+                  {category === 'all' ? 'All Categories' : getCategoryName(category)}
                 </option>
               ))}
             </select>
