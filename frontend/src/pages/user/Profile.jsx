@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowPathIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
-import { clearAuth, getCart, getMyOrders, getProfile } from "../../api/apiService";
+import { clearAuth, getCart, getMyOrders, getProfile, getWishlist } from "../../api/apiService";
 import CartSection from "../../components/ProfileSection/CartSection";
 import OrdersSection from "../../components/ProfileSection/OrdersSection";
 import OverviewSection from "../../components/ProfileSection/OverviewSection";
@@ -33,32 +34,48 @@ const Profile = () => {
       wishlist: "/profile/wishlist",
       cart: "/profile/cart",
     };
+
     navigate(paths[activeSection] || "/profile");
   }, [activeSection, navigate]);
 
   const refreshProfile = async () => {
     try {
       setLoading(true);
-      const [profileRes, ordersRes, cartRes] = await Promise.all([
+      const [profileRes, ordersRes, cartRes, wishlistRes] = await Promise.allSettled([
         getProfile(),
         getMyOrders(),
         getCart(),
+        getWishlist(),
       ]);
 
+      const profileError = profileRes.status === "rejected" ? profileRes.reason : null;
+      if (profileError?.response?.status === 401 || profileError?.response?.status === 403) {
+        clearAuth();
+        navigate("/sign_in");
+        return;
+      }
+
+      if (profileRes.status !== "fulfilled") {
+        throw profileError || new Error("Failed to load profile");
+      }
+
       const nextUser = {
-        ...profileRes.data,
-        order: ordersRes.data,
-        cart: cartRes.data,
-        wishlist: [],
+        ...profileRes.value.data,
+        order: ordersRes.status === "fulfilled" ? ordersRes.value.data : [],
+        cart: cartRes.status === "fulfilled" ? cartRes.value.data : [],
+        wishlist: wishlistRes.status === "fulfilled" ? (wishlistRes.value.data || []) : [],
       };
 
       localStorage.setItem("currentUser", JSON.stringify(nextUser));
       localStorage.setItem("user", JSON.stringify(nextUser));
       setCurrentUser(nextUser);
+
+      if (wishlistRes.status === "rejected") {
+        toast.error("Wishlist could not be loaded right now.");
+      }
     } catch (error) {
       console.error(error);
-      clearAuth();
-      navigate("/sign_in");
+      toast.error("Could not load your profile. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -145,7 +162,7 @@ const Profile = () => {
             <div className="bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] overflow-hidden">
               {activeSection === "overview" && <OverviewSection user={currentUser} setActiveSection={setActiveSection} />}
               {activeSection === "orders" && <OrdersSection user={currentUser} onRefresh={refreshProfile} />}
-              {activeSection === "wishlist" && <WishlistSection user={currentUser} />}
+              {activeSection === "wishlist" && <WishlistSection user={currentUser} onRefresh={refreshProfile} />}
               {activeSection === "cart" && <CartSection user={currentUser} />}
             </div>
           </div>

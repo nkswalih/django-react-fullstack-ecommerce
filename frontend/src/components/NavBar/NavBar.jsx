@@ -57,6 +57,8 @@ export default function Navbar() {
           bg-white shadow-xl
           rounded-2xl mx-4 mt-2
           lg:rounded-full lg:mx-44
+          backdrop-blur-md bg-white/40
+          
         `
       : `
           bg-transparent

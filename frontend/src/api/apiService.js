@@ -117,6 +117,7 @@ const productPath = (slugOrProduct) => {
 
 export const client = api;
 
+// --user
 export const login = (data) => api.post("/login/", data);
 export const register = (data) => api.post("/register/", data);
 export const refreshToken = (refresh) => api.post("/token/refresh/", { refresh });
@@ -124,6 +125,7 @@ export const refreshToken = (refresh) => api.post("/token/refresh/", { refresh }
 export const getProfile = () => api.get("/profile/");
 export const updateProfile = (data) => api.patch("/profile/", data);
 
+// products
 export const getProducts = (params) => api.get("/products/", { params });
 export const getProductBySlug = (slug) => api.get(`/products/${slug}/`);
 export const createProduct = (data) => api.post("/products/", data);
@@ -131,12 +133,19 @@ export const updateProduct = (slug, data) => api.put(`/products/${productPath(sl
 export const patchProduct = (slug, data) => api.patch(`/products/${productPath(slug)}/`, data);
 export const deleteProduct = (slug) => api.delete(`/products/${productPath(slug)}/`);
 
+//  cart
 export const getCart = () => api.get("/cart/");
 export const addToCart = (data) => api.post("/cart/", data);
 export const updateCartItem = (id, data) => api.patch(`/cart/${id}/`, data);
 export const removeCartItem = (id) => api.delete(`/cart/${id}/`);
 export const clearCart = () => api.delete("/cart/clear/");
 
+// wishlist
+export const getWishlist = () => api.get('/wishlist/');
+export const addToWishlist = (productId) => api.post('/wishlist/', { product: productId });
+export const removeFromWishlist = (productId) => api.delete('/wishlist/', { data: { product: productId } });
+
+// orders
 export const getOrders = () => api.get("/admin/orders/");
 export const getMyOrders = () => api.get("/orders/");
 export const getOrderById = (id) => api.get(`/orders/${id}/`);

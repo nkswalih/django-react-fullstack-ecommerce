@@ -4,6 +4,7 @@ import { addToCart, getProductBySlug } from '../../api/apiService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import SimpleFooter from '../../components/SimpleFoot';
+import { WishlistButtonLarge } from '../../components/ui/WishlistButton';
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -306,9 +307,12 @@ const ProductPage = () => {
               </div>
             </div>
 
-            <button onClick={handleAddToCart} disabled={addingToCart || product.stock <= 0} className={`w-full py-4 rounded-full font-bold tracking-wide text-sm ${product.stock > 0 && !addingToCart ? bubbleButtonClass : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
-              {addingToCart ? 'Adding...' : product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button onClick={handleAddToCart} disabled={addingToCart || product.stock <= 0} className={`flex-1 py-4 rounded-full font-bold tracking-wide text-sm ${product.stock > 0 && !addingToCart ? bubbleButtonClass : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
+                {addingToCart ? 'Adding...' : product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+              </button>
+              <WishlistButtonLarge product={product} />
+            </div>
           </div>
         </div>
 

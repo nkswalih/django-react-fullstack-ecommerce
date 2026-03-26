@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { EyeIcon } from '@heroicons/react/24/outline';
+import WishlistButton from '../ui/WishlistButton';
 
 const ProductGrid = ({ products }) => {
   const getColorClass = (color) => {
@@ -62,13 +63,8 @@ const ProductGrid = ({ products }) => {
               </div>
 
               {/* Hover Actions */}
-              <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {/* <button className="bg-white/90 hover:bg-white p-2 rounded-full shadow-sm transition-colors">
-                  <HeartIcon className="size-4 text-gray-700" />
-                </button> */}
-                <button className="bg-white/90 hover:bg-white p-2 rounded-full shadow-sm transition-colors">
-                  <EyeIcon className="size-4 text-gray-700" />
-                </button>
+              <div className="absolute top-3 right-3 flex flex-col gap-2">
+                <WishlistButton product={product} />
               </div>
 
               {/* Quick Add to Cart */}
