@@ -1,7 +1,9 @@
 import logging
+from datetime import timedelta
 
 from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db.models import Avg, CharField, F, Q, Sum
+from django.db.models.functions import Cast
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
@@ -16,6 +18,29 @@ logger = logging.getLogger(__name__)
 
 def is_admin(user):
     return bool(user.is_authenticated and user.role == 'Admin')
+
+
+def parse_positive_int(value, default):
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return default
+    return max(parsed, 0)
+
+
+def build_order_summary(queryset):
+    stats = queryset.aggregate(
+        total_revenue=Sum('total'),
+        average_order_value=Avg('total'),
+    )
+
+    return {
+        'total_orders': queryset.count(),
+        'total_revenue': stats['total_revenue'] or 0,
+        'pending_orders': queryset.filter(status='pending').count(),
+        'completed_orders': queryset.filter(status='completed').count(),
+        'average_order_value': round(stats['average_order_value'] or 0),
+    }
 
 
 class OrderListCreateView(APIView):
@@ -127,15 +152,64 @@ class AdminOrderListView(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         try:
-            status_filter = request.GET.get('status')
+            params = request.GET
             orders = (
                 Order.objects.all()
                 .select_related('user')
                 .prefetch_related('items__product')
                 .order_by('-created_at')
             )
-            if status_filter:
+            summary = build_order_summary(orders)
+
+            if q := params.get('q'):
+                orders = orders.annotate(id_str=Cast('id', output_field=CharField())).filter(
+                    Q(id_str__icontains=q) |
+                    Q(user__name__icontains=q) |
+                    Q(user__email__icontains=q) |
+                    Q(shipping_address__full_name__icontains=q)
+                )
+
+            status_filter = params.get('status')
+            if status_filter and status_filter.lower() != 'all':
                 orders = orders.filter(status=status_filter)
+
+            payment_method = params.get('payment_method')
+            if payment_method and payment_method.lower() != 'all':
+                orders = orders.filter(payment_method=payment_method)
+
+            date_filter = params.get('date_filter')
+            if date_filter and date_filter.lower() != 'all':
+                now = timezone.now()
+
+                if date_filter == 'today':
+                    orders = orders.filter(created_at__date=now.date())
+                elif date_filter == 'this-week':
+                    start_of_week = now - timedelta(days=now.weekday())
+                    orders = orders.filter(created_at__date__gte=start_of_week.date())
+                elif date_filter == 'this-month':
+                    orders = orders.filter(created_at__year=now.year, created_at__month=now.month)
+
+            sort_map = {
+                'oldest': 'created_at',
+                'total-high': '-total',
+                'total-low': 'total',
+                'newest': '-created_at',
+            }
+            orders = orders.order_by(sort_map.get(params.get('sort'), '-created_at'))
+
+            if 'limit' in params or 'offset' in params:
+                total = orders.count()
+                limit = parse_positive_int(params.get('limit'), 10)
+                offset = parse_positive_int(params.get('offset'), 0)
+                paginated_orders = orders[offset:offset + limit] if limit > 0 else orders.none()
+
+                return Response({
+                    'results': OrderSerializer(paginated_orders, many=True).data,
+                    'total': total,
+                    'limit': limit,
+                    'offset': offset,
+                    'summary': summary,
+                })
 
             return Response(OrderSerializer(orders, many=True).data)
 

@@ -78,6 +78,18 @@ def build_category_counts(queryset):
     return sorted(counts.values(), key=lambda item: item["name"].lower())
 
 
+def build_product_summary(queryset):
+    products = list(queryset.only("id", "price", "stock"))
+
+    return {
+        "total_products": len(products),
+        "out_of_stock": sum(1 for product in products if product.stock == 0),
+        "low_stock": sum(1 for product in products if 0 < product.stock < 10),
+        "total_value": sum(product.price * product.stock for product in products),
+        "categories": build_category_counts(queryset),
+    }
+
+
 def parse_positive_int(value, default):
     try:
         parsed = int(value)
@@ -97,6 +109,7 @@ class ProductListCreateView(APIView):
             qs = qs.exclude(status__iexact="inactive")
 
         params = request.GET
+        summary = build_product_summary(qs)
         filtered_qs = qs
 
         # search
@@ -120,6 +133,10 @@ class ProductListCreateView(APIView):
             if category.lower() != "all":
                 qs = qs.filter(build_category_filter(category))
 
+        if status := params.get("status"):
+            if status.lower() != "all":
+                qs = qs.filter(status__iexact=status)
+
         sort_map = {
             "price_low": "price",
             "price_high": "-price",
@@ -140,6 +157,7 @@ class ProductListCreateView(APIView):
             "total": total,
             "total_available": total_available,
             "category_counts": category_counts,
+            "summary": summary,
         })
 
     def post(self, request):

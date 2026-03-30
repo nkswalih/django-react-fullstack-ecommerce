@@ -18,6 +18,12 @@ const Header = ({ setSidebarOpen }) => {
   const searchRef = useRef(null);
   const { user, logout } = useAuth();
   const debouncedSearchQuery = useDebounce(searchQuery, 250);
+  const userInitials = (user?.name || "Admin")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "A";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -123,7 +129,7 @@ const Header = ({ setSidebarOpen }) => {
       <header className="bg-transparent border-b border-gray-200/50 z-30 sticky top-0">
         <div className="flex items-center justify-end h-16 px-4 md:px-6">
           <div className="flex items-center space-x-3">
-            <button
+            {/* <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             >
@@ -131,7 +137,7 @@ const Header = ({ setSidebarOpen }) => {
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
-            </button>
+            </button> */}
 
             <div className="relative" ref={searchRef}>
               <button
@@ -142,25 +148,35 @@ const Header = ({ setSidebarOpen }) => {
               </button>
 
               {searchOpen && (
-                <div className="absolute right-0 mt-2 w-96 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50">
-                  <div className="p-4 border-b border-gray-200/50">
-                    <div className="flex items-center">
-                      <SearchIcon className="w-5 h-5 text-gray-400 mr-3" />
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder="Search users, products, orders..."
-                        className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm bg-transparent"
-                        autoFocus
-                      />
-                      {searchQuery && (
-                        <button onClick={() => setSearchQuery("")} className="p-1 text-gray-400 hover:text-gray-600">
-                          <XIcon className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
+              <div 
+                className="
+                  /* Mobile styles: Fixed, centered, with side gaps */
+                  fixed top-20 left-4 right-4 w-auto 
+                  /* Desktop styles: Absolute, aligned right, fixed width */
+                  md:absolute md:top-full md:left-auto md:right-0 md:mt-2 md:w-96 
+                  /* Common styles */
+                  bg-white/80 backdrop-blur-xl rounded-2xl 
+                  shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50
+                "
+              >
+                <div className="p-4 border-b border-gray-200/50">
+                  <div className="flex items-center">
+                    <SearchIcon className="w-5 h-5 text-gray-400 mr-3" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(event) => setSearchQuery(event.target.value)}
+                      placeholder="Search users, products, orders..."
+                      className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm bg-transparent"
+                      autoFocus
+                    />
+                    {searchQuery && (
+                      <button onClick={() => setSearchQuery("")} className="p-1 text-gray-400 hover:text-gray-600">
+                        <XIcon className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
+                </div>
 
                   <div className="max-h-[400px] overflow-y-auto">
                     {loading && !searchData.users.length && !searchData.products.length && !searchData.orders.length ? (
@@ -276,17 +292,43 @@ const Header = ({ setSidebarOpen }) => {
             </div>
 
             <div className="relative">
-              <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="p-1.5 rounded-lg hover:bg-gray-100">
-                <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
-                  <ShieldUserIcon className="w-4 h-4 text-white" />
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex h-11 max-w-[11rem] items-center gap-2 rounded-full border border-white/70 bg-white/65 px-2.5 shadow-sm backdrop-blur-md transition-colors hover:bg-white/80 sm:max-w-[14rem]"
+              >
+                <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-gray-700 to-gray-900 text-white flex items-center justify-center shrink-0">
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={user?.name || "Admin"} className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-[11px] font-semibold tracking-wide">{userInitials}</span>
+                  )}
+                </div>
+
+                <div className="hidden min-w-0 flex-1 text-left sm:block">
+                  <p className="truncate text-sm font-semibold text-gray-900">{user?.name || "Administrator"}</p>
+                </div>
+
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-gray-600 shrink-0">
+                  <ShieldUserIcon className="w-3.5 h-3.5" />
                 </div>
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50 overflow-hidden">
+                <div className="absolute right-0 mt-2 w-[min(18rem,calc(100vw-2rem))] bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 z-50 overflow-hidden">
                   <div className="p-4 border-b border-gray-200/50">
-                    <p className="font-semibold text-gray-900">{user?.name}</p>
-                    <p className="text-sm text-gray-500">Administrator</p>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-10 w-10 overflow-hidden rounded-full bg-gradient-to-br from-gray-700 to-gray-900 text-white flex items-center justify-center shrink-0">
+                        {user?.avatar ? (
+                          <img src={user.avatar} alt={user?.name || "Admin"} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-xs font-semibold tracking-wide">{userInitials}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-gray-900">{user?.name || "Administrator"}</p>
+                        <p className="truncate text-xs text-gray-500">Administrator</p>
+                      </div>
+                    </div>
                   </div>
                   <button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-white/50 transition-colors">
                     <LogOutIcon className="w-4 h-4 mr-3" />

@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import useApi from "../../../hooks/useApi";
+import AdminPagination from "../AdminPagination";
 import AdminOrderFilters from "./AdminOrderFilters";
 import AdminOrderStats from "./AdminOrderStats";
 import AdminOrdersTable from "./AdminOrdersTable";
+
+const ORDERS_PER_PAGE = 10;
 
 const formatDate = (dateString) => {
   if (!dateString) return "N/A";
@@ -64,14 +67,31 @@ const AdminOrders = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const listParams = useMemo(
+    () => ({
+      limit: ORDERS_PER_PAGE,
+      offset: (currentPage - 1) * ORDERS_PER_PAGE,
+      ...(searchTerm ? { q: searchTerm } : {}),
+      ...(selectedStatus !== "all" ? { status: selectedStatus } : {}),
+      ...(selectedPaymentMethod !== "all" ? { payment_method: selectedPaymentMethod } : {}),
+      ...(dateFilter !== "all" ? { date_filter: dateFilter } : {}),
+      ...(sortBy ? { sort: sortBy } : {}),
+    }),
+    [currentPage, dateFilter, searchTerm, selectedPaymentMethod, selectedStatus, sortBy],
+  );
 
   const {
-    data: orders = [],
+    data,
     loading,
     error,
     refetch,
     patchData,
-  } = useApi("orders");
+  } = useApi("orders", { listParams });
+
+  const orders = Array.isArray(data) ? data : data?.results || [];
+  const orderSummary = data?.summary;
+  const totalFilteredOrders = data?.total ?? orders.length;
 
   useEffect(() => {
     if (selectedOrder?.id) {
@@ -82,62 +102,18 @@ const AdminOrders = () => {
     }
   }, [orders, selectedOrder]);
 
-  const filteredOrders = [...orders]
-    .filter((order) => {
-      const search = searchTerm.toLowerCase();
-      const paymentMethod = order.paymentMethod || order.payment_method;
-      const createdAt = order.createdAt || order.created_at;
-      const shippingAddress = order.shippingAddress || order.shipping_address || {};
+  const filteredOrders = orders;
+  const totalPages = Math.max(1, Math.ceil(totalFilteredOrders / ORDERS_PER_PAGE));
 
-      const matchesSearch =
-        String(order.id).toLowerCase().includes(search) ||
-        (order.userName || "").toLowerCase().includes(search) ||
-        (order.userEmail || "").toLowerCase().includes(search) ||
-        (shippingAddress.full_name || "").toLowerCase().includes(search);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedStatus, selectedPaymentMethod, dateFilter, sortBy]);
 
-      const matchesStatus = selectedStatus === "all" || order.status === selectedStatus;
-      const matchesPayment = selectedPaymentMethod === "all" || paymentMethod === selectedPaymentMethod;
-
-      let matchesDate = true;
-      if (createdAt && dateFilter !== "all") {
-        const orderDate = new Date(createdAt);
-        const now = new Date();
-        switch (dateFilter) {
-          case "today":
-            matchesDate = orderDate.toDateString() === now.toDateString();
-            break;
-          case "this-week": {
-            const startOfWeek = new Date();
-            startOfWeek.setDate(now.getDate() - now.getDay());
-            startOfWeek.setHours(0, 0, 0, 0);
-            matchesDate = orderDate >= startOfWeek;
-            break;
-          }
-          case "this-month":
-            matchesDate = orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
-            break;
-          default:
-            matchesDate = true;
-        }
-      }
-
-      return matchesSearch && matchesStatus && matchesPayment && matchesDate;
-    })
-    .sort((a, b) => {
-      const aDate = new Date(a.createdAt || a.created_at || 0);
-      const bDate = new Date(b.createdAt || b.created_at || 0);
-      switch (sortBy) {
-        case "oldest":
-          return aDate - bDate;
-        case "total-high":
-          return Number(b.total) - Number(a.total);
-        case "total-low":
-          return Number(a.total) - Number(b.total);
-        case "newest":
-        default:
-          return bDate - aDate;
-      }
-    });
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const handleViewDetails = useCallback((order) => {
     setSelectedOrder(order);
@@ -158,13 +134,16 @@ const AdminOrders = () => {
   );
 
   const stats = {
-    totalOrders: orders.length,
-    totalRevenue: orders.reduce((sum, order) => sum + Number(order.total || 0), 0),
-    pendingOrders: orders.filter((order) => order.status === "pending").length,
-    completedOrders: orders.filter((order) => order.status === "completed").length,
-    averageOrderValue: orders.length
-      ? Math.round(orders.reduce((sum, order) => sum + Number(order.total || 0), 0) / orders.length)
-      : 0,
+    totalOrders: orderSummary?.total_orders ?? orders.length,
+    totalRevenue: Number(orderSummary?.total_revenue ?? orders.reduce((sum, order) => sum + Number(order.total || 0), 0)),
+    pendingOrders: orderSummary?.pending_orders ?? orders.filter((order) => order.status === "pending").length,
+    completedOrders: orderSummary?.completed_orders ?? orders.filter((order) => order.status === "completed").length,
+    averageOrderValue: Number(
+      orderSummary?.average_order_value ??
+        (orders.length
+          ? Math.round(orders.reduce((sum, order) => sum + Number(order.total || 0), 0) / orders.length)
+          : 0),
+    ),
   };
 
   if (loading && !orders.length) {
@@ -192,7 +171,7 @@ const AdminOrders = () => {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Orders Management</h1>
-        <p className="text-gray-600">Manage and update customer orders ({orders.length} orders)</p>
+        <p className="text-gray-600">Manage and update customer orders ({stats.totalOrders} orders)</p>
       </div>
 
       <AdminOrderStats stats={stats} formatPrice={formatPrice} />
@@ -211,6 +190,7 @@ const AdminOrders = () => {
       />
       <AdminOrdersTable
         filteredOrders={filteredOrders}
+        paginatedOrders={orders}
         handleViewDetails={handleViewDetails}
         handleUpdateStatus={handleUpdateStatus}
         formatDate={formatDate}
@@ -226,6 +206,16 @@ const AdminOrders = () => {
         selectedStatus={selectedStatus}
         selectedPaymentMethod={selectedPaymentMethod}
         dateFilter={dateFilter}
+        pagination={
+          <AdminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalFilteredOrders}
+            itemsPerPage={ORDERS_PER_PAGE}
+            itemLabel="orders"
+            onPageChange={setCurrentPage}
+          />
+        }
       />
     </div>
   );

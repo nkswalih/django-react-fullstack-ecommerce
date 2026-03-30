@@ -2,6 +2,7 @@ import React from "react";
 
 const AdminOrdersTable = ({
   filteredOrders,
+  paginatedOrders,
   handleViewDetails,
   handleUpdateStatus,
   formatDate,
@@ -17,105 +18,110 @@ const AdminOrdersTable = ({
   selectedStatus,
   selectedPaymentMethod,
   dateFilter,
+  pagination,
 }) => {
   const shippingAddress = selectedOrder?.shippingAddress || selectedOrder?.shipping_address || {};
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {filteredOrders.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Details</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => {
-                const paymentMethod = order.paymentMethod || order.payment_method;
-                const createdAt = order.createdAt || order.created_at;
-                return (
-                  <tr key={order.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 sm:px-6 sm:py-4">
-                    <div className="flex items-center justify-between gap-2">
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Details</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {paginatedOrders.map((order) => {
+                  const paymentMethod = order.paymentMethod || order.payment_method;
+                  const createdAt = order.createdAt || order.created_at;
+                  return (
+                    <tr key={order.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 sm:px-6 sm:py-4">
+                      <div className="flex items-center justify-between gap-2">
 
-                      {/* LEFT */}
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
-                          #{order.id}
+                        {/* LEFT */}
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
+                            #{order.id}
+                          </div>
+
+                          <div className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                            {formatDate(createdAt)}
+                          </div>
                         </div>
 
-                        <div className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
-                          {formatDate(createdAt)}
-                        </div>
-                      </div>
-
-                      {/* RIGHT */}
-                      <div className="flex-shrink-0">
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${getPaymentColor(paymentMethod)}`}
-                        >
-                          {paymentMethod || "N/A"}
-                        </span>
-                      </div>
-
-                    </div>
-                  </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{order.userName || "N/A"}</div>
-                      <div className="text-sm text-gray-500">{order.userEmail || "N/A"}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{order.items?.length || 0} items</div>
-                      <div className="text-sm text-gray-500">
-                        {order.items?.slice(0, 2).map((item) => (
-                          <span key={item.id} className="block truncate max-w-[200px]">
-                            {item.quantity}x {item.productName}
+                        {/* RIGHT */}
+                        <div className="flex-shrink-0">
+                          <span
+                            className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${getPaymentColor(paymentMethod)}`}
+                          >
+                            {paymentMethod || "N/A"}
                           </span>
-                        ))}
-                        {order.items?.length > 2 && (
-                          <span className="text-gray-400">+{order.items.length - 2} more</span>
-                        )}
+                        </div>
+
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{formatPrice(order.total)}</div>
-                      <div className="text-sm text-gray-500">Subtotal: {formatPrice(order.subtotal)}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                        <select
-                          value={order.status}
-                          onChange={(event) => handleUpdateStatus(order.id, event.target.value)}
-                          className="text-xs bg-transparent border-none focus:ring-0"
-                        >
-                          {statusOptions.map((status) => (
-                            <option key={status} value={status}>
-                              {status.charAt(0).toUpperCase() + status.slice(1)}
-                            </option>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-gray-900">{order.userName || "N/A"}</div>
+                        <div className="text-sm text-gray-500">{order.userEmail || "N/A"}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900">{order.items?.length || 0} items</div>
+                        <div className="text-sm text-gray-500">
+                          {order.items?.slice(0, 2).map((item) => (
+                            <span key={item.id} className="block truncate max-w-[200px]">
+                              {item.quantity}x {item.productName}
+                            </span>
                           ))}
-                        </select>
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => handleViewDetails(order)}
-                        className="text-blue-600 hover:text-blue-900 transition-colors px-3 py-1 rounded hover:bg-blue-50"
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                          {order.items?.length > 2 && (
+                            <span className="text-gray-400">+{order.items.length - 2} more</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-gray-900">{formatPrice(order.total)}</div>
+                        <div className="text-sm text-gray-500">Subtotal: {formatPrice(order.subtotal)}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                          <select
+                            value={order.status}
+                            onChange={(event) => handleUpdateStatus(order.id, event.target.value)}
+                            className="text-xs bg-transparent border-none focus:ring-0"
+                          >
+                            {statusOptions.map((status) => (
+                              <option key={status} value={status}>
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                              </option>
+                            ))}
+                          </select>
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => handleViewDetails(order)}
+                          className="text-blue-600 hover:text-blue-900 transition-colors px-3 py-1 rounded hover:bg-blue-50"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {pagination}
+        </>
       ) : (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">Orders</div>

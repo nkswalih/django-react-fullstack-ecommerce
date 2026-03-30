@@ -91,10 +91,10 @@ export const createOrder = (data) => api.post("/orders/", data);
 export const cancelOrder = (id) => api.patch(`/orders/${id}/cancel/`);
 
 // Admin
-export const adminGetUsers = () => api.get("/admin/users/");
+export const adminGetUsers = (params) => api.get("/admin/users/", { params });
 export const adminPatchUser = (id, data) => api.patch(`/admin/users/${id}/`, data);
 export const adminDeleteUser = (id) => api.delete(`/admin/users/${id}/`);
-export const adminGetOrders = () => api.get("/admin/orders/");
+export const adminGetOrders = (params) => api.get("/admin/orders/", { params });
 export const adminPatchOrder = (id, data) => api.patch(`/admin/orders/${id}/`, data);
 export const getUsers = adminGetUsers;
 export const getOrders = adminGetOrders;

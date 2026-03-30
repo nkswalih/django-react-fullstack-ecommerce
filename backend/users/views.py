@@ -50,6 +50,14 @@ def set_auth_cookies(response, tokens, remember=False):
         response.set_cookie("refresh_token", tokens['refresh'], **cookie_kwargs)
 
 
+def parse_positive_int(value, default):
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return default
+    return max(parsed, 0)
+
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -121,7 +129,22 @@ class AdminUserListView(APIView):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            users = User.objects.all()
+            params = request.GET
+            users = User.objects.all().order_by('-created_at')
+
+            if 'limit' in params or 'offset' in params:
+                total = users.count()
+                limit = parse_positive_int(params.get('limit'), 10)
+                offset = parse_positive_int(params.get('offset'), 0)
+                paginated_users = users[offset:offset + limit] if limit > 0 else users.none()
+
+                return Response({
+                    'results': UserSerializer(paginated_users, many=True).data,
+                    'total': total,
+                    'limit': limit,
+                    'offset': offset,
+                })
+
             return Response(UserSerializer(users, many=True).data)
         except OperationalError:
             return database_error_response()

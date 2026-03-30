@@ -13,8 +13,8 @@ function App() {
         <AppRouter />
         <ToastContainer
           position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
+          autoClose={1500}
+          hideProgressBar={true} // Changed to true to remove the loading bar
           newestOnTop
           closeOnClick
           rtl={false}

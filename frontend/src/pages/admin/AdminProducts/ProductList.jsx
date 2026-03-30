@@ -3,12 +3,14 @@ import { getCategoryName } from '../../../utils/productCatalog'
 
 const ProductList = ({ 
   filteredProducts, 
+  paginatedProducts,
   searchTerm, setSearchTerm, 
   selectedCategory, setSelectedCategory, 
   selectedStatus, setSelectedStatus, 
   categories, statuses, 
   formatPrice, 
-  handleEdit, handleDelete, handleAddProduct 
+  handleEdit, handleDelete, handleAddProduct,
+  pagination,
 }) => {
 
   const getStatusColor = (status) => {
@@ -102,68 +104,72 @@ const ProductList = ({
       {/* Products Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {filteredProducts.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th> */}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-12 w-12 flex-shrink-0">
-                          <img
-                            className="h-12 w-12 rounded-lg object-cover border"
-                            src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
-                            alt={product.name}
-                            onError={(e) => { e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
-                          />
+          <>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th> */}
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {paginatedProducts.map((product) => (
+                    <tr key={product.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-12 w-12 flex-shrink-0">
+                            <img
+                              className="h-12 w-12 rounded-lg object-cover border"
+                              src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
+                              alt={product.name}
+                              onError={(e) => { e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
+                            />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                            <div className="text-sm text-gray-500">{product.brand}</div>
+                          </div>
                         </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                          <div className="text-sm text-gray-500">{product.brand}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-gray-900">{product.category}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-gray-900">
+                          {formatPrice(product.price, product.currency)}
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-900">{product.category}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {formatPrice(product.price, product.currency)}
-                      </div>
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStockColor(product.stock)}`}>
-                        {product.stock} units
-                      </span>
-                    </td>
-                    {/* <td className=" py-4">
+                      </td>
+                      <td className="py-4">
+                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStockColor(product.stock)}`}>
+                          {product.stock} units
+                        </span>
+                      </td>
+                      {/* <td className=" py-4">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(product.status)}`}>
                         {product.status}
                       </span>
                     </td> */}
-                    <td className="px-5 py-4 text-sm font-medium">
-                      <button onClick={() => handleEdit(product)} className="text-gray-600 hover:text-gray-900 transition-colors px-3 py-1 rounded hover:bg-gray-100">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(product)} className="text-red-600 hover:text-red-900 transition-colors px-3 py-1 rounded hover:bg-red-50">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <td className="px-5 py-4 text-sm font-medium">
+                        <button onClick={() => handleEdit(product)} className="text-gray-600 hover:text-gray-900 transition-colors px-3 py-1 rounded hover:bg-gray-100">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(product)} className="text-red-600 hover:text-red-900 transition-colors px-3 py-1 rounded hover:bg-red-50">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {pagination}
+          </>
         ) : (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📦</div>

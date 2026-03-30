@@ -1,116 +1,151 @@
 /* ========================================
-   Custom Toast Styles – Themed to match
-   the icy-blue glassmorphic app design
+   Custom Toast Styles - Glassy & Structured
    ======================================== */
 
-
-/* Container positioning fix */
+/* 1. DESKTOP POSITIONING */
 .Toastify__toast-container--top-right {
-  top: 5rem !important; /* clears the fixed Navbar */
-  right: 1.5rem !important;
+  top: 5rem !important;
+  right: 1rem !important;
+  width: min(340px, calc(100vw - 2rem)) !important;
 }
 
-/* Base toast */
+.Toastify__toast-container {
+  padding: 0 !important;
+}
+
+.Toastify__toast-body > div {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.25 !important;
+}
+
+/* 2. BASE TOAST STRUCTURE */
 .Toastify__toast {
-  font-family: 'SF Pro Display', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  border-radius: 1.25rem !important;
-  padding: 14px 18px !important;
-  min-height: 60px !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  font-family: 'SF Pro Display', 'DM Sans', sans-serif !important;
+  border-radius: 999px !important;
+  padding: 10px 16px !important;
+  min-height: 48px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 
+    0 10px 28px rgba(15, 23, 42, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22) !important;
+  margin-bottom: 0.75rem !important;
 }
 
-/* Success */
-.Toastify__toast--success {
-  background: rgba(236, 247, 240, 0.85) !important;
-  color: #1a3a27 !important;
-}
-
-.Toastify__toast--success .Toastify__progress-bar {
-  background: linear-gradient(to right, #6ee7b7, #10b981) !important;
-  border-radius: 99px !important;
-}
-
-.Toastify__toast--success .Toastify__toast-icon svg {
-  fill: #10b981 !important;
-}
-
-/* Error */
-.Toastify__toast--error {
-  background: rgba(255, 243, 242, 0.85) !important;
-  color: #3a1a1a !important;
-}
-
-.Toastify__toast--error .Toastify__progress-bar {
-  background: linear-gradient(to right, #fca5a5, #ef4444) !important;
-  border-radius: 99px !important;
-}
-
-.Toastify__toast--error .Toastify__toast-icon svg {
-  fill: #ef4444 !important;
-}
-
-/* Info */
-.Toastify__toast--info {
-  background: rgba(217, 232, 245, 0.85) !important;
-  color: #0b2649 !important;
-}
-
-.Toastify__toast--info .Toastify__progress-bar {
-  background: linear-gradient(to right, #93c5fd, #3b82f6) !important;
-  border-radius: 99px !important;
-}
-
-.Toastify__toast--info .Toastify__toast-icon svg {
-  fill: #3b82f6 !important;
-}
-
-/* Warning */
-.Toastify__toast--warning {
-  background: rgba(255, 251, 235, 0.85) !important;
-  color: #3a2e08 !important;
-}
-
-.Toastify__toast--warning .Toastify__progress-bar {
-  background: linear-gradient(to right, #fcd34d, #f59e0b) !important;
-  border-radius: 99px !important;
-}
-
-.Toastify__toast--warning .Toastify__toast-icon svg {
-  fill: #f59e0b !important;
-}
-
-/* Toast body text */
+/* Internal body content centering */
 .Toastify__toast-body {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  flex: 1 !important;
+  min-width: 0 !important;
   font-size: 0.875rem !important;
-  font-weight: 500 !important;
-  line-height: 1.4 !important;
-  letter-spacing: -0.01em !important;
+  font-weight: 600 !important;
 }
 
-/* Close button */
+/* Icon centering */
+.Toastify__toast-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  min-width: 20px !important;
+  margin-inline-end: 10px !important;
+}
+
+
+.Toastify__toast {
+  align-items: center !important;
+}
+
+/* THE CROSS (Close Button) */
 .Toastify__close-button {
-  color: #9ca3af !important;
-  opacity: 0.7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   align-self: center !important;
+  height: 28px !important;
+  width: 28px !important;
+  opacity: 0.5 !important;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.Toastify__close-button > svg {
+  width: 14px !important;
+  height: 14px !important;
 }
 
 .Toastify__close-button:hover {
-  color: #374151 !important;
   opacity: 1 !important;
-  background: rgba(0, 0, 0, 0.05) !important;
-  border-radius: 8px !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-radius: 50% !important;
 }
 
-/* Progress bar base */
-.Toastify__progress-bar {
-  height: 3px !important;
-  border-radius: 99px !important;
-  bottom: 0 !important;
-  opacity: 0.85 !important;
+/* ========================================
+   3. MOBILE RESPONSIVE (Bottom Centered)
+   ======================================== */
+@media only screen and (max-width: 480px) {
+  .Toastify__toast-container {
+    top: auto !important;
+    bottom: 1rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 1rem) !important;
+  }
+
+  .Toastify__toast {
+    min-height: 44px !important;
+    padding: 9px 14px !important;
+  }
+
+  .Toastify__toast-body {
+    font-size: 0.8125rem !important;
+  }
 }
+
+/* ========================================
+   4. THEMES (With Glassy Border Color)
+   ======================================== */
+
+/* Success - Glassy Green Border */
+.Toastify__toast--success {
+  background: rgba(236, 253, 245, 0.85) !important;
+  color: #064e3b !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important; /* Glassy touch border */
+}
+.Toastify__toast--success .Toastify__toast-icon svg { fill: #10b981 !important; }
+
+/* Error - Glassy Red Border */
+.Toastify__toast--error {
+  background: rgba(254, 242, 242, 0.85) !important;
+  color: #7f1d1d !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+.Toastify__toast--error .Toastify__toast-icon svg { fill: #ef4444 !important; }
+
+/* Info - Glassy Blue Border */
+.Toastify__toast--info {
+  background: rgba(239, 246, 255, 0.85) !important;
+  color: #1e3a8a !important;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+}
+.Toastify__toast--info .Toastify__toast-icon svg { fill: #3b82f6 !important; }
+
+/* Warning - Glassy Amber Border */
+.Toastify__toast--warning {
+  background: rgba(255, 251, 235, 0.85) !important;
+  color: #78350f !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+.Toastify__toast--warning .Toastify__toast-icon svg { fill: #f59e0b !important; }

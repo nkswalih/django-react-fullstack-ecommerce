@@ -48,28 +48,14 @@ const normalizeError = (error) => {
   return error?.message || "Request failed";
 };
 
-const updateCollection = (prev, updater) => {
-  if (Array.isArray(prev)) {
-    return updater(prev);
-  }
-
-  if (Array.isArray(prev?.results)) {
-    return {
-      ...prev,
-      results: updater(prev.results),
-    };
-  }
-
-  return prev;
-};
-
-export default function useApi(resource) {
+export default function useApi(resource, options = {}) {
   const config = resourceMap[resource];
+  const { listParams } = options;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (paramsOverride) => {
     if (!config?.list) {
       setError(`Unsupported resource: ${resource}`);
       setLoading(false);
@@ -79,14 +65,14 @@ export default function useApi(resource) {
     try {
       setLoading(true);
       setError(null);
-      const response = await config.list();
+      const response = await config.list(paramsOverride ?? listParams);
       setData(response.data);
     } catch (err) {
       setError(normalizeError(err));
     } finally {
       setLoading(false);
     }
-  }, [config, resource]);
+  }, [config, listParams, resource]);
 
   const createData = useCallback(
     async (payload) => {
@@ -121,14 +107,7 @@ export default function useApi(resource) {
         setLoading(true);
         setError(null);
         const response = await config.patch(id, payload);
-        setData((prev) => updateCollection(prev, (items) =>
-          items.map((item) => {
-            if (item.id === id || item.slug === id) {
-              return response.data;
-            }
-            return item;
-          }),
-        ));
+        await fetchData();
         return response.data;
       } catch (err) {
         const message = normalizeError(err);
@@ -138,7 +117,7 @@ export default function useApi(resource) {
         setLoading(false);
       }
     },
-    [config, resource],
+    [config, fetchData, resource],
   );
 
   const deleteData = useCallback(
@@ -151,9 +130,7 @@ export default function useApi(resource) {
         setLoading(true);
         setError(null);
         await config.remove(id);
-        setData((prev) => updateCollection(prev, (items) =>
-          items.filter((item) => item.id !== id && item.slug !== id),
-        ));
+        await fetchData();
       } catch (err) {
         const message = normalizeError(err);
         setError(message);
@@ -162,7 +139,7 @@ export default function useApi(resource) {
         setLoading(false);
       }
     },
-    [config, resource],
+    [config, fetchData, resource],
   );
 
   useEffect(() => {

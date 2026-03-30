@@ -1,10 +1,14 @@
-import { useDeferredValue, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import useApi from '../../../hooks/useApi'
+import AdminPagination from '../AdminPagination'
 import ProductStats from './ProductStats'
 import ProductList from './ProductList'
 import ProductForm from './ProductForm'
-import { getCategoryKey, isCategoryMatch, normalizeText } from '../../../utils/productCatalog'
+import { getCategoryKey } from '../../../utils/productCatalog'
+
+const PRODUCTS_PER_PAGE = 10;
+
 const AdminProducts = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -12,11 +16,21 @@ const AdminProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [tempSpecKey, setTempSpecKey] = useState('');
   const [tempSpecValue, setTempSpecValue] = useState('');
   const [tempVariantKey, setTempVariantKey] = useState('');
   const [tempVariantValue, setTempVariantValue] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  const listParams = useMemo(() => ({
+    limit: PRODUCTS_PER_PAGE,
+    offset: (currentPage - 1) * PRODUCTS_PER_PAGE,
+    ...(deferredSearchTerm ? { q: deferredSearchTerm } : {}),
+    ...(selectedCategory !== 'all' ? { category: selectedCategory } : {}),
+    ...(selectedStatus !== 'all' ? { status: selectedStatus } : {}),
+  }), [currentPage, deferredSearchTerm, selectedCategory, selectedStatus]);
 
   const {
     data,
@@ -26,10 +40,11 @@ const AdminProducts = () => {
     createData,
     patchData,
     deleteData,
-  } = useApi("products");
+  } = useApi("products", { listParams });
 
   const products = Array.isArray(data) ? data : data?.results || [];
-  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const productSummary = data?.summary;
+  const totalProducts = productSummary?.total_products ?? data?.total_available ?? data?.total ?? products.length;
 
   const initialAddForm = {
     name: '', category: 'Smartphone', brand: '', price: 0, currency: 'INR',
@@ -38,23 +53,19 @@ const AdminProducts = () => {
 
   const [addForm, setAddForm] = useState(initialAddForm);
   const [editForm, setEditForm] = useState(initialAddForm);
+  const filteredProducts = products;
+  const totalFilteredProducts = data?.total ?? products.length;
+  const totalPages = Math.max(1, Math.ceil(totalFilteredProducts / PRODUCTS_PER_PAGE));
 
-  const filteredProducts = useMemo(() => {
-    const normalizedSearch = normalizeText(deferredSearchTerm);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [deferredSearchTerm, selectedCategory, selectedStatus]);
 
-    return products.filter((product) => {
-      const matchesSearch =
-        !normalizedSearch ||
-        normalizeText(product.name).includes(normalizedSearch) ||
-        normalizeText(product.brand).includes(normalizedSearch) ||
-        normalizeText(product.category).includes(normalizedSearch);
-
-      const matchesCategory = isCategoryMatch(product.category, selectedCategory);
-      const matchesStatus = selectedStatus === 'all' || product.status === selectedStatus;
-
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [deferredSearchTerm, products, selectedCategory, selectedStatus]);
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const handleEdit = (product) => {
     const normalizedImages = Array.isArray(product.images)
@@ -127,7 +138,6 @@ const AdminProducts = () => {
       toast.success('Product added successfully!');
       setShowAddModal(false);
       setAddForm(initialAddForm);
-      refetch();
     } catch (error) {
       toast.error(error?.response?.data ? 'Failed to add product. Check the form values.' : 'Failed to add product');
       console.error('Error adding product:', error);
@@ -211,17 +221,11 @@ const AdminProducts = () => {
   };
 
   const categories = useMemo(() => {
-    const uniqueCategories = new Map();
+    const availableCategories = Array.isArray(productSummary?.categories) ? productSummary.categories : [];
+    const categoryKeys = availableCategories.map((category) => getCategoryKey(category.id || category.name));
 
-    products.forEach((product) => {
-      const categoryKey = getCategoryKey(product.category);
-      if (!uniqueCategories.has(categoryKey)) {
-        uniqueCategories.set(categoryKey, true);
-      }
-    });
-
-    return ['all', ...uniqueCategories.keys()];
-  }, [products]);
+    return ['all', ...categoryKeys];
+  }, [productSummary]);
 
   const statuses = ['all', 'new', 'active', 'out-of-stock', 'inactive', 'coming-soon'];
 
@@ -271,19 +275,30 @@ const AdminProducts = () => {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Products Management</h1>
-        <p className="text-gray-600">Manage your product catalog ({products.length} products)</p>
+        <p className="text-gray-600">Manage your product catalog ({totalProducts} products)</p>
       </div>
 
-      <ProductStats products={products} formatPrice={formatPrice} />
+      <ProductStats products={products} summary={productSummary} formatPrice={formatPrice} />
 
       <ProductList
         filteredProducts={filteredProducts}
+        paginatedProducts={products}
         searchTerm={searchTerm} setSearchTerm={setSearchTerm}
         selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
         selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus}
         categories={categories} statuses={statuses}
         formatPrice={formatPrice}
         handleEdit={handleEdit} handleDelete={handleDelete} handleAddProduct={handleAddProduct}
+        pagination={
+          <AdminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalFilteredProducts}
+            itemsPerPage={PRODUCTS_PER_PAGE}
+            itemLabel="products"
+            onPageChange={setCurrentPage}
+          />
+        }
       />
 
       {showEditModal && editingProduct && (

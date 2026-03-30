@@ -1,18 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import useApi from '../../hooks/useApi'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import AdminPagination from './AdminPagination'
+
+const USERS_PER_PAGE = 10;
 
 const AdminUsers = () => {
-  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingUser, setEditingUser] = useState(null);
   const [editForm, setEditForm] = useState({
     role: '',
     status: ''
   });
   const [showEditModal, setShowEditModal] = useState(false);
+  const listParams = useMemo(() => ({
+    limit: USERS_PER_PAGE,
+    offset: (currentPage - 1) * USERS_PER_PAGE,
+  }), [currentPage]);
 
   // Using the enhanced useApi hook
   const { 
@@ -22,14 +28,25 @@ const AdminUsers = () => {
     refetch,
     patchData,
     deleteData 
-  } = useApi("users");
+  } = useApi("users", { listParams });
+
+  const userItems = Array.isArray(rawUsers) ? rawUsers : rawUsers?.results || [];
+  const totalUsers = rawUsers?.total ?? userItems.length;
 
   // Process users to ensure they have role and status
-  const users = rawUsers.map((user, index) => ({
+  const users = userItems.map((user) => ({
     ...user,
-    role: user.role || (index === 0 ? "Admin" : "User"),
+    role: user.role || "User",
     status: user.status || "Active",
   }));
+
+  const totalPages = Math.max(1, Math.ceil(totalUsers / USERS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const handleEdit = (user) => {
     setEditingUser(user);
@@ -92,7 +109,7 @@ const AdminUsers = () => {
     }
   };
 
-  if (loading && !rawUsers.length) {
+  if (loading && !users.length) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-lg">Loading users...</div>
@@ -181,7 +198,7 @@ const AdminUsers = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Users Management</h1>
-          <p className="text-gray-600">Manage user roles and permissions ({users.length} users)</p>
+          <p className="text-gray-600">Manage user roles and permissions ({totalUsers} users)</p>
         </div>
       </div>
 
@@ -264,6 +281,15 @@ const AdminUsers = () => {
             </tbody>
           </table>
         </div>
+
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalUsers}
+          itemsPerPage={USERS_PER_PAGE}
+          itemLabel="users"
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   )
