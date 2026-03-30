@@ -3,6 +3,7 @@
    the icy-blue glassmorphic app design
    ======================================== */
 
+
 /* Container positioning fix */
 .Toastify__toast-container--top-right {
   top: 5rem !important; /* clears the fixed Navbar */

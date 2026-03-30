@@ -1,17 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { clearAuth as clearStoredAuth } from "../api/apiService";
+import { getProfile, logout as logoutRequest } from "../api/apiService";
 
 const AuthContext = createContext();
-
-const getStoredUser = () => {
-  try {
-    const stored = localStorage.getItem("currentUser") || localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  } catch {
-    return null;
-  }
-};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -19,22 +10,42 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("currentUser", JSON.stringify(userData));
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("isAuthenticated", "true");
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
     setUser(null);
-    clearStoredAuth();
   };
 
   useEffect(() => {
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-    }
-    setAuthLoading(false);
+    let isMounted = true;
+
+    const loadUser = async () => {
+      try {
+        const response = await getProfile();
+        if (isMounted) {
+          setUser(response.data);
+        }
+      } catch {
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setAuthLoading(false);
+        }
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -45,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isAdmin: () => user?.role === "Admin",
-        isUser: () => user?.role === "User",
+        isUser: () => user?.role === "Customer",
         authLoading,
       }}
     >

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
-import { clearAuth, login as loginApi, saveAuth } from "../../api/apiService";
+import { login as loginApi, logout as logoutApi } from "../../api/apiService";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "", rememberMe: false });
@@ -14,9 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
-    if (savedEmail) {
-      setFormData(prev => ({ ...prev, email: savedEmail, rememberMe: true }));
-    }
+    if (savedEmail) setFormData(prev => ({ ...prev, email: savedEmail, rememberMe: true }));
   }, []);
 
   const handleChange = (e) => {
@@ -27,39 +25,32 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      clearAuth();
       const res = await loginApi({
-        email: formData.email,
-        password: formData.password,
-      });
+         email: formData.email, 
+         password: formData.password,
+         remember: formData.rememberMe,
+        });
 
-      const { user, tokens } = res.data;
+      const { user } = res.data;
 
-      // Save tokens
-      saveAuth(tokens, user);
-
-      // Remember me
+      // ONLY FOR UX
       if (formData.rememberMe) {
         localStorage.setItem("rememberedEmail", formData.email);
       } else {
         localStorage.removeItem("rememberedEmail");
       }
 
-      // Update AuthContext
       login(user);
-
-      toast.success(`Welcome back, ${user.name}!`);
-
-      // Redirect based on role
+      toast.success(`Welcome back, ${user.name}!`, {
+        style: {
+          width: "360px",
+        },
+      });
       navigate(user.role === "Admin" ? "/admin" : "/");
-
     } catch (error) {
-      clearAuth();
       const msg =
         error.response?.data?.detail ||
-        error.response?.data?.error ||
         error.response?.data?.non_field_errors?.[0] ||
         "Invalid email or password";
       toast.error(msg);

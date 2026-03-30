@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getCart, updateCartItem, removeCartItem, clearCart as clearCartApi } from '../../api/apiService';
 import { motion, AnimatePresence } from 'framer-motion';
 import SimpleFooter from '../../components/SimpleFoot';
+import { useAuth } from '../../contexts/AuthContext';
 
 const fmt = (p) => new Intl.NumberFormat('en-IN', {
   style: 'currency', currency: 'INR', maximumFractionDigits: 0
@@ -11,12 +12,10 @@ const fmt = (p) => new Intl.NumberFormat('en-IN', {
 const CartPage = () => {
   const [cartItems, setCartItems]   = useState([]);
   const [loading, setLoading]       = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = localStorage.getItem('currentUser');
-    if (stored) setCurrentUser(JSON.parse(stored));
     fetchCart();
   }, []);
 

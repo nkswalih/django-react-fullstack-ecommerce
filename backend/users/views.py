@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 
 from .models import User
 from .serializers import LoginSerializer, RegisterSerializer, UserSerializer, get_tokens
@@ -19,6 +20,36 @@ def database_error_response():
     )
 
 
+def set_auth_cookies(response, tokens, remember=False):
+    """Set HttpOnly secure cookies for access and refresh tokens."""
+    is_production = not settings.DEBUG
+
+    cookie_kwargs = dict(
+        httponly=True,
+        secure=is_production,
+        samesite="Lax",
+    )
+
+    if remember:
+        # ✅ persistent cookies
+        response.set_cookie(
+            "access_token",
+            tokens['access'],
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            **cookie_kwargs
+        )
+        response.set_cookie(
+            "refresh_token",
+            tokens['refresh'],
+            max_age=60 * 60 * 24 * 7,
+            **cookie_kwargs
+        )
+    else:
+        # ✅ session cookies
+        response.set_cookie("access_token", tokens['access'], **cookie_kwargs)
+        response.set_cookie("refresh_token", tokens['refresh'], **cookie_kwargs)
+
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -30,13 +61,10 @@ class RegisterView(APIView):
         except OperationalError:
             return database_error_response()
 
-        return Response(
-            {
-                'user': UserSerializer(user).data,
-                'tokens': get_tokens(user),
-            },
-            status=status.HTTP_201_CREATED,
-        )
+        tokens = get_tokens(user)
+        response = Response({'user': UserSerializer(user).data}, status=201)
+        set_auth_cookies(response, tokens)
+        return response
 
 
 class LoginView(APIView):
@@ -50,12 +78,21 @@ class LoginView(APIView):
         except OperationalError:
             return database_error_response()
 
-        return Response(
-            {
-                'user': UserSerializer(user).data,
-                'tokens': get_tokens(user),
-            }
-        )
+        tokens = get_tokens(user)
+        response = Response({'user': UserSerializer(user).data})
+        remember = str(request.data.get("remember", "false")).lower() == "true"
+        set_auth_cookies(response, tokens, remember)
+        return response
+
+
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        response = Response({'detail': 'Logged out.'})
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return response
 
 
 class ProfileView(APIView):
@@ -83,7 +120,6 @@ class AdminUserListView(APIView):
     def get(self, request):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
-
         try:
             users = User.objects.all()
             return Response(UserSerializer(users, many=True).data)
@@ -97,7 +133,6 @@ class AdminUserDetailView(APIView):
     def patch(self, request, pk):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
-
         try:
             user = User.objects.get(pk=pk)
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -112,7 +147,6 @@ class AdminUserDetailView(APIView):
     def delete(self, request, pk):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
-
         try:
             user = User.objects.get(pk=pk)
             user.delete()

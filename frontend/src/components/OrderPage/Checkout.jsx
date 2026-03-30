@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createOrder, getCart } from '../../api/apiService';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../contexts/AuthContext';
 
 const initialFormData = {
   firstName: '',
@@ -19,9 +20,9 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [loadingCart, setLoadingCart] = useState(true);
   const [cartItems, setCartItems] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
   const [notification, setNotification] = useState({ show: false, message: '', type: 'error' });
   const [formData, setFormData] = useState(initialFormData);
+  const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
   const showNotification = (message, type = 'error') => {
@@ -41,28 +42,18 @@ const CheckoutPage = () => {
   }, [notification.show]);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (!storedUser) {
+    if (!currentUser) {
       setLoadingCart(false);
       showNotification('Please log in to checkout', 'error');
       return;
     }
 
-    try {
-      const parsedUser = JSON.parse(storedUser);
-      setCurrentUser(parsedUser);
-      setFormData((prev) => ({
-        ...prev,
-        firstName: parsedUser.name?.split(' ')[0] || '',
-        lastName: parsedUser.name?.split(' ').slice(1).join(' ') || '',
-        email: parsedUser.email || '',
-      }));
-    } catch (error) {
-      console.error('Error parsing current user:', error);
-      setLoadingCart(false);
-      showNotification('Please log in again', 'error');
-      return;
-    }
+    setFormData((prev) => ({
+      ...prev,
+      firstName: currentUser.name?.split(' ')[0] || '',
+      lastName: currentUser.name?.split(' ').slice(1).join(' ') || '',
+      email: currentUser.email || '',
+    }));
 
     const fetchCartItems = async () => {
       try {
@@ -77,7 +68,7 @@ const CheckoutPage = () => {
     };
 
     fetchCartItems();
-  }, []);
+  }, [currentUser]);
 
   const subtotal = useMemo(
     () => cartItems.reduce((total, item) => total + Number(item.productPrice || item.product_price || 0) * item.quantity, 0),

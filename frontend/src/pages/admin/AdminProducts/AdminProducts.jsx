@@ -1,13 +1,11 @@
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import useApi from '../../../hooks/useApi'
 import ProductStats from './ProductStats'
 import ProductList from './ProductList'
 import ProductForm from './ProductForm'
 import { getCategoryKey, isCategoryMatch, normalizeText } from '../../../utils/productCatalog'
-
 const AdminProducts = () => {
-  const [currentUser, setCurrentUser] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -40,11 +38,6 @@ const AdminProducts = () => {
 
   const [addForm, setAddForm] = useState(initialAddForm);
   const [editForm, setEditForm] = useState(initialAddForm);
-
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) setCurrentUser(JSON.parse(userData));
-  }, []);
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = normalizeText(deferredSearchTerm);

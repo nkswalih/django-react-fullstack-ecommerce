@@ -43,14 +43,7 @@ const AppRouter = () => {
         <Route path="/sign_in" element={<Login />} />
         <Route path="/terms_conditions" element={<Terms />} />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute requiredRole="User">
-              <UserLayout />
-            </ProtectedRoute>
-          }
-        >
+        <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="store" element={<StorePage />} />
@@ -58,15 +51,41 @@ const AppRouter = () => {
           <Route path="lap" element={<Laptop />} />
           <Route path="laptop" element={<Laptop />} />
           <Route path="test" element={<Test />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="profile/overview" element={<Profile />} />
-          <Route path="profile/orders" element={<Profile />} />
-          <Route path="profile/wishlist" element={<Profile />} />
-          <Route path="profile/cart" element={<Profile />} />
+
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute requiredRole="User">
+                <Profile />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Profile />} /> 
+
+            <Route path="overview" element={<Profile />} />
+            <Route path="orders" element={<Profile />} />
+            <Route path="wishlist" element={<Profile />} />
+            <Route path="cart" element={<Profile />} />
+          </Route>
+          
           <Route path="product/:slug" element={<ProductPage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
-          <Route path="order-confirmation/:orderId" element={<OrderConfirmation />} />
+          <Route
+            path="checkout"
+            element={
+              <ProtectedRoute requiredRole="User">
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+           path="order-confirmation/:orderId"
+            element={
+              <ProtectedRoute requiredRole="User">
+                <OrderConfirmation />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="accessories" element={<AccessoriesPage />} />
           <Route path="support" element={<EchooSupport />} />
         </Route>

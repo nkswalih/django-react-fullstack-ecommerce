@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 import useApi from '../../hooks/useApi'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 
 const AdminUsers = () => {
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [editingUser, setEditingUser] = useState(null);
   const [editForm, setEditForm] = useState({
     role: '',
@@ -21,9 +23,6 @@ const AdminUsers = () => {
     patchData,
     deleteData 
   } = useApi("users");
-
-  // Get current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem('user')) || null;
 
   // Process users to ensure they have role and status
   const users = rawUsers.map((user, index) => ({

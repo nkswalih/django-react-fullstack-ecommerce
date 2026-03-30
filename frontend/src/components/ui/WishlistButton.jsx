@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { addToWishlist, removeFromWishlist } from "../../api/apiService";
+import { useAuth } from "../../contexts/AuthContext";
 
 const getItemProductId = (item) => item?.product?.id || item?.product || item?.product_id;
 
@@ -16,26 +17,26 @@ const bubbleBase =
    – Large round bubble with animated ripple on click
 ╚════════════════════════════════════════════════════════════════*/
 export const WishlistButtonLarge = ({ product, className = "" }) => {
+  const { user, login } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ripple, setRipple] = useState(false);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr || !product?.id) { setIsWishlisted(false); return; }
-    try {
-      const user = JSON.parse(userStr);
-      const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
-      setIsWishlisted(wishlist.some((item) => getItemProductId(item) === product.id));
-    } catch { setIsWishlisted(false); }
-  }, [product?.id]);
+    if (!user || !product?.id) {
+      setIsWishlisted(false);
+      return;
+    }
+
+    const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
+    setIsWishlisted(wishlist.some((item) => getItemProductId(item) === product.id));
+  }, [product?.id, user]);
 
   const toggleWishlist = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (loading || !product?.id) return;
-    const userStr = localStorage.getItem("user");
-    if (!userStr) { toast.error("Please login to manage your wishlist"); return; }
+    if (!user) { toast.error("Please login to manage your wishlist"); return; }
 
     /* ripple animation */
     setRipple(true);
@@ -43,7 +44,6 @@ export const WishlistButtonLarge = ({ product, className = "" }) => {
 
     setLoading(true);
     try {
-      const user = JSON.parse(userStr);
       const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
       let updatedWishlist;
 
@@ -63,8 +63,7 @@ export const WishlistButtonLarge = ({ product, className = "" }) => {
       }
 
       const updatedUser = { ...user, wishlist: updatedWishlist };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      login(updatedUser);
     } catch (err) {
       toast.error(err?.response?.data?.detail || "Error updating wishlist");
     } finally {
@@ -113,33 +112,32 @@ export const WishlistButtonLarge = ({ product, className = "" }) => {
    – Compact, always visible top-right corner of card
 ╚════════════════════════════════════════════════════════════════*/
 const WishlistButton = ({ product, className = "" }) => {
+  const { user, login } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ripple, setRipple] = useState(false);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr || !product?.id) { setIsWishlisted(false); return; }
-    try {
-      const user = JSON.parse(userStr);
-      const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
-      setIsWishlisted(wishlist.some((item) => getItemProductId(item) === product.id));
-    } catch { setIsWishlisted(false); }
-  }, [product?.id]);
+    if (!user || !product?.id) {
+      setIsWishlisted(false);
+      return;
+    }
+
+    const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
+    setIsWishlisted(wishlist.some((item) => getItemProductId(item) === product.id));
+  }, [product?.id, user]);
 
   const toggleWishlist = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (loading || !product?.id) return;
-    const userStr = localStorage.getItem("user");
-    if (!userStr) { toast.error("Please login to manage your wishlist"); return; }
+    if (!user) { toast.error("Please login to manage your wishlist"); return; }
 
     setRipple(true);
     setTimeout(() => setRipple(false), 500);
 
     setLoading(true);
     try {
-      const user = JSON.parse(userStr);
       const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
       let updatedWishlist;
 
@@ -159,8 +157,7 @@ const WishlistButton = ({ product, className = "" }) => {
       }
 
       const updatedUser = { ...user, wishlist: updatedWishlist };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      login(updatedUser);
     } catch (err) {
       toast.error(err?.response?.data?.detail || "Error updating wishlist");
     } finally {

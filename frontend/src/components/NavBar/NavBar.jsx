@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import AuthButton from "../ui/AuthButton";
 import SearchDropdown from "../ui/SearchDropDown.jsx";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Nav item
 const NavItem = ({ to, label }) => {
@@ -30,8 +31,7 @@ const NavItem = ({ to, label }) => {
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {

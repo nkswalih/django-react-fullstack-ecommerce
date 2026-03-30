@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
-import { clearAuth, register as registerApi, saveAuth } from "../../api/apiService";
+import { register as registerApi } from "../../api/apiService";
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", terms: false });
@@ -23,16 +23,13 @@ const Register = () => {
     setLoading(true);
 
     try {
-      clearAuth();
-      const res = await registerApi({       // POST /api/register/
+      const res = await registerApi({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
 
-      const { user, tokens } = res.data;
-
-      saveAuth(tokens, user);;
+      const { user } = res.data;
 
       login(user);
 
@@ -40,7 +37,6 @@ const Register = () => {
       navigate("/");
 
     } catch (error) {
-      clearAuth();
       const errors = error.response?.data;
       if (errors?.email) toast.error(`Email: ${errors.email[0]}`);
       else if (errors?.password) toast.error(`Password: ${errors.password[0]}`);

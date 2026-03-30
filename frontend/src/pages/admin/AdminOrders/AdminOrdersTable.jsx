@@ -41,15 +41,31 @@ const AdminOrdersTable = ({
                 const createdAt = order.createdAt || order.created_at;
                 return (
                   <tr key={order.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">#{order.id}</div>
-                      <div className="text-sm text-gray-500">{formatDate(createdAt)}</div>
-                      <div className="mt-1">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPaymentColor(paymentMethod)}`}>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                    <div className="flex items-center justify-between gap-2">
+
+                      {/* LEFT */}
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
+                          #{order.id}
+                        </div>
+
+                        <div className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                          {formatDate(createdAt)}
+                        </div>
+                      </div>
+
+                      {/* RIGHT */}
+                      <div className="flex-shrink-0">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${getPaymentColor(paymentMethod)}`}
+                        >
                           {paymentMethod || "N/A"}
                         </span>
                       </div>
-                    </td>
+
+                    </div>
+                  </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{order.userName || "N/A"}</div>
                       <div className="text-sm text-gray-500">{order.userEmail || "N/A"}</div>

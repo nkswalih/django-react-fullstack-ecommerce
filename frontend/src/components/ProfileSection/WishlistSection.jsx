@@ -4,8 +4,10 @@ import { HeartIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 
 import { addToCart, removeFromWishlist } from "../../api/apiService";
+import { useAuth } from "../../contexts/AuthContext";
 
 const WishlistSection = ({ user, onRefresh }) => {
+  const { login } = useAuth();
   const [wishlistItems, setWishlistItems] = useState(user?.wishlist || []);
   const [loadingId, setLoadingId] = useState(null);
 
@@ -34,14 +36,7 @@ const WishlistSection = ({ user, onRefresh }) => {
       });
 
       setWishlistItems(updatedWishlist);
-
-      const userStr = localStorage.getItem("user");
-      if (userStr) {
-        const parsedUser = JSON.parse(userStr);
-        const nextUser = { ...parsedUser, wishlist: updatedWishlist };
-        localStorage.setItem("user", JSON.stringify(nextUser));
-        localStorage.setItem("currentUser", JSON.stringify(nextUser));
-      }
+      login({ ...user, wishlist: updatedWishlist });
 
       await onRefresh?.();
       toast.success("Removed from wishlist");

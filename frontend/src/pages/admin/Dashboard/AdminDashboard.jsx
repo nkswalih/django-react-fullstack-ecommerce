@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getOrders, getProducts, getUsers } from "../../../api/apiService";
+import { useAuth } from "../../../contexts/AuthContext";
 import AnalyticsCharts from "./AnalyticsCharts";
 import DashboardStats from "./DashboardStats";
 import RecentActivity from "./RecentActivity";
@@ -9,16 +10,9 @@ import { getProductsFromResponse } from "../../../utils/productCatalog";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
   const [analytics, setAnalytics] = useState(null);
-
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setCurrentUser(JSON.parse(userData));
-    }
-  }, []);
 
   useEffect(() => {
     fetchAnalytics();

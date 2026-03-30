@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import SimpleFooter from '../../components/SimpleFoot';
 import { WishlistButtonLarge } from '../../components/ui/WishlistButton';
+import { useAuth } from '../../contexts/AuthContext';
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -14,6 +15,7 @@ const ProductPage = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const { user } = useAuth();
 
   const [selectedOptions, setSelectedOptions] = useState({
     storage: '',
@@ -76,8 +78,7 @@ const ProductPage = () => {
     setAddingToCart(true);
 
     try {
-      const currentUserString = localStorage.getItem('currentUser');
-      if (!currentUserString) {
+      if (!user) {
         toast.error("Please log in to add items to cart");
         setAddingToCart(false);
         return;

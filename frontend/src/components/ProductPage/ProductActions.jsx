@@ -3,15 +3,16 @@ import { HeartIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 
 import { addToCart } from "../../api/apiService";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ProductActions = ({ product, selectedOptions, quantity, onQuantityChange }) => {
   const [addingToCart, setAddingToCart] = useState(false);
+  const { user } = useAuth();
 
   const handleAddToBag = async () => {
     if (addingToCart || product.stock === 0) return;
 
-    const currentUserString = localStorage.getItem("currentUser");
-    if (!currentUserString) {
+    if (!user) {
       toast.error("Please log in to add items to cart");
       return;
     }

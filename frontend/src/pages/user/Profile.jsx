@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowPathIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 
-import { clearAuth, getCart, getMyOrders, getProfile, getWishlist } from "../../api/apiService";
+import { getCart, getMyOrders, getProfile, getWishlist } from "../../api/apiService";
+import { useAuth } from "../../contexts/AuthContext";
 import CartSection from "../../components/ProfileSection/CartSection";
 import OrdersSection from "../../components/ProfileSection/OrdersSection";
 import OverviewSection from "../../components/ProfileSection/OverviewSection";
@@ -13,6 +14,7 @@ import SimpleFooter from "../../components/SimpleFoot";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { login, logout } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
   const [activeSection, setActiveSection] = useState("overview");
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ const Profile = () => {
 
       const profileError = profileRes.status === "rejected" ? profileRes.reason : null;
       if (profileError?.response?.status === 401 || profileError?.response?.status === 403) {
-        clearAuth();
+        await logout();
         navigate("/sign_in");
         return;
       }
@@ -66,9 +68,8 @@ const Profile = () => {
         wishlist: wishlistRes.status === "fulfilled" ? (wishlistRes.value.data || []) : [],
       };
 
-      localStorage.setItem("currentUser", JSON.stringify(nextUser));
-      localStorage.setItem("user", JSON.stringify(nextUser));
       setCurrentUser(nextUser);
+      login(nextUser);
 
       if (wishlistRes.status === "rejected") {
         toast.error("Wishlist could not be loaded right now.");
@@ -81,8 +82,8 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = () => {
-    clearAuth();
+  const handleLogout = async () => {
+    await logout();
     navigate("/sign_in");
   };
 

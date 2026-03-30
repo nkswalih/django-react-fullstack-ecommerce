@@ -2,7 +2,7 @@ import { LogOutIcon, SearchIcon, ShieldUserIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { clearAuth, getOrders, getProducts, getUsers } from "../../api/apiService";
+import { getOrders, getProducts, getUsers } from "../../api/apiService";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDebounce } from "../../hooks/useDebounce";
 import { getProductsFromResponse, normalizeText } from "../../utils/productCatalog";
@@ -99,9 +99,8 @@ const Header = ({ setSidebarOpen }) => {
     setSearchResults({ users, products, orders });
   }, [debouncedSearchQuery, searchData]);
 
-  const handleLogout = () => {
-    logout();
-    clearAuth();
+  const handleLogout = async () => {
+    await logout();
     navigate("/sign_in");
   };
 

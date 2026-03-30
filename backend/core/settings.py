@@ -38,12 +38,14 @@ ALLOWED_HOSTS = env_list(
 
 CORS_ALLOWED_ORIGINS = env_list(
     "CORS_ALLOWED_ORIGINS",
-    default=["http://127.0.0.1:5173", "http://localhost:5174"],
+    default=["http://127.0.0.1:8000", "http://localhost:5173"],
 )
+
+CORS_ALLOW_CREDENTIALS = True  
 
 CSRF_TRUSTED_ORIGINS = env_list(
     "CSRF_TRUSTED_ORIGINS",
-    default=["http://127.0.0.1:5173", "http://localhost:5174"],
+    default=["http://127.0.0.1:8000", "http://localhost:5173"],
 )
 
 
@@ -65,8 +67,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -147,7 +149,7 @@ AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "users.authentication.CookieJWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
