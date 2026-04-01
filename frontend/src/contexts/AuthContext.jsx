@@ -1,74 +1,59 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { getProfile, logout as logoutRequest } from "../api/apiService";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
+const AUTH_PAGES  = new Set(["/sign_in", "/sign_up"]);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [user,        setUser]    = useState(null);
+  const [authLoading, setLoading] = useState(true);
 
-  const login = (userData) => {
-    setUser(userData);
-  };
+  const login  = useCallback((userData) => setUser(userData), []);
 
-  const logout = async () => {
-    try {
-      await logoutRequest();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-    setUser(null);
-  };
+  const logout = useCallback(async () => {
+    try { await logoutRequest(); } catch { /* cookie cleared server-side anyway */ }
+    finally { setUser(null); }
+  }, []);
 
   useEffect(() => {
-    let isMounted = true;
+    if (AUTH_PAGES.has(window.location.pathname)) {
+      setLoading(false);
+      return;
+    }
 
-    const loadUser = async () => {
+    let active = true;
+
+    (async () => {
       try {
-        const response = await getProfile();
-        if (isMounted) {
-          setUser(response.data);
-        }
+        const { data } = await getProfile();
+        if (active) setUser(data);
       } catch {
-        if (isMounted) {
-          setUser(null);
-        }
+        if (active) setUser(null);
       } finally {
-        if (isMounted) {
-          setAuthLoading(false);
-        }
+        if (active) setLoading(false);
       }
-    };
+    })();
 
-    loadUser();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { active = false; };
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated: Boolean(user),
-        user,
-        login,
-        logout,
-        isAdmin: () => user?.role === "Admin",
-        isUser: () => user?.role === "Customer",
-        authLoading,
-      }}
-    >
+    <AuthContext.Provider value={{
+      user,
+      authLoading,
+      isAuthenticated: Boolean(user),
+      isAdmin:         user?.role === "Admin",   // ✅ value not function — easier to use
+      isUser:          user?.role === "User",
+      login,
+      logout,
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 };

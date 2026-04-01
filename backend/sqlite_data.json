@@ -1,0 +1,3077 @@
+[
+{
+  "model": "users.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$nBWYgop2ArraMwPKLLDUCH$npdqAXNgbTmBYBUfIJCszkPi8myVFJuqaSzV3L8+Dos=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "test@example.com",
+    "name": "Test User",
+    "role": "User",
+    "status": "Active",
+    "google_id": null,
+    "avatar": null,
+    "is_active": true,
+    "is_staff": false,
+    "created_at": "2026-03-23T18:33:27.557Z",
+    "updated_at": "2026-03-23T18:33:27.557Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$YbfPZxvrOD59mxeF0T801b$0J1hzgoz1m5GY6/l/oXRnFk7OPOfO3BVhwuK1/d1SRg=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "another@example.com",
+    "name": "Another User",
+    "role": "User",
+    "status": "Active",
+    "google_id": null,
+    "avatar": null,
+    "is_active": true,
+    "is_staff": false,
+    "created_at": "2026-03-23T18:34:57.832Z",
+    "updated_at": "2026-03-23T18:34:57.832Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$GxQE2IJ1dvcLEZ3aTKrTbN$oRdwwbvV9NKpKVB0D1dZ6bSmVWCQvQCVa1ZgMqAZbk8=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "swalink555@gmail.com",
+    "name": "Mohammed Swalih N K",
+    "role": "User",
+    "status": "Active",
+    "google_id": null,
+    "avatar": null,
+    "is_active": true,
+    "is_staff": false,
+    "created_at": "2026-03-23T18:37:43.183Z",
+    "updated_at": "2026-03-23T18:37:43.183Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$VSdwyytTRZg9zSKGvZbjOT$rxBSUDFKEFVBRZhaSLQimzr+6xzVvoBTEl1tAnCRgzE=",
+    "last_login": null,
+    "is_superuser": true,
+    "email": "admin@gmail.com",
+    "name": "Mohammed Swalih N K",
+    "role": "Admin",
+    "status": "Active",
+    "google_id": null,
+    "avatar": null,
+    "is_active": true,
+    "is_staff": true,
+    "created_at": "2026-03-24T04:18:19.857Z",
+    "updated_at": "2026-03-30T06:33:49.662Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$6dj49NrRM49RyZWik9DoqZ$oFfIeQx4b2niOY8Kw7aVSBtRJjSv1GeccUZhZtrX5qw=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "swalih@gmail.com",
+    "name": "Swalih",
+    "role": "User",
+    "status": "Active",
+    "google_id": null,
+    "avatar": null,
+    "is_active": true,
+    "is_staff": false,
+    "created_at": "2026-03-26T09:43:36.126Z",
+    "updated_at": "2026-03-30T09:35:40.698Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 35,
+  "fields": {
+    "slug": "iphone-17-pro",
+    "name": "iPhone 17 Pro",
+    "brand": "Apple",
+    "category": "Smartphone",
+    "price": "129999.00",
+    "currency": "INR",
+    "stock": 16,
+    "status": "active",
+    "short_description": "iPhone 17 Pro — titanium frame and pro camera system.",
+    "features": [
+      "6.1-inch Super Retina XDR display",
+      "Titanium design with textured matte glass back",
+      "A17 Pro chip with 6-core CPU",
+      "Pro camera system with 48MP Main camera",
+      "USB-C connector for charging and data transfer"
+    ],
+    "specs": {
+      "display": "6.1-inch ProMotion OLED",
+      "chip": "A19 Pro",
+      "mainCamera": "48MP Pro triple-lens",
+      "material": "Titanium",
+      "os": "iOS 19"
+    },
+    "variants": {
+      "storage": [
+        "256GB",
+        "512GB",
+        "1TB"
+      ],
+      "colors": [
+        "Orange",
+        "Deep Blue",
+        "White"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.113Z",
+    "updated_at": "2026-03-24T11:37:49.161Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 36,
+  "fields": {
+    "slug": "iphone-17",
+    "name": "iPhone 17",
+    "brand": "Apple",
+    "category": "Smartphone",
+    "price": "79999.00",
+    "currency": "INR",
+    "stock": 5,
+    "status": "active",
+    "short_description": "iPhone 17 with upgraded performance and battery.",
+    "features": [],
+    "specs": {
+      "display": "6.1-inch Super Retina XDR",
+      "chip": "A18 Pro",
+      "mainCamera": "48MP + 12MP",
+      "battery": "Improved battery life",
+      "os": "iOS 19"
+    },
+    "variants": {
+      "storage": [
+        "128GB",
+        "256GB",
+        "512GB"
+      ],
+      "colors": [
+        "Lavender",
+        "Sage",
+        "Mist Blue",
+        "White",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.118Z",
+    "updated_at": "2026-03-23T18:51:02.118Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 37,
+  "fields": {
+    "slug": "iphone-17-pro-max",
+    "name": "iPhone 17 Pro Max",
+    "brand": "Apple",
+    "category": "Smartphone",
+    "price": "149999.00",
+    "currency": "INR",
+    "stock": 0,
+    "status": "active",
+    "short_description": "iPhone 17 Pro Max — largest display and best battery.",
+    "features": [],
+    "specs": {
+      "display": "6.7-inch ProMotion OLED",
+      "chip": "A19 Pro",
+      "mainCamera": "48MP Pro quad-lens",
+      "battery": "Extended battery life",
+      "material": "Titanium"
+    },
+    "variants": {
+      "storage": [
+        "512GB",
+        "1TB"
+      ],
+      "colors": [
+        "Orange",
+        "Silver",
+        "Deep Blue"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.121Z",
+    "updated_at": "2026-03-23T18:51:02.121Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 38,
+  "fields": {
+    "slug": "iphone-air",
+    "name": "iPhone Air",
+    "brand": "Apple",
+    "category": "Smartphone",
+    "price": "139999.00",
+    "currency": "INR",
+    "stock": 39,
+    "status": "active",
+    "short_description": "iPhone Air — lightweight design, great performance.",
+    "features": [],
+    "specs": {
+      "display": "6.1-inch OLED",
+      "chip": "A17 Lite",
+      "mainCamera": "48MP",
+      "battery": "Good battery life",
+      "weight": "Lightweight"
+    },
+    "variants": {
+      "storage": [
+        "64GB",
+        "128GB",
+        "256GB"
+      ],
+      "colors": [
+        "Light Gold",
+        "Sky",
+        "White",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.123Z",
+    "updated_at": "2026-03-23T18:51:02.123Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 39,
+  "fields": {
+    "slug": "iphone-16",
+    "name": "iPhone 16",
+    "brand": "Apple",
+    "category": "Smartphone",
+    "price": "74999.00",
+    "currency": "INR",
+    "stock": 9,
+    "status": "active",
+    "short_description": "iPhone 16 with advanced camera and A18 chip.",
+    "features": [],
+    "specs": {
+      "display": "6.1-inch Super Retina XDR",
+      "chip": "A18",
+      "mainCamera": "48MP",
+      "battery": "All-day battery",
+      "os": "iOS 19"
+    },
+    "variants": {
+      "storage": [
+        "128GB",
+        "256GB",
+        "512GB"
+      ],
+      "colors": [
+        "Teal",
+        "Blue",
+        "Pink",
+        "White",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.126Z",
+    "updated_at": "2026-03-24T11:23:22.794Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 40,
+  "fields": {
+    "slug": "nothing-phone-3",
+    "name": "Nothing Phone 3",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "36999.00",
+    "currency": "INR",
+    "stock": 27,
+    "status": "active",
+    "short_description": "Nothing Phone 3 — improved camera & performance.",
+    "features": [],
+    "specs": {
+      "display": "6.6-inch OLED",
+      "chip": "Snapdragon 8 Gen 3",
+      "camera": "50MP + 12MP",
+      "battery": "4700mAh"
+    },
+    "variants": {
+      "storage": [
+        "128GB",
+        "256GB"
+      ],
+      "colors": [
+        "Black",
+        "Silver"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.128Z",
+    "updated_at": "2026-03-24T11:44:23.045Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 41,
+  "fields": {
+    "slug": "nothing-phone-3a-pro",
+    "name": "Nothing Phone 3a Pro",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "32999.00",
+    "currency": "INR",
+    "stock": 38,
+    "status": "active",
+    "short_description": "Nothing Phone 3a Pro — clean design & smooth UI.",
+    "features": [],
+    "specs": {
+      "display": "6.5-inch OLED",
+      "chip": "Snapdragon 7s Gen 3",
+      "camera": "50MP",
+      "battery": "5000mAh"
+    },
+    "variants": {
+      "storage": [
+        "128GB",
+        "256GB"
+      ],
+      "colors": [
+        "Gray",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.130Z",
+    "updated_at": "2026-03-24T11:41:53.269Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 42,
+  "fields": {
+    "slug": "nothing-phone-3a",
+    "name": "Nothing Phone 3a",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "23999.00",
+    "currency": "INR",
+    "stock": 60,
+    "status": "active",
+    "short_description": "Nothing Phone 3a — budget-friendly with signature design.",
+    "features": [],
+    "specs": {
+      "display": "6.2-inch OLED",
+      "chip": "Mid-range SoC",
+      "camera": "48MP",
+      "battery": "5300mAh"
+    },
+    "variants": {
+      "storage": [
+        "64GB",
+        "128GB"
+      ],
+      "colors": [
+        "White",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.132Z",
+    "updated_at": "2026-03-24T11:48:48.262Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 43,
+  "fields": {
+    "slug": "acer-nitro-v15-2025",
+    "name": "Acer Nitro V15 (2025)",
+    "brand": "Acer",
+    "category": "Laptop",
+    "price": "74999.00",
+    "currency": "INR",
+    "stock": 20,
+    "status": "active",
+    "short_description": "Acer Nitro V15 — gaming laptop with RTX graphics.",
+    "features": [],
+    "specs": {
+      "processor": "Intel i7 13th Gen",
+      "gpu": "NVIDIA RTX 4060",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "15.6-inch FHD 144Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "512GB",
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.135Z",
+    "updated_at": "2026-03-23T18:51:02.135Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 44,
+  "fields": {
+    "slug": "acer-nitro-v16-2025",
+    "name": "Acer Nitro V16 (2025)",
+    "brand": "Acer",
+    "category": "Laptop",
+    "price": "89999.00",
+    "currency": "INR",
+    "stock": 11,
+    "status": "active",
+    "short_description": "Acer Nitro V16 — larger display, high-refresh gaming.",
+    "features": [],
+    "specs": {
+      "processor": "Intel i7 14th Gen",
+      "gpu": "NVIDIA RTX 4070",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "16-inch QHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.137Z",
+    "updated_at": "2026-03-23T18:51:02.137Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 45,
+  "fields": {
+    "slug": "acer-nitro-v16-lite",
+    "name": "Acer Nitro V16 Lite",
+    "brand": "Acer",
+    "category": "Laptop",
+    "price": "89999.00",
+    "currency": "INR",
+    "stock": 11,
+    "status": "active",
+    "short_description": "Acer Nitro V16 — larger display, high-refresh gaming.",
+    "features": [],
+    "specs": {
+      "processor": "Intel Core i5-13420H Processor",
+      "gpu": "NVIDIA GeForce RTX 4050-6 GB GDDR6",
+      "ram": "16 GB",
+      "storage": "512 GB SSD",
+      "display": "16-inch QHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.138Z",
+    "updated_at": "2026-03-23T18:51:02.138Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 46,
+  "fields": {
+    "slug": "lenovo-loq-3-high-rtx-4080",
+    "name": "Lenovo LOQ 3 (High) - RTX 4080",
+    "brand": "Lenovo",
+    "category": "Laptop",
+    "price": "189999.00",
+    "currency": "INR",
+    "stock": 6,
+    "status": "active",
+    "short_description": "Lenovo LOQ 3 high model with top-tier GPU.",
+    "features": [],
+    "specs": {
+      "processor": "Intel i9 / Ryzen 9",
+      "gpu": "NVIDIA RTX 4060",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "display": "16-inch QHD 240Hz"
+    },
+    "variants": {
+      "ram": [
+        "32GB"
+      ],
+      "storage": [
+        "1TB",
+        "2TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.140Z",
+    "updated_at": "2026-03-23T18:51:02.140Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 47,
+  "fields": {
+    "slug": "lenovo-loq-3-high-rtx-4070",
+    "name": "Lenovo LOQ 3 (High) - RTX 4070",
+    "brand": "Lenovo",
+    "category": "Laptop",
+    "price": "139999.00",
+    "currency": "INR",
+    "stock": 8,
+    "status": "active",
+    "short_description": "Lenovo LOQ 3 high model balancing price and power.",
+    "features": [],
+    "specs": {
+      "processor": "Intel i7 / Ryzen 7",
+      "gpu": "NVIDIA RTX 4070",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "16-inch FHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.141Z",
+    "updated_at": "2026-03-23T18:51:02.141Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 48,
+  "fields": {
+    "slug": "asus-tuf-gaming-f16",
+    "name": "ASUS TUF Gaming F16",
+    "brand": "ASUS",
+    "category": "Laptop",
+    "price": "84999.00",
+    "currency": "INR",
+    "stock": 15,
+    "status": "active",
+    "short_description": "ASUS TUF — durable gaming laptop, value-focused.",
+    "features": [],
+    "specs": {
+      "processor": "13th Gen,Intel Core i5-13450HX",
+      "gpu": "NVIDIA RTX 5050-8GB",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "15.6-inch FHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "8GB",
+        "16GB"
+      ],
+      "storage": [
+        "512GB",
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.143Z",
+    "updated_at": "2026-03-23T18:51:02.143Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 49,
+  "fields": {
+    "slug": "asus-tuf-a15",
+    "name": "ASUS TUF A15",
+    "brand": "ASUS",
+    "category": "Laptop",
+    "price": "69999.00",
+    "currency": "INR",
+    "stock": 18,
+    "status": "active",
+    "short_description": "ASUS TUF A15 — AMD powered gaming performance.",
+    "features": [],
+    "specs": {
+      "processor": "Ryzen 7",
+      "gpu": "NVIDIA RTX 3050",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "15.6-inch FHD 144Hz"
+    },
+    "variants": {
+      "ram": [
+        "8GB",
+        "16GB"
+      ],
+      "storage": [
+        "512GB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.144Z",
+    "updated_at": "2026-03-23T18:51:02.144Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 50,
+  "fields": {
+    "slug": "asus-tuf-f16",
+    "name": "ASUS TUF F16",
+    "brand": "ASUS",
+    "category": "Laptop",
+    "price": "139990.00",
+    "currency": "INR",
+    "stock": 10,
+    "status": "active",
+    "short_description": "ASUS TUF F16 — higher-end TUF with stronger GPU.",
+    "features": [],
+    "specs": {
+      "processor": "14th Gen, Smartchoice,Intel Core i7 14650HX",
+      "gpu": "NVIDIA RTX 5060-8GB",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "16-inch QHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.146Z",
+    "updated_at": "2026-03-23T18:51:02.146Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 51,
+  "fields": {
+    "slug": "hp-victus-16",
+    "name": "HP Victus 16",
+    "brand": "HP",
+    "category": "Laptop",
+    "price": "89999.00",
+    "currency": "INR",
+    "stock": 12,
+    "status": "active",
+    "short_description": "HP Victus 16 — larger display with improved thermals.",
+    "features": [],
+    "specs": {
+      "processor": "AMD Ryzen 9-8945HS",
+      "gpu": "NVIDIA 8GB RTX 4060",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "16.1-inch FHD 144Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.148Z",
+    "updated_at": "2026-03-23T18:51:02.148Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 52,
+  "fields": {
+    "slug": "hp-victus-15",
+    "name": "HP Victus 15",
+    "brand": "HP",
+    "category": "Laptop",
+    "price": "74999.00",
+    "currency": "INR",
+    "stock": 20,
+    "status": "active",
+    "short_description": "HP Victus 15 — solid mid-range gaming laptop.",
+    "features": [],
+    "specs": {
+      "processor": "Intel Core i7, 13th Gen-13620H",
+      "gpu": "NVIDIA 6 GB RTX 3050",
+      "ram": "8GB",
+      "storage": "512GB SSD",
+      "display": "15.6-inch FHD 144Hz"
+    },
+    "variants": {
+      "ram": [
+        "8GB",
+        "16GB"
+      ],
+      "storage": [
+        "512GB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.150Z",
+    "updated_at": "2026-03-23T18:51:02.150Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 53,
+  "fields": {
+    "slug": "lenovo-legion-5",
+    "name": "Lenovo Legion 5",
+    "brand": "Lenovo",
+    "category": "Laptop",
+    "price": "129999.00",
+    "currency": "INR",
+    "stock": 9,
+    "status": "active",
+    "short_description": "Lenovo Legion 5 — powerful gaming with excellent cooling.",
+    "features": [],
+    "specs": {
+      "processor": "AMD Ryzen 9",
+      "gpu": "NVIDIA RTX 4070",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "15.6-inch QHD 165Hz"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "1TB",
+        "2TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.153Z",
+    "updated_at": "2026-03-23T18:51:02.153Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 54,
+  "fields": {
+    "slug": "lenovo-legion-7",
+    "name": "Lenovo Legion 7",
+    "brand": "Lenovo",
+    "category": "Laptop",
+    "price": "169999.00",
+    "currency": "INR",
+    "stock": 5,
+    "status": "active",
+    "short_description": "Lenovo Legion 7 — flagship Legion with top specs.",
+    "features": [],
+    "specs": {
+      "processor": "Intel i9",
+      "gpu": "NVIDIA RTX 4080",
+      "ram": "32GB",
+      "storage": "2TB SSD",
+      "display": "16-inch QHD 240Hz"
+    },
+    "variants": {
+      "ram": [
+        "32GB"
+      ],
+      "storage": [
+        "2TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.155Z",
+    "updated_at": "2026-03-23T18:51:02.155Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 55,
+  "fields": {
+    "slug": "macbook-m5-13-inch",
+    "name": "MacBook M5 13-inch",
+    "brand": "Apple",
+    "category": "Laptop",
+    "price": "129999.00",
+    "currency": "INR",
+    "stock": 8,
+    "status": "active",
+    "short_description": "MacBook with M5 — top performance for professionals.",
+    "features": [],
+    "specs": {
+      "processor": "Apple M5",
+      "ram": "8GB",
+      "storage": "256GB SSD",
+      "display": "13.3-inch Liquid Retina",
+      "battery": "Up to 20 hours"
+    },
+    "variants": {
+      "ram": [
+        "8GB",
+        "16GB"
+      ],
+      "storage": [
+        "256GB",
+        "512GB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.158Z",
+    "updated_at": "2026-03-23T18:51:02.158Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 56,
+  "fields": {
+    "slug": "macbook-m4-14-inch",
+    "name": "MacBook M4 14-inch",
+    "brand": "Apple",
+    "category": "Laptop",
+    "price": "149999.00",
+    "currency": "INR",
+    "stock": 6,
+    "status": "active",
+    "short_description": "MacBook M4 series — balanced power and portability.",
+    "features": [],
+    "specs": {
+      "processor": "Apple M4",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "14-inch Liquid Retina",
+      "battery": "Up to 18 hours"
+    },
+    "variants": {
+      "ram": [
+        "16GB",
+        "32GB"
+      ],
+      "storage": [
+        "512GB",
+        "1TB"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.162Z",
+    "updated_at": "2026-03-23T18:51:02.162Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 57,
+  "fields": {
+    "slug": "silicone-case-for-iphone-17-pro",
+    "name": "Silicone Case for iPhone 17 pro",
+    "brand": "StoreBrand",
+    "category": "Accessory",
+    "price": "799.00",
+    "currency": "INR",
+    "stock": 200,
+    "status": "active",
+    "short_description": "Slim silicone case for iPhone 16 series.",
+    "features": [],
+    "specs": {
+      "material": "Silicone",
+      "compatibility": "iPhone 16 / 17 / Air",
+      "colors": "Black, Blue, White"
+    },
+    "variants": {
+      "colors": [
+        "Black",
+        "Blue",
+        "White"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.165Z",
+    "updated_at": "2026-03-23T18:51:02.165Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 59,
+  "fields": {
+    "slug": "true-wireless-earbuds",
+    "name": "True Wireless Earbuds",
+    "brand": "SoundBrand",
+    "category": "Accessory",
+    "price": "3999.00",
+    "currency": "INR",
+    "stock": 120,
+    "status": "active",
+    "short_description": "Wireless earbuds with active noise cancellation.",
+    "features": [],
+    "specs": {
+      "battery": "30 hours (with case)",
+      "features": "ANC, Bluetooth 5.3, Quick Pair"
+    },
+    "variants": {
+      "colors": [
+        "Black",
+        "White"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.170Z",
+    "updated_at": "2026-03-23T18:51:02.170Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 60,
+  "fields": {
+    "slug": "logitech-lift-vertical-ergonomic-mouse",
+    "name": "Logitech Lift Vertical Ergonomic Mouse",
+    "brand": "Logitech",
+    "category": "Accessory",
+    "price": "5495.00",
+    "currency": "INR",
+    "stock": 298,
+    "status": "active",
+    "short_description": "Wireless, Bluetooth or Logi Bolt USB Receiver, Quiet clicks, 4 Buttons, Compatible with Windows/macOS/iPadOS, Laptop, PC - Graphite",
+    "features": [],
+    "specs": {
+      "hardness": "9H",
+      "compatibility": "iPhone 16 / 17 / Air",
+      "features": "Oleophobic coating"
+    },
+    "variants": {
+      "models": [
+        "Graphite"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.173Z",
+    "updated_at": "2026-03-23T18:51:02.173Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 62,
+  "fields": {
+    "slug": "offbeat-armored-premium-laptop-27ltr-backapcks-series",
+    "name": "Offbeat - Armored premium Laptop 27ltr backapcks series",
+    "brand": "offbeat",
+    "category": "Accessory",
+    "price": "1890.00",
+    "currency": "INR",
+    "stock": 180,
+    "status": "active",
+    "short_description": "Slim padded laptop sleeve for 13–15 inch laptops.",
+    "features": [],
+    "specs": {
+      "material": "Neoprene",
+      "sizes": "13-inch, 15-inch",
+      "features": "Water resistant"
+    },
+    "variants": {
+      "sizes": [
+        "13-inch",
+        "15-inch"
+      ],
+      "colors": [
+        "Grey",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.181Z",
+    "updated_at": "2026-03-23T18:51:02.181Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 63,
+  "fields": {
+    "slug": "usb-c-to-lightning-cable-1m",
+    "name": "USB-C to Lightning Cable (1m)",
+    "brand": "Apple",
+    "category": "Accessory",
+    "price": "1999.00",
+    "currency": "INR",
+    "stock": 350,
+    "status": "active",
+    "short_description": "Durable braided USB-C to Lightning cable (1m).",
+    "features": [],
+    "specs": {
+      "length": "1m",
+      "compatibility": "iPhone, iPad",
+      "features": "Fast charging support"
+    },
+    "variants": {
+      "lengths": [
+        "1m",
+        "2m"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.184Z",
+    "updated_at": "2026-03-23T18:51:02.184Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 64,
+  "fields": {
+    "slug": "iphone-finewoven-wallet-with-magsafe-moss",
+    "name": "iPhone FineWoven Wallet with MagSafe Moss",
+    "brand": "Apple",
+    "category": "Accessory",
+    "price": "2499.00",
+    "currency": "INR",
+    "stock": 90,
+    "status": "active",
+    "short_description": "MagSafe compatible wallet for iPhone (holds 3 cards).",
+    "features": [],
+    "specs": {
+      "material": "Leatherette",
+      "compatibility": "iPhone 12 and later (MagSafe)",
+      "capacity": "3 cards"
+    },
+    "variants": {
+      "colors": [
+        "Black",
+        "Brown"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.186Z",
+    "updated_at": "2026-03-23T18:51:02.186Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 66,
+  "fields": {
+    "slug": "cmf-phone-2-pro-5g",
+    "name": "CMF Phone 2 Pro 5G",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "19499.00",
+    "currency": "INR",
+    "stock": 49,
+    "status": "active",
+    "short_description": "Inside, the CMF Phone 2 Pro is powered by the MediaTek Dimensity 7300 Pro 5G chip. It has an 8-core CPU that can go up to 2.5GHz, making it 10% faster than the CMF Phone 1. The graphics performance is also 5% better, which should help with gaming and everyday use.",
+    "features": [],
+    "specs": {
+      "Brand": "CMF BY NOTHING",
+      "Operating System": "Android 15",
+      "RAM Memory Installed Size": "8 GB",
+      "Connectivity technologies": "Bluetooth, NFC, USB, Wi-Fi"
+    },
+    "variants": {
+      "ram": [
+        "128gb",
+        "256gb"
+      ],
+      "colors": [
+        "Orange",
+        "Black",
+        "White",
+        "Light green"
+      ]
+    },
+    "created_at": "2026-03-23T18:51:02.194Z",
+    "updated_at": "2026-03-24T09:06:54.603Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 67,
+  "fields": {
+    "slug": "nothing-headphone1-42db-anc",
+    "name": "Nothing Headphone(1) 42dB ANC",
+    "brand": "Nothing",
+    "category": "Accessory",
+    "price": "19999.00",
+    "currency": "INR",
+    "stock": 39,
+    "status": "active",
+    "short_description": "Clear and Rich Sound\nThis Headphone (1) features a meticulously engineered 40 mm dynamic driver paired with a high-linearity suspension system and 8.9 mm PU surround for exceptional sound performance. The nickel-plated coating minimises distortion, delivering clear high frequencies and depth in the bass. The diaphragm, rim, and dome are balanced to be lightweight yet rigid, allowing enhanced response times and minimising unwanted vibrations. This results in consistent and precise sound reproduction. The advanced PU surround in this Headphone (1) is engineered for efficient sound delivery and vivid bass. It moves more effectively, producing deeper, richer tones in the low frequencies. Its 8.9 mm width exceeds industry norms, minimising sound distortion and keeping the driver stable for precise vibrations, for clear vocals, vibrant mids, and an overall immersive sound.",
+    "features": [],
+    "specs": {
+      "Battery": "Up to 80 hours of playback",
+      "Collab With": "Sound by KEF",
+      "Working ANC": "Real-time adaptive ANC"
+    },
+    "variants": {},
+    "created_at": "2026-03-23T18:51:02.199Z",
+    "updated_at": "2026-03-23T18:51:02.199Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 68,
+  "fields": {
+    "slug": "nothing-ear-2024",
+    "name": "Nothing Ear 2024",
+    "brand": "Nothing",
+    "category": "Accessory",
+    "price": "8499.00",
+    "currency": "INR",
+    "stock": 42,
+    "status": "active",
+    "short_description": "We've mastered sound, and now you can too. Nothing Ear delivers our best-ever audio experience, giving you complete control of your sound in high fidelity. Bringing you closer to the artist, wherever you are.",
+    "features": [],
+    "specs": {
+      "Battery": "40.5 h battery 24-bit Hi-Res Audio",
+      "Sound": "24 bit Hi-Res Audio with LDAC & LHDC for the ultimate sound experience",
+      "Noise": "45 dB active noise cancellation"
+    },
+    "variants": {},
+    "created_at": "2026-03-23T18:51:02.203Z",
+    "updated_at": "2026-03-23T18:51:02.203Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 72,
+  "fields": {
+    "slug": "nothing-phone-4a-5g-1774337062366",
+    "name": "Nothing Phone 4a 5G",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "31999.00",
+    "currency": "INR",
+    "stock": 10,
+    "status": "active",
+    "short_description": "dsc",
+    "features": [],
+    "specs": {
+      "Display": "17.22 cm (6.78 inch) AMOLED Display",
+      "Processor": "Qualcomm Snapdragon 7s Gen 4 Octa-Core Processor",
+      "Operating System": "Android 16 (Nothing OS)",
+      "Camera": "50 MP + 50 MP + 8 MP Rear Camera / 32 MP Front Camera",
+      "Battery": "5400 mAh Battery with Fast Charging Support",
+      "Highlights": "Glyph Bar, Transparent Design, In-Display Fingerprint Sensor, 5G Connectivity"
+    },
+    "variants": {
+      "ram": [
+        "8GB",
+        "12GB"
+      ],
+      "storage": [
+        "128GB",
+        "256GB"
+      ],
+      "colors": [
+        "Pink",
+        "White",
+        "Blue",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-24T07:24:22.399Z",
+    "updated_at": "2026-03-24T08:58:05.294Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 73,
+  "fields": {
+    "slug": "nothing-phone-4a-pro-5g-1774341431105",
+    "name": "Nothing Phone 4a Pro 5G",
+    "brand": "Nothing",
+    "category": "Smartphone",
+    "price": "39999.00",
+    "currency": "INR",
+    "stock": 10,
+    "status": "active",
+    "short_description": "Qualcomm Snapdragon 7 Gen 4 | 5400 mAh Battery | Glyph Interface (Black)",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "colors": [
+        "White",
+        "Black",
+        "Pink"
+      ],
+      "ram": [
+        "8GB",
+        "12GB"
+      ]
+    },
+    "created_at": "2026-03-24T08:37:11.140Z",
+    "updated_at": "2026-03-24T08:52:53.425Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 74,
+  "fields": {
+    "slug": "phone-3a-community-edition-1774352880710",
+    "name": "Phone ( 3a ) Community Edition",
+    "brand": "Nothing Community",
+    "category": "Smartphone",
+    "price": "42000.00",
+    "currency": "INR",
+    "stock": 5,
+    "status": "active",
+    "short_description": "A collaborative celebration of community and creativity.",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "ram": [
+        "12GB"
+      ],
+      "storage": [
+        "256GB"
+      ]
+    },
+    "created_at": "2026-03-24T11:48:00.744Z",
+    "updated_at": "2026-03-24T11:48:00.744Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 75,
+  "fields": {
+    "slug": "macbook-neo-1774353396159",
+    "name": "MacBook Neo",
+    "brand": "Apple",
+    "category": "Laptop",
+    "price": "69000.00",
+    "currency": "INR",
+    "stock": 21,
+    "status": "active",
+    "short_description": "13″ Laptop with A18 Pro chip: Built for AI and Apple Intelligence, Liquid Retina Display, 8GB Unified Memory, 256GB SSD Storage, 1080p FaceTime HD Camera; Citrus",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "storage": [
+        "256GB",
+        "512GB"
+      ],
+      "colors": [
+        "4",
+        "Citrus",
+        "Deep Blue",
+        "Pink",
+        "Silver"
+      ]
+    },
+    "created_at": "2026-03-24T11:56:36.188Z",
+    "updated_at": "2026-03-24T13:37:42.396Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 76,
+  "fields": {
+    "slug": "pixel-10-1774357096227",
+    "name": "Pixel 10",
+    "brand": "Google",
+    "category": "Smartphone",
+    "price": "74000.00",
+    "currency": "INR",
+    "stock": 20,
+    "status": "active",
+    "short_description": "The power of Gemini, supercharged on Pixel.\nPixel phones have Gemini built in to help you do more, faster, and easier. Enabled by our next-gen chip, Google Tensor G5, it’s the extraordinary AI assistant for all things you.1",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "colors": [
+        "Blue",
+        "Lemon",
+        "mist blue",
+        "Black"
+      ],
+      "ram": [
+        "12GB"
+      ],
+      "storage": [
+        "256GB"
+      ]
+    },
+    "created_at": "2026-03-24T12:58:16.262Z",
+    "updated_at": "2026-03-24T13:04:00.831Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 77,
+  "fields": {
+    "slug": "pixel-10-pro-pro-xl-1774357644813",
+    "name": "Pixel 10 Pro & Pro XL",
+    "brand": "Google",
+    "category": "Smartphone",
+    "price": "109999.00",
+    "currency": "INR",
+    "stock": 10,
+    "status": "active",
+    "short_description": "Next-gen chip for the ultimate AI experience on a phone.\nThe new Google Tensor G5 chip is Pixel’s biggest leap in performance yet. It's custom built with a TPU that’s up to 60% more powerful and a CPU that’s on average 34% faster for Google’s most advanced AI and performance.22 It also delivers Pixel’s highest-quality photos and videos with an upgraded ISP.",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "storage": [
+        "256GB",
+        "512GB",
+        "1TB"
+      ],
+      "ram": [
+        "16GB"
+      ],
+      "colors": [
+        "Lemon",
+        "Gray",
+        "Light Gold",
+        "Black"
+      ]
+    },
+    "created_at": "2026-03-24T13:07:24.862Z",
+    "updated_at": "2026-03-24T13:08:53.070Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 78,
+  "fields": {
+    "slug": "airpods-max-2-1774365775475",
+    "name": "AirPods Max 2",
+    "brand": "Apple",
+    "category": "Audio",
+    "price": "67900.00",
+    "currency": "INR",
+    "stock": 15,
+    "status": "active",
+    "short_description": "Superior sound down to a science.\nTransformed by the H2 chip, AirPods Max 2 deliver more stunningly detailed, high‑fidelity audio. A new high-dynamic-range amplifier adds even more headroom used by the custom‑built driver to reveal richer bass, more natural vocals and precise instrument localisation across a wider soundstage.",
+    "features": [],
+    "specs": {},
+    "variants": {
+      "colors": [
+        "Black",
+        "Light Gold",
+        "Teal",
+        "Lavender"
+      ]
+    },
+    "created_at": "2026-03-24T15:22:55.532Z",
+    "updated_at": "2026-03-24T15:22:55.534Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 100,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-digitalmat-gallery-3-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=SVhTK013TmU5bXcxZm9yb0hnWkxGU0JYMGNRelI2WXAyb0IycFNGSFF5QXlNUWtzZldTWFRVcW9XNGZ1blhXOWVkZGptNUJaWitJZ3gyOURkSTlZQ3VCc3FjamJwVXJjd2U3WEc3Smc2MXpkZWxUbVcrZTZlY2ZZSjRZQ2QyaW1mbW94YnYxc1YvNXZ4emJGL0IxNFp3",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 101,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-unselect-gallery-1-202509_GEO_EMEA?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxdFgrSXpWVEhWaW9YTGlWRHFoSHU0OGVVRGcwVkxmNk9rdGtMbGV1WEU3aHNCckZqMTMrS3dIUWFPL2dFWXJDTmhNQnJMcnc4RkxJd3ZMc3hKZVVFWHUxNjR2WDVZSE9wdmlwTk5JUnpsUEZyYW1LQys4QTB0dktyalpuNkJlVVN3&traceId=1",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 102,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-digitalmat-gallery-2-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=SVhTK013TmU5bXcxZm9yb0hnWkxGZHp0bzhwRTZxYVNNMnVRTXVpMUZES0U5aWg1WE9Xd3BOSWtnNzkvSWZLd0ZGMGUwb1Y3aUJoOFNtZnEvQXJFMEJYVzFZSG9ORXhsSkhTN0hjejcrL012STE2N3lLaGN2TEw1SWFFVXhJdG8",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 103,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-digitalmat-gallery-4-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=SVhTK013TmU5bXcxZm9yb0hnWkxGV01QRDErVGRSejdiZElhV1JWdUVLeUU5aWg1WE9Xd3BOSWtnNzkvSWZLd0ZGMGUwb1Y3aUJoOFNtZnEvQXJFMEJYVzFZSG9ORXhsSkhTN0hjejcrL1ArTXlFTTV6c1Ayd1o2ZkVhV1JhK0U",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 104,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-digitalmat-gallery-5-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=SVhTK013TmU5bXcxZm9yb0hnWkxGUjZZYjZUb0RCWElvSXlYUWhuREtTeUU5aWg1WE9Xd3BOSWtnNzkvSWZLd0ZGMGUwb1Y3aUJoOFNtZnEvQXJFMEJYVzFZSG9ORXhsSkhTN0hjejcrL012STE2N3lLaGN2TEw1SWFFVXhJdG8",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 105,
+  "fields": {
+    "product": 36,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-digitalmat-gallery-6-202509?wid=728&hei=666&fmt=jpeg&qlt=90&.v=SVhTK013TmU5bXcxZm9yb0hnWkxGYnFKc2ptWjJYakpPRXdPVUNzTGpNT0U5aWg1WE9Xd3BOSWtnNzkvSWZLd1l1V3dXQmdJWnFRbkcraVFaYnkzVFk1WkdmSmlSUHRjbjg3K3JzSXZQSU81aWdqNHVwcUtlVHFoZ0JJaFYvWUs",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 106,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-5-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJeG1hWkZ6UHNRSXhlQnZJMURpUmV1QW8xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXpucGszV1kvUjNNUmdVQ1lGWXlTekY",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 107,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17promax-digitalmat-gallery-2-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=WkVhZXB4WmFzZmdNeXA3cHg3WUZFU0tjazZmSzdrSHdxTW9VUlF0akdCdVNDb201c3lKa2NEYURnZ1VuSk5xQXpGbHdxTU5oSkkwKzZZOXF0cVNPL1V0RmgycTRGTHI3SUVxVFVFNFI5Qyt6aitNLzYzbUlaaklNYXhYUEpnVXU",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 108,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17promax-digitalmat-gallery-1-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=WkVhZXB4WmFzZmdNeXA3cHg3WUZFU0tjazZmSzdrSHdxTW9VUlF0akdCdTZhTHJkRit4dmNvT3JoY0NOUVJTRitzMU1qbXEvNjlBN1VxbHRaS1dQS2NQOWxuYmZSN0NKOEpIS2RzTDlRVVFUd2h0eWVsVXNFSXNxYyt3ZEFEVStKTjNIVGtvY0IzalVQV0ZqbHBCUjZR",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 109,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17promax-digitalmat-gallery-3-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=WkVhZXB4WmFzZmdNeXA3cHg3WUZFU0tjazZmSzdrSHdxTW9VUlF0akdCc2hJek5jUXlGL2hrRE9PQW1MczdvOXpGbHdxTU5oSkkwKzZZOXF0cVNPL1V0RmgycTRGTHI3SUVxVFVFNFI5Qy9MaS85TmIwRFdiWE5HcWJteWMrRGQ",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 110,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-pro-finish-select-202509-6-9inch-silver_AV3?wid=5120&hei=2880&fmt=webp&qlt=90&.v=NUNzdzNKR0FJbmhKWm5YamRHb05tUzkyK3hWak1ybHhtWDkwUXVINFc0RVRqUkJqUGFyN1pGMnlaV3JkWU9jdmdrZ1hLRVJweE1Ld0hrelZYQUxRVWZQWFVaUmg1QWFsTVJFWjd1RElva2hnM0hWZ2pCcFpSZTVSV1k3SjhURDRMaElvNnRvQmpNZTUweTNnQlFCT1B3&traceId=1",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 111,
+  "fields": {
+    "product": 37,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-pro-finish-select-202509-6-9inch-deepblue_AV3?wid=5120&hei=2880&fmt=webp&qlt=90&.v=NUNzdzNKR0FJbmhKWm5YamRHb05tUzkyK3hWak1ybHhtWDkwUXVINFc0RWhhOHJGRUNHdlh6a3VuZVVqdnNrNVJ2dnZ6eHdCQ0dUd3RuYU1ZcENUSHdDb1F2RTNvUEVHRkpGaGtOSVFHak5NTEhXRE11VU1QNVo2eDJsWlpuWHQ1V3E2amljcVUyYTdYMlk2dDNTTllR&traceId=1",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 112,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17air-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jci9mUU0zMkc5ekxlZHFEM05NWkp3NUMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTCtUZHJHS0dDSWYyeUtQd0tjOERiaFE",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 113,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-1-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwRzYrc3EwZ1VoVGgyY0J1bS9COCtuZ1lMQnk0NlU1Q0YrZ2hIbjFrUkVtaGQ5S3Q4dnBGQmd2K0NENXJLTFNwNzhmSGN3NTUxbDRHZDZXK1V3b1o4a1MzQ2RtWllHVXFBTG9GU1VuVXUrcFpGQlRRRytmTHd2bTlDU2RZMUtqVTRR",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 114,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-2-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwT1BCRHJhQ0hmOWpiYTg5dm5FQWI3dHZibThWRUlEV2tlZ2JSNmpmUlp1TlFuOTJXc2JVdks4czlZWHJTOHkzNkg4SnkwY0diclR3aWNnek5QTEFaZFJOWDUzbkRhQW1IMmtSeU8zS2hzSWE",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 115,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-3-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwTjJ1T24yemhudm9NaWo1cUl6SVN6RVlMQnk0NlU1Q0YrZ2hIbjFrUkVtaGQ5S3Q4dnBGQmd2K0NENXJLTFNwNzhmSGN3NTUxbDRHZDZXK1V3b1o4a1FHTkhMY1JTVVlSYVMxTGw2ZWJDT3hka0xmckVNVTBkS20yTzkwa0dhU09n",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 116,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-4-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwQ29tZGFRcVl5Vm12RlEvdm1xNU1vdHZibThWRUlEV2tlZ2JSNmpmUlp1TlFuOTJXc2JVdks4czlZWHJTOHkzNkg4SnkwY0diclR3aWNnek5QTEFaZFQ0SUJEdG9iY1h3NUYwNDNqMUY3YXo",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 117,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-5-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwR015UmNzenFKUHB0bGtqQUxXNExEVnZibThWRUlEV2tlZ2JSNmpmUlp1TlFuOTJXc2JVdks4czlZWHJTOHkzNkg4SnkwY0diclR3aWNnek5QTEFaZFRUdFBEQ2lzRUQ0Yk4rVVZQOGJ6ZHA",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 118,
+  "fields": {
+    "product": 38,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-air-digitalmat-gallery-6-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=cjBEZlU5bVdKZEVBTk45K09QMzAwQWlINEF4cWpiTXVBQzlOalN3V1o1WnZibThWRUlEV2tlZ2JSNmpmUlp1TlFuOTJXc2JVdks4czlZWHJTOHkzNkg4SnkwY0diclR3aWNnek5QTEFaZFFOVHhaMzM2dnpoZnlQV2FXblJuN3A",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 136,
+  "fields": {
+    "product": 43,
+    "image_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSLfr7dY8I9aMS-7SSNvK0xtd8WZ-kCHCrr5IngrcsZJs50rI2yovBCbVsx6LdtfHHYfgBeppbNAkvpy968JqFSgLHQeTTUK8zDd5491mKCev6gQBgveo7I",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 137,
+  "fields": {
+    "product": 44,
+    "image_url": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQzKkDkta9raFHZk1l6fF0qD7XJ0i3O5-M-7EUIxue81CRJyDUJ3oXHQdmCpc_eiU8lGXf_xcJj2Nu8fgnvxJZqs3tfJuzbRSzWXkzO5kfqVMQuMmnMDam0eQ",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 138,
+  "fields": {
+    "product": 45,
+    "image_url": "https://static-ecapac.acer.com/media/catalog/product/n/i/nitro_base_image_i5_un.366si.006.jpg?optimize=high&bg-color=255,255,255&fit=bounds&height=500&width=500&canvas=500:500",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 139,
+  "fields": {
+    "product": 46,
+    "image_url": "https://m.media-amazon.com/images/I/81f7dTXcl4L.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 140,
+  "fields": {
+    "product": 47,
+    "image_url": "https://m.media-amazon.com/images/I/81AFuufzY-L.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 141,
+  "fields": {
+    "product": 48,
+    "image_url": "https://m.media-amazon.com/images/I/81esbxfsMlL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 142,
+  "fields": {
+    "product": 49,
+    "image_url": "https://m.media-amazon.com/images/I/81+DaZP4aSL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 143,
+  "fields": {
+    "product": 50,
+    "image_url": "https://m.media-amazon.com/images/I/81uhoF43yAL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 144,
+  "fields": {
+    "product": 51,
+    "image_url": "https://m.media-amazon.com/images/I/41-Fy0V3XZL._SY300_SX300_QL70_FMwebp_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 145,
+  "fields": {
+    "product": 52,
+    "image_url": "https://m.media-amazon.com/images/I/71yAQOj0FTL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 146,
+  "fields": {
+    "product": 53,
+    "image_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQmDh-P-LjJMDwMEhQYWe5hw-aPLpN1CtNc4uD63s3VAULe5p-o_qdqHzw5r_EvobgQZnvkipKSiavaszC7SVCXwITtjkuOoPz_4Txlex8eKoU0GYbpLifocMzGD4KN&usqp=CAc",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 147,
+  "fields": {
+    "product": 54,
+    "image_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRzE-LF68BIl_IKwC4pj_xwi6nVO2S8KV0WeQCm0np75W-uiJMZqdZocYnnG68T2eDDWKlwxyOYMxbmjpcA6YtvTJZRV4gNAhR4YqNlUkOQiwq8D1OM9JJ1",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 148,
+  "fields": {
+    "product": 55,
+    "image_url": "https://www.apple.com/assets-www/en_WW/mac/01_product_tile/xlarge/mbp_14_16_b933a4e71_2x.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 149,
+  "fields": {
+    "product": 55,
+    "image_url": "https://www.apple.com/v/macbook-pro/av/images/overview/performance/performance_mx_chip_startframe__bfgs77zni2sy_large_2x.jpg",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 150,
+  "fields": {
+    "product": 55,
+    "image_url": "https://www.apple.com/v/macbook-pro/av/images/overview/artificial-intelligence/ai_features_endframe__fr82kdy8eeem_large.jpg",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 151,
+  "fields": {
+    "product": 55,
+    "image_url": "https://www.apple.com/v/macbook-pro/av/images/overview/welcome/hero_endframe__e4ls9pihykya_xlarge_2x.jpg",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 152,
+  "fields": {
+    "product": 56,
+    "image_url": "https://www.apple.com/assets-www/en_WW/mac/01_product_tile/xlarge/mba_13_15_140e630d3_2x.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 153,
+  "fields": {
+    "product": 56,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-m4-skyblue-gallery1-202503?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=dFJNbHJtN3hkZlFORmN2VUlkWnZyRXYwRGVrS3RUdEhkRUtkS2E1aGdYZmd1eUJ6eHZMSFFNMld6aTRncXNRUlJWYlIvRkkxemNIb09FY29ZRmVrUDV4ZVYvN2VacDZmMzVpdWVtV014N1RyMTdVV05yRXMxSlVPemtESDIwNVE",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 154,
+  "fields": {
+    "product": 56,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-m4-skyblue-gallery2-202503?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=dFJNbHJtN3hkZlFORmN2VUlkWnZySHB1eEZuT0djdFIvaGtSV0tRQ3lXcmd1eUJ6eHZMSFFNMld6aTRncXNRUlJWYlIvRkkxemNIb09FY29ZRmVrUDVRZFpWRGhqRDhIZHNORWNaTWxnaCtycDU0Zm9tS1NLYWZhaWJKS1VJSUo",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 155,
+  "fields": {
+    "product": 56,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-m4-skyblue-gallery3-202503?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=dFJNbHJtN3hkZlFORmN2VUlkWnZyTjlvU0tjcXRFSTRCQmxWYlhhckRTN2d1eUJ6eHZMSFFNMld6aTRncXNRUlJWYlIvRkkxemNIb09FY29ZRmVrUHpEdmdxeCtvQXIySWpQWVFFTEVIUit0cWcyZmNzMEx0dHVPQ21kOTEvcTQ",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 156,
+  "fields": {
+    "product": 56,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-m4-skyblue-gallery4-202503?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=dFJNbHJtN3hkZlFORmN2VUlkWnZyS090QVV3bTNqT2lCUW11ak84QUNXUGd1eUJ6eHZMSFFNMld6aTRncXNRUlJWYlIvRkkxemNIb09FY29ZRmVrUDk3b3A2MTZjVElvS05OR0xlT2MraklnbVJYM29hTEY2aG9Va0ptMTVFdnI",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 157,
+  "fields": {
+    "product": 56,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mba13-m4-gallery7-202503?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=TkdkdTYvZmdKUlhJb2I0VXBWbFVFY3VoMUZNNDRVL2pzWmc0SVRMZjBwQXBFd2F2YlBVdmtrWUs2bExmOEpiQ2dsbGZlRHV0Q3JlbHJxWXRlWjZpMnA2UjRCeUZ1cmNrQmUvQ1hmTmlERzA",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 158,
+  "fields": {
+    "product": 57,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGF64?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=S0R5bjkzbTk4d0FPVGtMK2hQZUdVZ2tuVHYzMERCZURia3c5SzJFOTlPZ3JTRTZ5Yi94UDBnUUhiU2ZvQ2ZITkxhdEF2Qnk0U2VobnRLanVtaVJ5THc",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 160,
+  "fields": {
+    "product": 59,
+    "image_url": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0069_CMF-Buds-Pro-2-case-orange.png?v=1753437680",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 161,
+  "fields": {
+    "product": 60,
+    "image_url": "https://m.media-amazon.com/images/I/61OkuiCWbDL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 163,
+  "fields": {
+    "product": 62,
+    "image_url": "https://m.media-amazon.com/images/I/61CnZjeZGgL._SX679_.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 164,
+  "fields": {
+    "product": 63,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MU2G3_AV1?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=ejdRTlJjUmp1dHRXbG9mdkF0dmJpRlZya2lKWlJmUEwrYndWOTJiVWJWQUYwVmtIbGRkS25RMVpBRlo0bk5DUVo0R3pnVmdwR2k3OGlKTzYyNVpEbFE",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 165,
+  "fields": {
+    "product": 64,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGH74_AV4?wid=2000&hei=2000&fmt=jpeg&qlt=90&.v=aXg0N3ppSVJKcTF1eHV1dU5tVjNEU1RkTXNZOFJZTitTVFE0NHl0VW5Cb0YwVmtIbGRkS25RMVpBRlo0bk5DUUdBT1NodzZZMVZMR3o5cWtzVUVud3c",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 166,
+  "fields": {
+    "product": 64,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGH74?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=QWVQRnQzSTQvSSthZ0FrN0hIaDFaZ2tuVHYzMERCZURia3c5SzJFOTlPaWc2VXhiaHNBT1NtRnhyVHFkMm1SKzd2U2F3ZkUrYkNLNElnendiZnh3THc",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 175,
+  "fields": {
+    "product": 67,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0021_Headphone1-white.png?v=1753757251",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 176,
+  "fields": {
+    "product": 67,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/c45d469722841bcffddc4bb2520582f0e6c414d8-864x864.jpg?auto=format",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 177,
+  "fields": {
+    "product": 67,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/c05efb71ebf47b15989185802054b726c0b74edf-864x864.jpg?auto=format",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 178,
+  "fields": {
+    "product": 67,
+    "image_url": "https://image.mux.com/d2SMbGKYhLtjbtiBoNI8jbdZRcszD017dblEwqljLC014/thumbnail.webp",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 179,
+  "fields": {
+    "product": 68,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0024_Ear-black.png?v=1753757359&width=600&height=600&crop=center",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 180,
+  "fields": {
+    "product": 68,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0023_Ear-white.png?v=1753757347&width=600&height=600&crop=center",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 181,
+  "fields": {
+    "product": 68,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/892ca1fee54f0c221d55289e8072c84df0537aa2-396x396.jpg?auto=format",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 182,
+  "fields": {
+    "product": 68,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/BA_360_ENTEI_030_blackBud_rgb_00_4fdaba7c-5568-4db0-aaa5-5129d524d8bd.png?v=1713169144",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 223,
+  "fields": {
+    "product": 73,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Pro-White.png?v=1772251228",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 224,
+  "fields": {
+    "product": 73,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Pro-Black.png?v=1772251228",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 225,
+  "fields": {
+    "product": 73,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Pro-Pink.png?v=1772251228",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 226,
+  "fields": {
+    "product": 72,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Pink.png?v=1772251226",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 227,
+  "fields": {
+    "product": 72,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-White.png?v=1772251226",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 228,
+  "fields": {
+    "product": 72,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Blue.png?v=1772251226",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 229,
+  "fields": {
+    "product": 72,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Black.png?v=1772251226",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 230,
+  "fields": {
+    "product": 72,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/w/s/r/-original-imahh7x7jkxraxfg.jpeg?q=90",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 231,
+  "fields": {
+    "product": 72,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/h/r/e/-original-imahh7x7zafczyrp.jpeg?q=90",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 232,
+  "fields": {
+    "product": 72,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/t/j/f/-original-imahh7x7e2f5wbyw.jpeg?q=90",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 233,
+  "fields": {
+    "product": 66,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0054_CMF-Phone-2-Pro-Orange.png?v=1753757344",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 234,
+  "fields": {
+    "product": 66,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0058_CMF-Phone-2-Pro-black.png?v=1753757371",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 235,
+  "fields": {
+    "product": 66,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0055_CMF-Phone-2-Pro-lightgrey.png?v=1753757347",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 236,
+  "fields": {
+    "product": 66,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0056_CMF-Phone-2-Pro-Lightgreen.png?v=1753757364",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 237,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/o/l/2/-original-imahgfmzvanpgncf.jpeg?q=90",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 238,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/g/l/q/-original-imahgfmzdbnzzjjg.jpeg?q=90",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 239,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/c/v/v/-original-imahgfmypevfehpc.jpeg?q=90",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 240,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/h/u/i/-original-imahgfmyczqxhtm2.jpeg?q=90",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 241,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/n/q/h/-original-imahgfmzjj8gtqbc.jpeg?q=90",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 242,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/d/o/r/-original-imahfvx3ywpmyexy.jpeg?q=90",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 243,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/r/z/s/-original-imahfvx3gkzzpjud.jpeg?q=90",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 244,
+  "fields": {
+    "product": 39,
+    "image_url": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mobile/t/u/o/-original-imahfvx39gh3ddzy.jpeg?q=90",
+    "order": 7,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 255,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-card-40-17pro-202509?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=WVVFRzUzVk1oblJhbW9PbGNSU25jaUtlSkZ1cHdCU1J4ZWZjamdoYzhpRkMxQXc4S3pBZE5lUDJlTzVYSUYydFMwV0hhcmdVdXZzZ1NwTlFUaEgwTDc0akx0V0lSSVRoL2tPb3ZabW5DM0k",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 256,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-3-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJeGNmQmJPaDM2aGx4aDFNbXhCczNyV28xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXhxRHVRU1Y3V3BkbTR4MkxPZTk5REQ",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 257,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-5-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJeG1hWkZ6UHNRSXhlQnZJMURpUmV1QW8xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXpucGszV1kvUjNNUmdVQ1lGWXlTekY",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 258,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-4-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJeW44a2VheUNSOWt5dkdpV3ArUU1HZG8xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXkvQ2svUmdCYndZbnB5SWh3WFZNNWk",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 259,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-2-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJempueExUTkVtdVNxK2VpSU1Ja0hLVm8xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXl3WUo3NEhENThaODkzU2xiZzlIRjY",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 260,
+  "fields": {
+    "product": 35,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-6-202509?wid=728&hei=666&fmt=p-jpg&qlt=95&.v=ekJPc2lPUlRuRk50SkcyOVdnU1d0TjFla0N0Znl3UThxdjB3SW91ZDVJekUvTEM4WjJGZEN4em41Q2lvalVzaG8xUkhYejcxalRvY0FPQVpMcmoxMDlLQzdVZ2V3VnpqcXFKTGxlK1dFUXo4ZlI3QkpWSVN2MGtZNno5SVhENkg",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 261,
+  "fields": {
+    "product": 41,
+    "image_url": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0009_Phone-3a-Pro-grey.png?v=1753435871",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 262,
+  "fields": {
+    "product": 41,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0010_Phone-3a-Pro-black.png?v=1753757371",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 263,
+  "fields": {
+    "product": 40,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0012_Phone-3-black.png?v=1753757353",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 264,
+  "fields": {
+    "product": 40,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0011_Phone-3-white.png?v=1753757325",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 265,
+  "fields": {
+    "product": 74,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Primary-Phone-3a-Community-Editon.png?v=1764905578",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 266,
+  "fields": {
+    "product": 74,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/0a2270698227bfdc24eaa3d70f4c30ae97445315-552x552.jpg?auto=format",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 267,
+  "fields": {
+    "product": 74,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/1779eceb137927118428234af692435dd045dc7b-552x552.jpg?auto=format",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 268,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/0000s_0004_Phone-3a-white.png?v=1753436094",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 269,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Arc1352x1352-Black-Glyphon_4677e90c-2628-407c-b286-e6b96238dedf.png?v=1740649954",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 270,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/becdad013a788bc6f8d8fbdc8a6314c3349409bb-1316x1645.jpg?auto=format",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 271,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/0df691b675e706bd67f87ee850de3838462cd1bf-864x862.jpg?auto=format",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 272,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/83d3ab4062686b5ad48285af7ea6f007293642d0-400x400.jpg?auto=format",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 273,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/2e27c9b97e5643f36b5f3b36621961740be27653-3000x1877.jpg?auto=format",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 274,
+  "fields": {
+    "product": 42,
+    "image_url": "https://cdn.sanity.io/images/gtd4w1cq/production/0565a4337e05847e87ea5a8e6f9192c553fe2b63-400x400.jpg?auto=format",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 324,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/0udrEfNYmIpHmSaNU6fWHp3S0YJ4faYdDghUveqZxK4CfJB54EqAuQhJ9KLzY8q0xtRIBFLAQNKPnongqMjW5ry9p4KMpE6Ay7c=s6000-w6000-e365-rw-v0-nu",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 325,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/INS1FNcKTpxGrrtrSv4L2Mde41meyin4qz9N-vghnFJWwhhOY-LF2KUoywzG5E1AIDg09qjemweZHHAAcFrrTKsP1qsvU-I-QpmB=s6000-w6000-e365-rw-v0-nu",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 326,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/kZe13KTBUHP0gilMpAsn_sNj4CNPsDN2sdaawTFpFHkXnsnKPsKzkak0rV8RETT8mMIXi2CqovidA5BAjdq8slaRhcLZO3eeXu4=s6000-w6000-e365-rw-v0-nu",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 327,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/uKS6tpepgnOv8cPyZiguZjy78QN3u4t8AYgtrLNJPbNUYwq1RXBC9R3q4xx-4gCSYkKJXzxAJvFfurgmkGLB28VcSMRAEMvHNQ=s6000-w6000-e365-rw-v0-nu",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 328,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/qwGtRkzaEVLYpTCOL8Dt305kUdLLJ9A5kFLwEtAsYLa1lEAi3uPZvQknirERfPbxpiV4E36DwinwAtY_Z4FFSMO_GUToo0gmXWM=s6000-w6000-e365-rw-v0-nu",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 329,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/Y9WF2kAFPvcLB79X5--drBixY7gYcsdML-7GyO2gkNBPOb2pM9k-VUPhEYLcsVf_FqLt57A7yjn-a07dsPX8eGu1qBrcG7oX-lmR=s6000-w6000-e365-rw-v0-nu",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 330,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/J5fWw5wbCmadkp4ftM5JMukPDrIk8IcRXLajCv9vSCvTFL-iEtuBRsW2t0q2wxFAqh11AygQCnV6MIQ86yOFK8rncLbMF1mpH9Q=s6000-w6000-e365-rw-v0-nu",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 331,
+  "fields": {
+    "product": 76,
+    "image_url": "https://lh3.googleusercontent.com/4kkQjV9_KKefMkgavfvN8SzF32NqktTrd1tXo6UatDhj4uEt2pna3X7-Qd48a8RW37xfg-t00jd8xLs75Iu_nKRlAr9_ool7KA=s6000-w6000-e365-rw-v0-nu",
+    "order": 7,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 336,
+  "fields": {
+    "product": 77,
+    "image_url": "https://lh3.googleusercontent.com/fJdAO7TvHzN0DbBnfbLFLGd4Jn4eyUuXqCfVrcIQ8MZQTvSsZyHqov1QTGcVFg7QZkQSz6DGqrbwujU6YVrQQfLz_wOsjiFl-u8=s6000-w6000-e365-rw-v0-nu",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 337,
+  "fields": {
+    "product": 77,
+    "image_url": "https://lh3.googleusercontent.com/D93LpE5G1J_UNtPaod5Zr1dlJkRXi68DM6NVI-dRpmAV5P9BKAy8GW7Wn3jEnVyJWFJXYMkCWv3U15bvz8wQPTjSp8JbTZbz1g=s6000-w6000-e365-rw-v0-nu",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 338,
+  "fields": {
+    "product": 77,
+    "image_url": "https://lh3.googleusercontent.com/g-wDNHws__1H63i7rilmWzNaIj1BKalZHcZWf22a6RoHg3bAYGp08WLvAPGKHSClnpGvi135lkG916UcFE0V5zOtSyv8W84F9jQ=s6000-w6000-e365-rw-v0-nu",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 339,
+  "fields": {
+    "product": 77,
+    "image_url": "https://lh3.googleusercontent.com/QN0PAB_Q19QFiED43V_jrAhNF7k7_ifUUXB0fFBnoK0TAG2NXk5RQKPi5t4eF4uSKf5CaL7hs3UIFrnbv4gadjCvuIgBHPah=s6000-w6000-e365-rw-v0-nu",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 340,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-unselect-202603-gallery-1?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDK3BoR2lIdGdhMDNQSUZrOHIycWd6Vmd1bjBBbHBBMFNjNjVIN0pUcUg2U0tZMGFKbG9yanhQdjZDS1dZUFFhRVE4bm1RcmlWRWp2eDN1WHNkSjNmUmFub3B6RFdCcnJtSHE1TzBCb3pCcis&traceId=1",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 341,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-citrus?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGanBDNVRWUi9VODI0cmtDTHVBWWcxQ1NpWFhQQ1I0WVI5WjBkZjUvejV2QlNoZWpHdXpsK0owWUFtZzZCNmNiVHgzd29KOHZNUm00R0YvelN0WmhxUWY&traceId=1",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 342,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-indigo?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGaHRKR2NLSndGNTNZcDVqTWZTTjVHa1NpWFhQQ1I0WVI5WjBkZjUvejV2QlNoZWpHdXpsK0owWUFtZzZCNmNiVHdxQWpnMkppejJoUjdMNjR5bHZrUlU&traceId=1",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 343,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-blush?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGaTJXcGV0S1RvcFFEZ3lwQkF6ZjJpUGllL1JtdmgzcGVIUDRDUVJnTDZxRjN2TUJEekVlZHpBZVEwZnY0SVpRaUFSYk9JNHJaUWt3Zm9IL2hlOVhoTGs&traceId=1",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 344,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-silver?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGZ0VtRlA5OGp5bTVTTGk3Mkh6Z3U0UVNpWFhQQ1I0WVI5WjBkZjUvejV2QlNoZWpHdXpsK0owWUFtZzZCNmNiVHp0OXc4ZDQreEJkTzVIQzhjVm4xSmE&traceId=1",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 345,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-citrus_AV1?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGaTVvak5OZlMxdTUzNFFmNm5mY2h1dkE0ZWxMVGt3djRUV0FHWk92REs5YjAxSlgrVWMrMzU1OXo2c2JyNjJZTGhqZ0ZtbXkvTFByVUFpdW1PQmJlVHQ&traceId=1",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 346,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-blush_AV2?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGaStpRVl4UjU1RlFZN1NHN1M2a2JEN2ZvSGF2dFhlaXl5ZzZDVTRMdEVvNll2UjRaSC9URTlmd0FSb1ZTWjRnb3MrRjMvL1MxUUwvRHZwUmlDT2ltTkk&traceId=1",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 347,
+  "fields": {
+    "product": 75,
+    "image_url": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/macbook-neo-color-select-202603-indigo_AV3?wid=5120&hei=3280&fmt=webp&qlt=90&.v=TytZbDBUUnRqRElRcFlBSHpmZVVDNFdhaFd1bmVlZEFaaDd5ZjhzZmNGaWlRbzM4aXpwVXJZRVlGd2xiUEN6REE0ZWxMVGt3djRUV0FHWk92REs5YjAxSlgrVWMrMzU1OXo2c2JyNjJZTGgrU2xIMEFiK1ZLaURMVjA2d0lCT2w&traceId=1",
+    "order": 7,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 348,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/bento/midnight/bento_1_airpod_max_midnight__4jy1tkqh9qay_small.jpg",
+    "order": 0,
+    "is_primary": true
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 349,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/bento/starlight/bento_1_airpod_max_starlight__f7v0k5blkzqm_small.jpg",
+    "order": 1,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 350,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/bento/blue/bento_1_airpod_max_blue__blqgkfdancya_small.jpg",
+    "order": 2,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 351,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/bento/purple/bento_1_airpod_max_purple__2udwesqoiyq2_small.jpg",
+    "order": 3,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 352,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/product-stories/hifi-sound/audio_airpod_max__filcqiddcmye_large_2x.jpg",
+    "order": 4,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 353,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/product-stories/anc/anc_airpod_max_lifestyle__duzobvqwpz42_small.jpg",
+    "order": 5,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 354,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/product-stories/hifi-sound/modal/audio_bc_microphone__c4kgd4pga3cm_xsmall.png",
+    "order": 6,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 355,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/media-card/hifi_static__fbsq0dr3be2q_xsmall.jpg",
+    "order": 7,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 356,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/media-card/design_static__dph7m26odtg2_xsmall_2x.jpg",
+    "order": 8,
+    "is_primary": false
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 357,
+  "fields": {
+    "product": 78,
+    "image_url": "https://www.apple.com/v/airpods-max/k/images/overview/bento/blue/bento_4_airpod_max_blue__cfidljp9xd7m_xlarge.jpg",
+    "order": 9,
+    "is_primary": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "pending",
+    "payment_method": "upi",
+    "subtotal": "19999.00",
+    "shipping": "99.00",
+    "total": "20098.00",
+    "shipping_address": {
+      "first_name": "swalih",
+      "last_name": "nk",
+      "email": "swalink555@gmail.com",
+      "phone": "718640123",
+      "address": "nalukndathil house",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "swalih nk"
+    },
+    "created_at": "2026-03-23T18:55:11.144Z",
+    "updated_at": "2026-03-23T18:55:11.144Z",
+    "cancelled_at": null
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "pending",
+    "payment_method": "card",
+    "subtotal": "16998.00",
+    "shipping": "99.00",
+    "total": "17097.00",
+    "shipping_address": {
+      "first_name": "Mohammed",
+      "last_name": "Swalih N K",
+      "email": "swalink555@gmail.com",
+      "phone": "564568588",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Mohammed Swalih N K"
+    },
+    "created_at": "2026-03-23T19:05:38.787Z",
+    "updated_at": "2026-03-23T19:05:38.787Z",
+    "cancelled_at": null
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 58,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "shipped",
+    "payment_method": "cod",
+    "subtotal": "5495.00",
+    "shipping": "99.00",
+    "total": "5594.00",
+    "shipping_address": {
+      "first_name": "Mohammed",
+      "last_name": "Swalih N K",
+      "email": "swalink555@gmail.com",
+      "phone": "08547368811",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Mohammed Swalih N K"
+    },
+    "created_at": "2026-03-24T03:26:44.993Z",
+    "updated_at": "2026-03-24T04:24:31.783Z",
+    "cancelled_at": "2026-03-24T04:24:25.461Z"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 59,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "confirmed",
+    "payment_method": "card",
+    "subtotal": "149999.00",
+    "shipping": "0.00",
+    "total": "149999.00",
+    "shipping_address": {
+      "first_name": "Mohammed",
+      "last_name": "Swalih N K",
+      "email": "swalink555@gmail.com",
+      "phone": "08547368811",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Mohammed Swalih N K"
+    },
+    "created_at": "2026-03-24T06:56:50.734Z",
+    "updated_at": "2026-03-24T06:56:50.734Z",
+    "cancelled_at": null
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 60,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "cancelled",
+    "payment_method": "cod",
+    "subtotal": "210000.00",
+    "shipping": "0.00",
+    "total": "210000.00",
+    "shipping_address": {
+      "first_name": "Mohammed",
+      "last_name": "Swalih N K",
+      "email": "swalink555@gmail.com",
+      "phone": "08547368811",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Mohammed Swalih N K"
+    },
+    "created_at": "2026-03-24T13:11:22.638Z",
+    "updated_at": "2026-03-24T13:11:22.638Z",
+    "cancelled_at": "2026-03-24T13:11:39.723Z"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 61,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "status": "pending",
+    "payment_method": "upi",
+    "subtotal": "109999.00",
+    "shipping": "0.00",
+    "total": "109999.00",
+    "shipping_address": {
+      "first_name": "Mohammed",
+      "last_name": "Swalih N K",
+      "email": "swalink555@gmail.com",
+      "phone": "08547368811",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Mohammed Swalih N K"
+    },
+    "created_at": "2026-03-26T05:01:58.145Z",
+    "updated_at": "2026-03-26T05:01:58.145Z",
+    "cancelled_at": null
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 62,
+  "fields": {
+    "user": [
+      "swalih@gmail.com"
+    ],
+    "status": "pending",
+    "payment_method": "upi",
+    "subtotal": "109999.00",
+    "shipping": "0.00",
+    "total": "109999.00",
+    "shipping_address": {
+      "first_name": "Swalih",
+      "last_name": "N K",
+      "email": "swalih@gmail.com",
+      "phone": "08547368811",
+      "address": "Nalukandathil House, Perunthallur, Vettom Pallippuram PO",
+      "city": "Tirur",
+      "state": "Kerala",
+      "pincode": "676102",
+      "full_name": "Swalih N K"
+    },
+    "created_at": "2026-03-26T09:44:12.128Z",
+    "updated_at": "2026-03-26T09:44:12.128Z",
+    "cancelled_at": null
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "product": 67,
+    "product_name": "Nothing Headphone(1) 42dB ANC",
+    "product_image": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0021_Headphone1-white.png?v=1753757251",
+    "product_brand": "Nothing",
+    "product_slug": "nothing-headphone1-42db-anc",
+    "storage": "",
+    "ram": "",
+    "quantity": 1,
+    "unit_price": "19999.00",
+    "item_total": "19999.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 2,
+    "product": 68,
+    "product_name": "Nothing Ear 2024",
+    "product_image": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/0000s_0024_Ear-black.png?v=1753757359&width=600&height=600&crop=center",
+    "product_brand": "Nothing",
+    "product_slug": "nothing-ear-2024",
+    "storage": "",
+    "ram": "",
+    "quantity": 2,
+    "unit_price": "8499.00",
+    "item_total": "16998.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 58,
+  "fields": {
+    "order": 58,
+    "product": 60,
+    "product_name": "Logitech Lift Vertical Ergonomic Mouse",
+    "product_image": "https://m.media-amazon.com/images/I/61OkuiCWbDL._SX679_.jpg",
+    "product_brand": "Logitech",
+    "product_slug": "logitech-lift-vertical-ergonomic-mouse",
+    "storage": "",
+    "ram": "",
+    "quantity": 1,
+    "unit_price": "5495.00",
+    "item_total": "5495.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 59,
+  "fields": {
+    "order": 59,
+    "product": 56,
+    "product_name": "MacBook M4 14-inch",
+    "product_image": "https://www.apple.com/assets-www/en_WW/mac/01_product_tile/xlarge/mba_13_15_140e630d3_2x.jpg",
+    "product_brand": "Apple",
+    "product_slug": "macbook-m4-14-inch",
+    "storage": "512GB",
+    "ram": "16GB",
+    "quantity": 1,
+    "unit_price": "149999.00",
+    "item_total": "149999.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 60,
+  "fields": {
+    "order": 60,
+    "product": 74,
+    "product_name": "Phone ( 3a ) Community Edition",
+    "product_image": "https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Primary-Phone-3a-Community-Editon.png?v=1764905578",
+    "product_brand": "Nothing Community",
+    "product_slug": "phone-3a-community-edition-1774352880710",
+    "storage": "256GB",
+    "ram": "12GB",
+    "quantity": 5,
+    "unit_price": "42000.00",
+    "item_total": "210000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 61,
+  "fields": {
+    "order": 61,
+    "product": 77,
+    "product_name": "Pixel 10 Pro & Pro XL",
+    "product_image": "https://lh3.googleusercontent.com/fJdAO7TvHzN0DbBnfbLFLGd4Jn4eyUuXqCfVrcIQ8MZQTvSsZyHqov1QTGcVFg7QZkQSz6DGqrbwujU6YVrQQfLz_wOsjiFl-u8=s6000-w6000-e365-rw-v0-nu",
+    "product_brand": "Google",
+    "product_slug": "pixel-10-pro-pro-xl-1774357644813",
+    "storage": "256GB",
+    "ram": "16GB",
+    "quantity": 1,
+    "unit_price": "109999.00",
+    "item_total": "109999.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 62,
+  "fields": {
+    "order": 62,
+    "product": 77,
+    "product_name": "Pixel 10 Pro & Pro XL",
+    "product_image": "https://lh3.googleusercontent.com/fJdAO7TvHzN0DbBnfbLFLGd4Jn4eyUuXqCfVrcIQ8MZQTvSsZyHqov1QTGcVFg7QZkQSz6DGqrbwujU6YVrQQfLz_wOsjiFl-u8=s6000-w6000-e365-rw-v0-nu",
+    "product_brand": "Google",
+    "product_slug": "pixel-10-pro-pro-xl-1774357644813",
+    "storage": "256GB",
+    "ram": "16GB",
+    "quantity": 1,
+    "unit_price": "109999.00",
+    "item_total": "109999.00"
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 71,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 68,
+    "quantity": 31,
+    "storage": "",
+    "ram": "",
+    "added_at": "2026-03-30T16:17:25.492Z"
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 72,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 78,
+    "quantity": 2,
+    "storage": "",
+    "ram": "",
+    "added_at": "2026-03-30T16:47:58.486Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 38,
+    "added_at": "2026-03-26T09:16:15.980Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 39,
+    "added_at": "2026-03-26T09:16:35.684Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 76,
+    "added_at": "2026-03-26T09:16:38.849Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 66,
+    "added_at": "2026-03-26T09:16:51.134Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 40,
+    "added_at": "2026-03-26T09:16:58.933Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "swalih@gmail.com"
+    ],
+    "product": 78,
+    "added_at": "2026-03-26T12:05:57.717Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 77,
+    "added_at": "2026-03-30T16:17:13.593Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "swalink555@gmail.com"
+    ],
+    "product": 68,
+    "added_at": "2026-03-30T16:47:49.309Z"
+  }
+}
+]

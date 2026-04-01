@@ -1,7 +1,7 @@
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-from django.conf import settings
-import jwt
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError
 from .models import User
 
 
@@ -12,13 +12,14 @@ class CookieJWTAuthentication(BaseAuthentication):
             return None
 
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            user = User.objects.get(id=payload["user_id"])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Token has expired")
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed("Invalid token")
+            validated = AccessToken(token)
+            user = User.objects.get(id=validated["user_id"])
         except User.DoesNotExist:
-            raise AuthenticationFailed("User not found")
+            raise AuthenticationFailed("User not found.")
+        except TokenError:
+            raise AuthenticationFailed("Invalid or expired token.")
 
         return (user, None)
+
+    def authenticate_header(self, request):
+        return "Bearer"

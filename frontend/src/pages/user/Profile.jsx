@@ -43,26 +43,16 @@ const Profile = () => {
   const refreshProfile = async () => {
     try {
       setLoading(true);
-      const [profileRes, ordersRes, cartRes, wishlistRes] = await Promise.allSettled([
-        getProfile(),
+      const { data: profile } = await getProfile();
+
+      const [ordersRes, cartRes, wishlistRes] = await Promise.allSettled([
         getMyOrders(),
         getCart(),
         getWishlist(),
       ]);
 
-      const profileError = profileRes.status === "rejected" ? profileRes.reason : null;
-      if (profileError?.response?.status === 401 || profileError?.response?.status === 403) {
-        await logout();
-        navigate("/sign_in");
-        return;
-      }
-
-      if (profileRes.status !== "fulfilled") {
-        throw profileError || new Error("Failed to load profile");
-      }
-
       const nextUser = {
-        ...profileRes.value.data,
+        ...profile,
         order: ordersRes.status === "fulfilled" ? ordersRes.value.data : [],
         cart: cartRes.status === "fulfilled" ? cartRes.value.data : [],
         wishlist: wishlistRes.status === "fulfilled" ? (wishlistRes.value.data || []) : [],
@@ -75,6 +65,12 @@ const Profile = () => {
         toast.error("Wishlist could not be loaded right now.");
       }
     } catch (error) {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        await logout();
+        navigate("/sign_in", { replace: true });
+        return;
+      }
+
       console.error(error);
       toast.error("Could not load your profile. Please try again.");
     } finally {

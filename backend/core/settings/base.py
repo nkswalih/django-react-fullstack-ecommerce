@@ -1,53 +1,25 @@
 """
-Django settings for the ecommerce project.
+Base settings shared across all environments.
 """
 
 from datetime import timedelta
 from pathlib import Path
-import os
+from decouple import config, Csv, UndefinedValueError
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# decouple automatically finds .env — no load_dotenv() needed
 
+SECRET_KEY = config("SECRET_KEY")  # raises UndefinedValueError if missing
 
-def env(name, default=None):
-    return os.getenv(name, default)
+DEBUG = config("DEBUG", default=False, cast=bool)
 
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
-def env_bool(name, default=False):
-    value = env(name)
-    if value is None:
-        return default
-    return value.strip().lower() in {"1", "true", "yes", "on"}
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+CORS_ALLOW_CREDENTIALS = True
 
-
-def env_list(name, default=None):
-    value = env(name)
-    if value is None:
-        return list(default or [])
-    return [item.strip() for item in value.split(",") if item.strip()]
-
-
-SECRET_KEY = env("SECRET_KEY", "django-insecure-local-dev-key")
-DEBUG = env_bool("DEBUG", default=True)
-
-ALLOWED_HOSTS = env_list(
-    "ALLOWED_HOSTS",
-    default=["127.0.0.1", "localhost", "testserver"],
-)
-
-CORS_ALLOWED_ORIGINS = env_list(
-    "CORS_ALLOWED_ORIGINS",
-    default=["http://127.0.0.1:8000", "http://localhost:5173"],
-)
-
-CORS_ALLOW_CREDENTIALS = True  
-
-CSRF_TRUSTED_ORIGINS = env_list(
-    "CSRF_TRUSTED_ORIGINS",
-    default=["http://127.0.0.1:8000", "http://localhost:5173"],
-)
-
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -97,47 +69,39 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"
 
-
+# --- Database ---
 DATABASES = {
     "default": {
-        "ENGINE": env("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": env("DB_NAME", ""),
-        "USER": env("DB_USER", ""),
-        "PASSWORD": env("DB_PASSWORD", ""),
-        "HOST": env("DB_HOST", "localhost"),
-        "PORT": env("DB_PORT", "5432"),
+        "ENGINE": config("DB_ENGINE", default="django.db.backends.postgresql"),
+        "NAME": config("DB_NAME"),          # raises if missing
+        "USER": config("DB_USER"),          # raises if missing
+        "PASSWORD": config("DB_PASSWORD"),  # raises if missing
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
+        "CONN_MAX_AGE": 60,
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = env("TIME_ZONE", "Asia/Kolkata")
+TIME_ZONE = config("TIME_ZONE", default="Asia/Kolkata")
 USE_I18N = True
 USE_TZ = True
-
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
-
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -153,10 +117,3 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
 }
-
-
-SECURE_BROWSER_XSS_FILTER = not DEBUG
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

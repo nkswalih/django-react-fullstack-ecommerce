@@ -9,54 +9,50 @@ from .models import User
 from .serializers import LoginSerializer, RegisterSerializer, UserSerializer, get_tokens
 
 
+# ─── Helpers ──────────────────────────────────────────────────────────────────
+
 def is_admin(user):
-    return bool(user.is_authenticated and user.role == 'Admin')
+    return user.is_authenticated and user.role == "Admin"
 
 
-def database_error_response():
+def db_error_response():
     return Response(
-        {'detail': 'Database is not ready. Run migrations and try again.'},
+        {"detail": "Service temporarily unavailable. Please try again."},
         status=status.HTTP_503_SERVICE_UNAVAILABLE,
     )
 
 
 def set_auth_cookies(response, tokens, remember=False):
-    """Set HttpOnly secure cookies for access and refresh tokens."""
     is_production = not settings.DEBUG
 
-    cookie_kwargs = dict(
+    kwargs = dict(
         httponly=True,
         secure=is_production,
         samesite="Lax",
+        path="/",            # ✅ critical — must match delete_cookie
     )
 
-    if remember:
-        # ✅ persistent cookies
-        response.set_cookie(
-            "access_token",
-            tokens['access'],
-            max_age=60 * 60 * 24 * 7,  # 7 days
-            **cookie_kwargs
-        )
-        response.set_cookie(
-            "refresh_token",
-            tokens['refresh'],
-            max_age=60 * 60 * 24 * 7,
-            **cookie_kwargs
-        )
-    else:
-        # ✅ session cookies
-        response.set_cookie("access_token", tokens['access'], **cookie_kwargs)
-        response.set_cookie("refresh_token", tokens['refresh'], **cookie_kwargs)
+    access_max_age  = 60 * 60 * 24 * 7 if remember else 60 * 60 * 24
+    refresh_max_age = 60 * 60 * 24 * 7
+
+    response.set_cookie("access_token",  tokens["access"],  max_age=access_max_age,  **kwargs)
+    response.set_cookie("refresh_token", tokens["refresh"], max_age=refresh_max_age, **kwargs)
+
+
+def clear_auth_cookies(response):
+    is_production = not settings.DEBUG
+    response.delete_cookie("access_token", path="/", samesite="Lax", secure=is_production)
+    response.delete_cookie("refresh_token", path="/", samesite="Lax", secure=is_production)
 
 
 def parse_positive_int(value, default):
     try:
-        parsed = int(value)
+        return max(int(value), 0)
     except (TypeError, ValueError):
         return default
-    return max(parsed, 0)
 
+
+# ─── Auth Views ───────────────────────────────────────────────────────────────
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -67,10 +63,10 @@ class RegisterView(APIView):
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
-        tokens = get_tokens(user)
-        response = Response({'user': UserSerializer(user).data}, status=201)
+        tokens   = get_tokens(user)
+        response = Response({"user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
         set_auth_cookies(response, tokens)
         return response
 
@@ -80,15 +76,15 @@ class LoginView(APIView):
 
     def post(self, request):
         try:
-            serializer = LoginSerializer(data=request.data, context={'request': request})
+            serializer = LoginSerializer(data=request.data, context={"request": request})
             serializer.is_valid(raise_exception=True)
-            user = serializer.validated_data['user']
+            user = serializer.validated_data["user"]
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
-        tokens = get_tokens(user)
-        response = Response({'user': UserSerializer(user).data})
         remember = str(request.data.get("remember", "false")).lower() == "true"
+        tokens   = get_tokens(user)
+        response = Response({"user": UserSerializer(user).data})
         set_auth_cookies(response, tokens, remember)
         return response
 
@@ -97,11 +93,33 @@ class LogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        response = Response({'detail': 'Logged out.'})
-        response.delete_cookie("access_token")
-        response.delete_cookie("refresh_token")
+        response = Response({"detail": "Logged out."})
+        clear_auth_cookies(response)
         return response
 
+
+class TokenRefreshView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        from rest_framework_simplejwt.tokens import RefreshToken
+        from rest_framework_simplejwt.exceptions import TokenError
+
+        token = request.COOKIES.get("refresh_token")
+        if not token:
+            return Response({"detail": "No refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            refresh  = RefreshToken(token)
+            tokens   = {"access": str(refresh.access_token), "refresh": str(refresh)}
+            response = Response({"detail": "Token refreshed."})
+            set_auth_cookies(response, tokens)
+            return response
+        except TokenError:
+            return Response({"detail": "Invalid or expired refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# ─── Profile ──────────────────────────────────────────────────────────────────
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -110,7 +128,7 @@ class ProfileView(APIView):
         try:
             return Response(UserSerializer(request.user).data)
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
     def patch(self, request):
         try:
@@ -119,8 +137,10 @@ class ProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
+
+# ─── Admin ────────────────────────────────────────────────────────────────────
 
 class AdminUserListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -129,25 +149,22 @@ class AdminUserListView(APIView):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
+            users  = User.objects.all().order_by("-created_at")
             params = request.GET
-            users = User.objects.all().order_by('-created_at')
 
-            if 'limit' in params or 'offset' in params:
-                total = users.count()
-                limit = parse_positive_int(params.get('limit'), 10)
-                offset = parse_positive_int(params.get('offset'), 0)
-                paginated_users = users[offset:offset + limit] if limit > 0 else users.none()
-
+            if "limit" in params or "offset" in params:
+                limit  = parse_positive_int(params.get("limit"), 10)
+                offset = parse_positive_int(params.get("offset"), 0)
                 return Response({
-                    'results': UserSerializer(paginated_users, many=True).data,
-                    'total': total,
-                    'limit': limit,
-                    'offset': offset,
+                    "results": UserSerializer(users[offset:offset + limit] if limit else users.none(), many=True).data,
+                    "total":   users.count(),
+                    "limit":   limit,
+                    "offset":  offset,
                 })
 
             return Response(UserSerializer(users, many=True).data)
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
 
 class AdminUserDetailView(APIView):
@@ -157,7 +174,7 @@ class AdminUserDetailView(APIView):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            user = User.objects.get(pk=pk)
+            user       = User.objects.get(pk=pk)
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -165,16 +182,15 @@ class AdminUserDetailView(APIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except OperationalError:
-            return database_error_response()
+            return db_error_response()
 
     def delete(self, request, pk):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            user = User.objects.get(pk=pk)
-            user.delete()
+            User.objects.get(pk=pk).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except OperationalError:
-            return database_error_response()
+            return db_error_response()

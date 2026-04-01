@@ -1,14 +1,12 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenRefreshView
-from .views import RegisterView, LoginView, LogoutView, ProfileView, AdminUserListView, AdminUserDetailView
-
+from . import views
 
 urlpatterns = [
-    path('register/', RegisterView.as_view()),
-    path('login/', LoginView.as_view()),
-    path('logout/', LogoutView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
-    path('profile/', ProfileView.as_view()),
-    path('admin/users/', AdminUserListView.as_view()),
-    path('admin/users/<int:pk>/', AdminUserDetailView.as_view()),
+    path("register/",      views.RegisterView.as_view()),
+    path("login/",         views.LoginView.as_view()),
+    path("logout/",        views.LogoutView.as_view()),
+    path("token/refresh/", views.TokenRefreshView.as_view()),  # ✅ custom cookie-based refresh
+    path("profile/",       views.ProfileView.as_view()),
+    path("admin/users/",   views.AdminUserListView.as_view()),
+    path("admin/users/<int:pk>/", views.AdminUserDetailView.as_view()),
 ]
