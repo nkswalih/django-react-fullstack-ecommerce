@@ -4,9 +4,10 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.conf import settings
+import requests as http_requests
 
 from .models import User
-from .serializers import LoginSerializer, RegisterSerializer, UserSerializer, get_tokens
+from .serializers import LoginSerializer, RegisterSerializer, UserSerializer,GoogleAuthSerializer, get_tokens
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -29,7 +30,7 @@ def set_auth_cookies(response, tokens, remember=False):
         httponly=True,
         secure=is_production,
         samesite="Lax",
-        path="/",            # ✅ critical — must match delete_cookie
+        path="/",
     )
 
     access_max_age  = 60 * 60 * 24 * 7 if remember else 60 * 60 * 24
@@ -40,9 +41,15 @@ def set_auth_cookies(response, tokens, remember=False):
 
 
 def clear_auth_cookies(response):
-    is_production = not settings.DEBUG
-    response.delete_cookie("access_token", path="/", samesite="Lax", secure=is_production)
-    response.delete_cookie("refresh_token", path="/", samesite="Lax", secure=is_production)
+    for name in ("access_token", "refresh_token"):
+        response.cookies[name] = ""
+        response.cookies[name]["path"] = "/"
+        response.cookies[name]["max-age"] = 0
+        response.cookies[name]["expires"] = "Thu, 01 Jan 1970 00:00:00 GMT"
+        response.cookies[name]["httponly"] = True
+        response.cookies[name]["samesite"] = "Lax"
+        if not settings.DEBUG:
+            response.cookies[name]["secure"] = True
 
 
 def parse_positive_int(value, default):
@@ -117,6 +124,91 @@ class TokenRefreshView(APIView):
             return response
         except TokenError:
             return Response({"detail": "Invalid or expired refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+
+    
+class GoogleLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        access_token = request.data.get("access_token")
+        credential   = request.data.get("credential")
+
+        if access_token:
+            try:
+                resp = http_requests.get(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    headers={"Authorization": f"Bearer {access_token}"},
+                    timeout=5,
+                )
+                if resp.status_code != 200:
+                    return Response(
+                        {"detail": "Failed to fetch Google user info."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                id_info = resp.json()
+            except http_requests.RequestException:
+                return Response(
+                    {"detail": "Google API unreachable."},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                )
+
+        elif credential:
+            from google.oauth2 import id_token
+            from google.auth.transport import requests as google_requests
+            try:
+                id_info = id_token.verify_oauth2_token(
+                    credential,
+                    google_requests.Request(),
+                    settings.GOOGLE_CLIENT_ID,
+                    clock_skew_in_seconds=10,
+                )
+            except ValueError as e:
+                return Response(
+                    {"detail": f"Invalid Google token: {e}"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            return Response(
+                {"detail": "No Google token provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not id_info.get("email_verified"):
+            return Response(
+                {"detail": "Google email not verified."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        google_id = id_info["sub"]
+        email     = id_info["email"]
+        name      = id_info.get("name", email.split("@")[0])
+        avatar    = id_info.get("picture")
+
+        try:
+            user = User.objects.get(google_id=google_id)
+        except User.DoesNotExist:
+            try:
+                user = User.objects.get(email=email)
+                user.google_id = google_id
+                user.avatar = avatar or user.avatar
+                user.save(update_fields=["google_id", "avatar", "updated_at"])
+            except User.DoesNotExist:
+                user = User.objects.create_user(email=email, name=name, password=None)
+                user.google_id = google_id
+                user.avatar    = avatar
+                user.status    = "Active"
+                user.save(update_fields=["google_id", "avatar", "status", "updated_at"])
+
+        if user.status != "Active" or not user.is_active:
+            return Response(
+                {"detail": "Your account has been deactivated."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        tokens   = get_tokens(user)
+        response = Response({"user": UserSerializer(user).data})
+        set_auth_cookies(response, tokens)
+        return response
 
 
 # ─── Profile ──────────────────────────────────────────────────────────────────

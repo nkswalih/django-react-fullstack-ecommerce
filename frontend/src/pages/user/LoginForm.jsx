@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { login as loginApi, logout as logoutApi } from "../../api/apiService";
+import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
+import { googleLogin as googleLoginApi } from "../../api/apiService";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "", rememberMe: false });
@@ -22,10 +25,21 @@ const Login = () => {
     setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-   const handleGoogleLogin = () => {
-    console.log("Redirecting to Google...");
-    // window.location.href = "YOUR_GOOGLE_AUTH_URL";
-  };
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await googleLoginApi({ access_token: tokenResponse.access_token });
+        const { user } = res.data;
+        login(user);
+        toast.success(`Welcome, ${user.name}!`);
+        navigate(user.role === "Admin" ? "/admin" : "/");
+      } catch (error) {
+        const msg = error.response?.data?.detail || "Google login failed.";
+        toast.error(msg);
+      }
+    },
+    onError: () => toast.error("Google sign-in was cancelled or failed."),
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
