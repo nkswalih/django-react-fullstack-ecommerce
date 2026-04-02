@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.dev
+.env.prod
+frontend
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+backend/.venv
+backend/staticfiles
+backend/media

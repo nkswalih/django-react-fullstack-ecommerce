@@ -1,0 +1,8 @@
+.env
+.env.dev
+.env.prod
+docker/postgres/init/*.sql
+docker/postgres/init/*.dump
+docker/postgres/init/*.backup
+backend/staticfiles/
+backend/media/

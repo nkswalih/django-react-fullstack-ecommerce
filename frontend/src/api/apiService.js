@@ -2,8 +2,19 @@ import axios from "axios";
 
 // In dev: Vite proxy forwards /api/* → Django (same origin, cookies work)
 // In prod: /api/ hits your actual domain (nginx/server handles it)
+const resolveApiBaseUrl = () => {
+  const raw = import.meta.env.VITE_API_URL?.trim();
+
+  if (!raw) {
+    return "/api/";
+  }
+
+  const normalized = raw.endsWith("/") ? raw : `${raw}/`;
+  return normalized.endsWith("/api/") ? normalized : `${normalized}api/`;
+};
+
 const api = axios.create({
-  baseURL: "/api/",
+  baseURL: resolveApiBaseUrl(),
   withCredentials: true,
 });
 
@@ -43,9 +54,7 @@ api.interceptors.response.use(
       return api(original);
     } catch (err) {
       processQueue(err);
-      if (window.location.pathname !== "/sign_in") {
-        window.location.href = "/sign_in";
-      }
+      window.dispatchEvent(new Event("auth:logout"));  // ← change this
       return Promise.reject(err);
     } finally {
       isRefreshing = false;

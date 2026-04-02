@@ -1,2 +1,6 @@
 .env
-sqlite_data.json
+.env.dev
+.env.prod
+__pycache__/
+staticfiles/
+media/

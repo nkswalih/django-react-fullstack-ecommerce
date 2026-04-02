@@ -114,16 +114,26 @@ class TokenRefreshView(APIView):
 
         token = request.COOKIES.get("refresh_token")
         if not token:
-            return Response({"detail": "No refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response(
+                {"detail": "No refresh token."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            clear_auth_cookies(response)
+            return response
 
         try:
-            refresh  = RefreshToken(token)
-            tokens   = {"access": str(refresh.access_token), "refresh": str(refresh)}
+            refresh = RefreshToken(token)
+            tokens  = {"access": str(refresh.access_token), "refresh": str(refresh)}
             response = Response({"detail": "Token refreshed."})
             set_auth_cookies(response, tokens)
             return response
         except TokenError:
-            return Response({"detail": "Invalid or expired refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response(
+                {"detail": "Invalid or expired refresh token."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            clear_auth_cookies(response)
+            return response
 
     
 class GoogleLoginView(APIView):

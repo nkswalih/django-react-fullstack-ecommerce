@@ -11,10 +11,23 @@ export const AuthProvider = ({ children }) => {
   const login  = useCallback((userData) => setUser(userData), []);
 
   const logout = useCallback(async () => {
-    try { await logoutRequest(); } catch { /* cookie cleared server-side anyway */ }
+    try { await logoutRequest(); } catch { }
     finally { setUser(null); }
   }, []);
 
+  // Force logout when interceptor detects stale/invalid cookies
+  useEffect(() => {
+    const forceLogout = () => {
+      setUser(null);
+      if (window.location.pathname !== "/sign_in") {
+        window.location.href = "/sign_in";
+      }
+    };
+    window.addEventListener("auth:logout", forceLogout);
+    return () => window.removeEventListener("auth:logout", forceLogout);
+  }, []);
+
+  // On mount, fetch profile to rehydrate user state
   useEffect(() => {
     if (AUTH_PAGES.has(window.location.pathname)) {
       setLoading(false);
@@ -42,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       user,
       authLoading,
       isAuthenticated: Boolean(user),
-      isAdmin:         user?.role === "Admin",   // ✅ value not function — easier to use
+      isAdmin:         user?.role === "Admin",
       isUser:          user?.role === "User",
       login,
       logout,

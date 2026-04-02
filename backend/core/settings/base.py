@@ -1,24 +1,23 @@
-"""
-Base settings shared across all environments.
-"""
+"""Base settings shared across all environments."""
 
 from datetime import timedelta
 from pathlib import Path
-from decouple import config, Csv, UndefinedValueError
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+from decouple import Csv, config
 
-# decouple automatically finds .env — no load_dotenv() needed
+BASE_DIR = Path(__file__).resolve().parents[2]
+DEFAULT_SECRET_KEY = "django-insecure-change-me-before-production"
 
-SECRET_KEY = config("SECRET_KEY")  # raises UndefinedValueError if missing
-
+SECRET_KEY = config("SECRET_KEY", default=DEFAULT_SECRET_KEY)
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
-
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="127.0.0.1,localhost",
+    cast=Csv(),
+)
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 CORS_ALLOW_CREDENTIALS = True
-
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
 
 INSTALLED_APPS = [
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -69,18 +69,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"
 
-# --- Database ---
-DATABASES = {
-    "default": {
-        "ENGINE": config("DB_ENGINE", default="django.db.backends.postgresql"),
-        "NAME": config("DB_NAME"),          # raises if missing
-        "USER": config("DB_USER"),          # raises if missing
-        "PASSWORD": config("DB_PASSWORD"),  # raises if missing
-        "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default="5432"),
-        "CONN_MAX_AGE": 60,
-    }
+default_database = {
+    "ENGINE": config("DB_ENGINE", default="django.db.backends.postgresql"),
+    "NAME": config("DB_NAME", default="ecommerce"),
+    "USER": config("DB_USER", default="postgres"),
+    "PASSWORD": config("DB_PASSWORD", default="postgres"),
+    "HOST": config("DB_HOST", default="localhost"),
+    "PORT": config("DB_PORT", default="5432"),
+    "CONN_MAX_AGE": config("DB_CONN_MAX_AGE", default=60, cast=int),
+    "CONN_HEALTH_CHECKS": True,
 }
+
+db_sslmode = config("DB_SSLMODE", default="")
+if db_sslmode:
+    default_database["OPTIONS"] = {"sslmode": db_sslmode}
+
+DATABASES = {"default": default_database}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -94,11 +98,17 @@ TIME_ZONE = config("TIME_ZONE", default="Asia/Kolkata")
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
@@ -118,8 +128,16 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 
-GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = config("GOOGLE_CLIENT_SECRET")
+GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID", default="")
+GOOGLE_CLIENT_SECRET = config("GOOGLE_CLIENT_SECRET", default="")
+RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID", default="")
+RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET", default="")
 
-RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
-RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
+BOOTSTRAP_FIXTURE_PATH = config(
+    "BOOTSTRAP_FIXTURE_PATH",
+    default=str(BASE_DIR / "sqlite_data.json"),
+)
+SQLITE_IMPORT_PATH = config(
+    "SQLITE_IMPORT_PATH",
+    default=str(BASE_DIR / "db.sqlite3"),
+)
