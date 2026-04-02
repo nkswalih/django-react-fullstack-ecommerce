@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createOrder, getCart } from '../../api/apiService';
+import { createOrder, getCart, createRazorpayOrder, verifyRazorpayPayment } from '../../api/apiService';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
-import { motion } from 'framer-motion';
 
 const initialFormData = {
   firstName: '',
@@ -14,7 +13,7 @@ const initialFormData = {
   city: '',
   state: '',
   pincode: '',
-  paymentMethod: 'razorpay', // Default to Razorpay for 2026 standard
+  paymentMethod: 'razorpay',
 };
 
 const CheckoutPage = () => {
@@ -67,34 +66,110 @@ const CheckoutPage = () => {
   const handlePlaceOrder = async () => {
     if (!currentUser) return navigate('/sign_in');
 
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'state', 'pincode'];
-    if (requiredFields.some((field) => !String(formData[field] || '').trim())) {
+    const requiredFields = ['firstName','lastName','email','phone','address','city','state','pincode'];
+    if (requiredFields.some((f) => !String(formData[f] || '').trim())) {
       toast.error('Please complete all shipping fields');
       return;
     }
 
-    setLoading(true);
+    const shippingPayload = {
+    first_name: formData.firstName.trim(),
+    last_name:  formData.lastName.trim(),
+    email:      formData.email.trim(),
+    phone:      formData.phone.trim(),
+    address:    formData.address.trim(),
+    city:       formData.city.trim(),
+    state:      formData.state.trim(),
+    pincode:    formData.pincode.trim(),
+  };
+
+  setLoading(true);
+
+  // ── Non-Razorpay methods (COD / UPI direct / card) ──────────────────────
+  if (formData.paymentMethod !== 'razorpay') {
     try {
       const response = await createOrder({
         payment_method: formData.paymentMethod,
-        first_name: formData.firstName.trim(),
-        last_name: formData.lastName.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        address: formData.address.trim(),
-        city: formData.city.trim(),
-        state: formData.state.trim(),
-        pincode: formData.pincode.trim(),
+        ...shippingPayload,
       });
-
       toast.success(`Order placed! ID: ${response.data.id}`);
-      navigate(`/order-confirmation/${response.data.id}`, { state: { order: response.data } });
+      navigate(`/order-confirmation/${response.data.id}`, {
+        state: { order: response.data },
+      });
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Order failed. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
+    return;
+  }
+
+  // ── Razorpay flow ────────────────────────────────────────────────────────
+  try {
+    // Step 1: get rzp order_id from backend
+    const { data: rzpData } = await createRazorpayOrder({});
+
+    const options = {
+      key:        rzpData.key_id,
+      amount:     rzpData.amount,
+      currency:   rzpData.currency,
+      order_id:   rzpData.razorpay_order_id,
+      name:       'Echo Store',
+      description:'Your order',
+      prefill: {
+        name:  `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        contact: formData.phone,
+      },
+      theme: { color: '#111827' },
+
+      handler: async (response) => {
+        // Step 2: verify on backend, create DB order
+        try {
+          const verifyRes = await verifyRazorpayPayment({
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id:   response.razorpay_order_id,
+            razorpay_signature:  response.razorpay_signature,
+            ...shippingPayload,
+          });
+
+          toast.success(`Order confirmed! ID: ${verifyRes.data.id}`);
+          navigate(`/order-confirmation/${verifyRes.data.id}`, {
+            state: { order: verifyRes.data },
+          });
+        } catch (err) {
+          toast.error('Payment received but order setup failed. Contact support.');
+        } finally {
+          setLoading(false);
+        }
+      },
+
+      modal: {
+        ondismiss: () => {
+          toast.info('Payment cancelled');
+          setLoading(false);
+        },
+      },
+    };
+
+    if (!window.Razorpay) {
+      toast.error('Payment system failed to load. Please refresh the page.');
+      setLoading(false);
+      return;
+    }
+
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', (response) => {
+      toast.error(`Payment failed: ${response.error.description}`);
+      setLoading(false);
+    });
+    rzp.open();
+
+  } catch (error) {
+    toast.error('Could not initiate payment. Please try again.');
+    setLoading(false);
+  }
+};
 
   const inputClass = "w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all placeholder:text-gray-400 text-gray-800 text-sm";
   const labelClass = "block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1";

@@ -95,6 +95,10 @@ export const getOrderById = (id)       => api.get(`/orders/${id}/`);
 export const createOrder  = (data)     => api.post("/orders/", data);
 export const cancelOrder  = (id)       => api.patch(`/orders/${id}/cancel/`);
 
+// RazorPay
+export const createRazorpayOrder = (data)   => api.post('/razorpay/create-order/', data);
+export const verifyRazorpayPayment = (data) => api.post('/razorpay/verify/', data);
+
 // ─── Admin ────────────────────────────────────────────────────────────────────
 
 export const adminGetUsers   = (params)   => api.get("/admin/users/", { params });

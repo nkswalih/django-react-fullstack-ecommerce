@@ -16,6 +16,7 @@ class Order(models.Model):
         ('card', 'Card'),
         ('upi',  'UPI'),
         ('cod',  'Cash on Delivery'),
+        ('razorpay', 'Razorpay'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
