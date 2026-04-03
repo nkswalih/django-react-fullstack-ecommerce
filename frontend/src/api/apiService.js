@@ -54,7 +54,8 @@ api.interceptors.response.use(
       return api(original);
     } catch (err) {
       processQueue(err);
-      window.dispatchEvent(new Event("auth:logout"));  // ← change this
+      
+      window.dispatchEvent(new Event("auth:logout"));
       return Promise.reject(err);
     } finally {
       isRefreshing = false;

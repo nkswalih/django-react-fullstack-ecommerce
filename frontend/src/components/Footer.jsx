@@ -40,7 +40,7 @@ const Footer = () => {
             <div>
               <p className="text-sm font-medium text-neutral-400 mb-4 tracking-wide">Subscribe to our newsletter</p>
               <div className="relative max-w-sm">
-                <input 
+                <input
                   type="email" 
                   placeholder="Your email address" 
                   className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-6 pr-14 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
@@ -58,31 +58,31 @@ const Footer = () => {
             {/* Links Columns */}
             <div className="grid grid-cols-2 gap-x-12 sm:gap-x-24 gap-y-6 text-base font-medium text-neutral-400">
               <div className="flex flex-col gap-5">
-                <Link to="/services" className="hover:text-white transition-colors">Our services +</Link>
-                <Link to="/projects" className="hover:text-white transition-colors">Projects</Link>
-                <Link to="/process" className="hover:text-white transition-colors">Our Process</Link>
-                <Link to="/referral" className="hover:text-white transition-colors">Referral Program</Link>
+                <Link to="/support" className="hover:text-white transition-colors">Our Support +</Link>
+                <Link to="https://nkswalih.vercel.app/#projects" className="hover:text-white transition-colors">Projects</Link>
+                <Link to="https://nkswalih.vercel.app/#about" className="hover:text-white transition-colors">About Dev</Link>
+                <Link to="https://nkswalih.vercel.app/" className="hover:text-white transition-colors">Portfolio</Link>
               </div>
               <div className="flex flex-col gap-5">
-                <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
-                <Link to="/resources" className="hover:text-white transition-colors">Resources</Link>
-                <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-                <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+                <Link to="/Store" className="hover:text-white transition-colors">Store</Link>
+                <Link to="/Apple" className="hover:text-white transition-colors">Apple</Link>
+                <Link to="/Laptop" className="hover:text-white transition-colors">Laptop</Link>
+                <Link to="/Accessories" className="hover:text-white transition-colors">Accessories</Link>
               </div>
             </div>
 
             {/* Social Icons (Vertical like the reference) */}
             <div className="flex sm:flex-col gap-4 sm:border-l sm:border-white/10 sm:pl-12">
-              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+              <a href="https://x.com/swwaliih?s=21" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
                 <Twitter size={18} strokeWidth={2} />
               </a>
               <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
                 <Instagram size={18} strokeWidth={2} />
               </a>
-              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+              <a href="https://www.linkedin.com/in/mohammedswalihnk/" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
                 <Linkedin size={18} strokeWidth={2} />
               </a>
-              <a href="#" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+              <a href="https://github.com/nkswalih" className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
                 <Github size={18} strokeWidth={2} />
               </a>
             </div>

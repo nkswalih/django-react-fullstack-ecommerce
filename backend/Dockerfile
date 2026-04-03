@@ -34,6 +34,7 @@ COPY backend/requirements.txt /tmp/requirements.txt
 
 RUN python -m pip install --upgrade pip \
     && pip install --no-index --find-links=/wheels -r /tmp/requirements.txt \
+    && pip install gunicorn==23.0.0 \
     && rm -rf /wheels /tmp/requirements.txt
 
 COPY docker/backend/entrypoint.sh /entrypoint.sh

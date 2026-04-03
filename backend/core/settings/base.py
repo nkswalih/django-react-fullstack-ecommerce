@@ -16,6 +16,8 @@ ALLOWED_HOSTS = config(
     default="127.0.0.1,localhost",
     cast=Csv(),
 )
+
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
@@ -123,9 +125,10 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID", default="")
@@ -141,3 +144,5 @@ SQLITE_IMPORT_PATH = config(
     "SQLITE_IMPORT_PATH",
     default=str(BASE_DIR / "db.sqlite3"),
 )
+
+SESSION_COOKIE_HTTPONLY = True

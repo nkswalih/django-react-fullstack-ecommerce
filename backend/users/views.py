@@ -5,9 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.conf import settings
 import requests as http_requests
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 from .models import User
-from .serializers import LoginSerializer, RegisterSerializer, UserSerializer,GoogleAuthSerializer, get_tokens
+from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -24,31 +28,40 @@ def db_error_response():
 
 
 def set_auth_cookies(response, tokens, remember=False):
-    is_production = not settings.DEBUG
-
     kwargs = dict(
         httponly=True,
-        secure=is_production,
-        samesite="Lax",
-        path="/",
+        secure=settings.SESSION_COOKIE_SECURE, 
+        samesite=settings.SESSION_COOKIE_SAMESITE,
+        path="/api/",
     )
 
-    access_max_age  = 60 * 60 * 24 * 7 if remember else 60 * 60 * 24
-    refresh_max_age = 60 * 60 * 24 * 7
-
-    response.set_cookie("access_token",  tokens["access"],  max_age=access_max_age,  **kwargs)
-    response.set_cookie("refresh_token", tokens["refresh"], max_age=refresh_max_age, **kwargs)
+    if remember:
+        response.set_cookie(
+            "access_token",
+            tokens["access"],
+            max_age=60 * 60 * 24 * 7,
+            **kwargs,
+        )
+        response.set_cookie(
+            "refresh_token",
+            tokens["refresh"],
+            max_age=60 * 60 * 24 * 30, 
+            **kwargs,
+        )
+    else:
+        response.set_cookie("access_token",  tokens["access"],  **kwargs)
+        response.set_cookie("refresh_token", tokens["refresh"], **kwargs)
 
 
 def clear_auth_cookies(response):
     for name in ("access_token", "refresh_token"):
         response.cookies[name] = ""
-        response.cookies[name]["path"] = "/"
-        response.cookies[name]["max-age"] = 0
-        response.cookies[name]["expires"] = "Thu, 01 Jan 1970 00:00:00 GMT"
+        response.cookies[name]["path"]     = "/api/"
+        response.cookies[name]["max-age"]  = 0
+        response.cookies[name]["expires"]  = "Thu, 01 Jan 1970 00:00:00 GMT"
         response.cookies[name]["httponly"] = True
-        response.cookies[name]["samesite"] = "Lax"
-        if not settings.DEBUG:
+        response.cookies[name]["samesite"] = settings.SESSION_COOKIE_SAMESITE
+        if settings.SESSION_COOKIE_SECURE:
             response.cookies[name]["secure"] = True
 
 
@@ -57,6 +70,14 @@ def parse_positive_int(value, default):
         return max(int(value), 0)
     except (TypeError, ValueError):
         return default
+
+
+def get_tokens(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+    }
 
 
 # ─── Auth Views ───────────────────────────────────────────────────────────────
@@ -109,33 +130,29 @@ class TokenRefreshView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        from rest_framework_simplejwt.tokens import RefreshToken
-        from rest_framework_simplejwt.exceptions import TokenError
 
         token = request.COOKIES.get("refresh_token")
         if not token:
             response = Response(
                 {"detail": "No refresh token."},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
             )
-            clear_auth_cookies(response)
             return response
 
         try:
             refresh = RefreshToken(token)
             tokens  = {"access": str(refresh.access_token), "refresh": str(refresh)}
             response = Response({"detail": "Token refreshed."})
-            set_auth_cookies(response, tokens)
+            set_auth_cookies(response, tokens, remember=False)
             return response
         except TokenError:
             response = Response(
                 {"detail": "Invalid or expired refresh token."},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
             )
-            clear_auth_cookies(response)
             return response
 
-    
+
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
 
@@ -163,8 +180,6 @@ class GoogleLoginView(APIView):
                 )
 
         elif credential:
-            from google.oauth2 import id_token
-            from google.auth.transport import requests as google_requests
             try:
                 id_info = id_token.verify_oauth2_token(
                     credential,
@@ -200,7 +215,7 @@ class GoogleLoginView(APIView):
             try:
                 user = User.objects.get(email=email)
                 user.google_id = google_id
-                user.avatar = avatar or user.avatar
+                user.avatar    = avatar or user.avatar
                 user.save(update_fields=["google_id", "avatar", "updated_at"])
             except User.DoesNotExist:
                 user = User.objects.create_user(email=email, name=name, password=None)
@@ -217,7 +232,7 @@ class GoogleLoginView(APIView):
 
         tokens   = get_tokens(user)
         response = Response({"user": UserSerializer(user).data})
-        set_auth_cookies(response, tokens)
+        set_auth_cookies(response, tokens, remember=False)
         return response
 
 

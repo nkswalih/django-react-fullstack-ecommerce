@@ -44,7 +44,7 @@ const ProfileSidebar = ({ user, activeSection, setActiveSection }) => {
                 <span className="text-2xl font-bold text-white tracking-wide">{initials}</span>
               </div>
             </div>
-            <div className="absolute bottom-0 right-0 w-5 h-5 bg-emerald-400 rounded-full border-2 border-white"></div>
+            {/* <div className="absolute bottom-0 right-0 w-5 h-5 bg-emerald-400 rounded-full border-2 border-white"></div> */}
           </div>
           <h2 className="text-base font-bold text-gray-900 leading-tight">{user?.name || 'User'}</h2>
           <p className="text-xs text-gray-500 mt-0.5 truncate max-w-full px-2">{user?.email}</p>
