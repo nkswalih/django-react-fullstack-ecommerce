@@ -50,7 +50,7 @@ const CartSection = ({ user }) => {
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/64?text=No+Image";
+                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' fill='%23e5e7eb'%3E%3Crect width='64' height='64' rx='4'/%3E%3C/svg%3E";
                 }}
               />
             </div>

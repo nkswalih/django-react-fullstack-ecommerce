@@ -40,7 +40,7 @@ const AppleMac = () => {
             Learn more
           </button>
           <button
-            onClick={() => Navigate("/product/macbook-m5-13")}
+            onClick={() => Navigate("/product/macbook-m5-13-inch")}
             className="flex items-center gap-2 px-8 py-3 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white rounded-full hover:from-gray-400 hover:to-gray-700 transition-all hover:scale-105"
           >
             Buy

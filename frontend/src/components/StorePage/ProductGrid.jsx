@@ -47,7 +47,7 @@ const ProductGrid = ({ products }) => {
             <div className="relative mb-4 overflow-hidden rounded-xl">
               <div className="aspect-square bg-white flex items-center justify-center p-0 w-auto h-auto">
                 <img
-                  src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300'}
+                  src={product.images?.[0]?.image_url || 'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' fill='%23e5e7eb'%3E%3Crect width='300' height='300' rx='8'/%3E%3C/svg%3E'}
                   alt={product.name}
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />

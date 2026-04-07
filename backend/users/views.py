@@ -159,8 +159,45 @@ class GoogleLoginView(APIView):
     def post(self, request):
         access_token = request.data.get("access_token")
         credential   = request.data.get("credential")
+        code         = request.data.get("code")
 
-        if access_token:
+        if code:
+            # Redirect flow: exchange authorization code for tokens
+            try:
+                token_resp = http_requests.post(
+                    "https://oauth2.googleapis.com/token",
+                    data={
+                        "code": code,
+                        "client_id": settings.GOOGLE_CLIENT_ID,
+                        "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                        "redirect_uri": request.data.get("redirect_uri", ""),
+                        "grant_type": "authorization_code",
+                    },
+                    timeout=5,
+                )
+                if token_resp.status_code != 200:
+                    return Response(
+                        {"detail": "Failed to exchange Google auth code."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                tokens_json = token_resp.json()
+                id_info = id_token.verify_oauth2_token(
+                    tokens_json.get("id_token", ""),
+                    google_requests.Request(),
+                    settings.GOOGLE_CLIENT_ID,
+                )
+            except ValueError as e:
+                return Response(
+                    {"detail": f"Invalid Google token: {e}"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            except http_requests.RequestException:
+                return Response(
+                    {"detail": "Google API unreachable."},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                )
+
+        elif access_token:
             try:
                 resp = http_requests.get(
                     "https://www.googleapis.com/oauth2/v3/userinfo",

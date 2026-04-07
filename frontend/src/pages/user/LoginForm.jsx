@@ -1,12 +1,9 @@
 import { ArrowUpRightIcon, EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
-import { login as loginApi, logout as logoutApi } from "../../api/apiService";
-import { useGoogleLogin } from "@react-oauth/google";
-import { GoogleLogin } from "@react-oauth/google";
-import { googleLogin as googleLoginApi } from "../../api/apiService";
+import { login as loginApi, googleLogin as googleLoginApi } from "../../api/apiService";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "", rememberMe: false });
@@ -14,6 +11,37 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Handle Google OAuth redirect (Google returns with ?code=xxx&scope=...&authuser=...)
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const scope = searchParams.get("scope");
+    // Only treat this as a redirect callback if we have an auth code
+    if (code) {
+      const handleRedirect = async () => {
+        setLoading(true);
+        try {
+          const res = await googleLoginApi({
+            code,
+            redirect_uri: window.location.origin + "/sign_in",
+          });
+          const { user } = res.data;
+          login(user);
+          toast.success(`Welcome, ${user.name}!`);
+          navigate(user.role === "Admin" ? "/admin" : "/");
+        } catch (error) {
+          const msg = error.response?.data?.detail || "Google login failed.";
+          toast.error(msg);
+          // Clean URL and stay on sign_in
+          navigate("/sign_in", { replace: true });
+        } finally {
+          setLoading(false);
+        }
+      };
+      handleRedirect();
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
@@ -25,35 +53,27 @@ const Login = () => {
     setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const res = await googleLoginApi({ access_token: tokenResponse.access_token });
-        const { user } = res.data;
-        login(user);
-        toast.success(`Welcome, ${user.name}!`);
-        navigate(user.role === "Admin" ? "/admin" : "/");
-      } catch (error) {
-        const msg = error.response?.data?.detail || "Google login failed.";
-        toast.error(msg);
-      }
-    },
-    onError: () => toast.error("Google sign-in was cancelled or failed."),
-  });
+  const handleGoogleLogin = () => {
+    // Redirect to Google OAuth — avoids popup COOP issues entirely
+    const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+    const redirectUri = encodeURIComponent(window.location.origin + "/sign_in");
+    const scope = encodeURIComponent("openid email profile");
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=select_account`;
+    window.location.href = url;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await loginApi({
-         email: formData.email, 
+         email: formData.email,
          password: formData.password,
          remember: formData.rememberMe,
         });
 
       const { user } = res.data;
 
-      // ONLY FOR UX
       if (formData.rememberMe) {
         localStorage.setItem("rememberedEmail", formData.email);
       } else {
@@ -62,9 +82,7 @@ const Login = () => {
 
       login(user);
       toast.success(`Welcome back, ${user.name}!`, {
-        style: {
-          width: "360px",
-        },
+        style: { width: "360px" },
       });
       navigate(user.role === "Admin" ? "/admin" : "/");
     } catch (error) {
@@ -82,7 +100,7 @@ const Login = () => {
     <div className="min-h-screen bg-neutral-200 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-[40px] overflow-hidden min-h-[650px]">
 
-        {/* Left branding — unchanged */}
+        {/* Left branding */}
         <div className="hidden md:flex md:w-1/2 bg-[#1a1a1a] p-12 flex-col justify-between relative overflow-hidden">
           <div className="z-10">
             <p className="text-gray-400 text-sm mb-20">Join the EchOo community – start your journey today.</p>
@@ -157,7 +175,7 @@ const Login = () => {
                     <div className="flex-grow border-t border-gray-200"></div>
                 </div>
 
-                <button 
+                <button
                   type="button"
                   onClick={handleGoogleLogin}
                   className="w-full flex items-center justify-center gap-3 py-4 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold text-sm shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-[0.98]"

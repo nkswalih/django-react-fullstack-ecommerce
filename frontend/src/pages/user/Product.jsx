@@ -171,7 +171,7 @@ const ProductPage = () => {
   const activeImageIndex = (product.images && product.images.length > selectedOptions.imageIndex)
     ? selectedOptions.imageIndex
     : 0;
-  const activeImage = product.images?.[activeImageIndex]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image';
+  const activeImage = product.images?.[activeImageIndex]?.image_url;
 
   const bubbleButtonClass = "bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white transition-all hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-700 hover:scale-105 active:scale-95";
 

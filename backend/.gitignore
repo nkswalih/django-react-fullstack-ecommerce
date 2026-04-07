@@ -3,6 +3,7 @@
 .env
 *.sqlite3
 __pycache__/
+*.pyc
 staticfiles/
 media/
 sqlite_data.json

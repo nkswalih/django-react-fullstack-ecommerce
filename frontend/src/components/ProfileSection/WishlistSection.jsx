@@ -90,7 +90,7 @@ const WishlistSection = ({ user, onRefresh }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {wishlistItems.map((item) => {
           const product = item.product || {};
-          const image = product.images?.[0]?.image_url || item.product_image || "https://via.placeholder.com/80?text=No+Image";
+          const image = product.images?.[0]?.image_url || item.product_image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' fill='%23e5e7eb'%3E%3Crect width='80' height='80' rx='4'/%3E%3C/svg%3E";
 
           return (
             <div key={item.id} className="border border-gray-200 rounded-2xl p-4 hover:shadow-sm transition-all">
@@ -102,7 +102,7 @@ const WishlistSection = ({ user, onRefresh }) => {
                     className="w-full h-full object-contain mix-blend-multiply"
                     onError={(event) => {
                       event.target.onerror = null;
-                      event.target.src = "https://via.placeholder.com/80?text=No+Image";
+                      event.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' fill='%23e5e7eb'%3E%3Crect width='80' height='80' rx='4'/%3E%3C/svg%3E";
                     }}
                   />
                 </Link>

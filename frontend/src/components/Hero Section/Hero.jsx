@@ -210,7 +210,7 @@ const MainHero = () => {
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     // Make sure it doesn't loop infinitely
-                                    e.target.src = "https://via.placeholder.com/200?text=No+Image";
+                                    e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' fill='%23e5e7eb'%3E%3Crect width='200' height='200' rx='8'/%3E%3Ctext x='50%25' y='50%25' fill='%239ca3af' text-anchor='middle' dy='.3em' font-size='14' font-family='sans-serif'%3ENo Image%3C/text%3E%3C/svg%3E";
                                 }}
                             />
                         </div>

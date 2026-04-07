@@ -1,6 +1,23 @@
 name: ecommerce-prod
 
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: ecommerce_db_prod
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
   backend:
     build:
       context: .
@@ -11,11 +28,13 @@ services:
     env_file:
       - .env.prod
     environment:
+      DB_HOST: db
       DB_SSLMODE: ""
       SECURE_SSL_REDIRECT: "0"
+      SECURE_HSTS_SECONDS: "0"
+      SESSION_COOKIE_SECURE: "0"
+      CSRF_COOKIE_SECURE: "0"
       DJANGO_BOOTSTRAP_DATA: "1"
-      CORS_ALLOWED_ORIGINS: "http://localhost,http://localhost:5173,https://echoo-ecommerce.vercel.app"
-      CSRF_TRUSTED_ORIGINS: "http://localhost,http://localhost:5173,https://echoo-ecommerce.vercel.app"
     expose:
       - "8000"
     volumes:
@@ -24,16 +43,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-net
     healthcheck:
       test:
         - CMD
         - python
         - -c
-        - "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/api/health/', headers={'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request, timeout=5)"
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/', timeout=5)"
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 30s
+      start_period: 40s
 
   nginx:
     image: nginx:1.27-alpine
@@ -48,31 +69,20 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - static_data_prod:/var/www/static:ro
       - media_data_prod:/var/www/media:ro
+    networks:
+      - app-net
     healthcheck:
-      test:
-        - CMD-SHELL
-        - "nginx -t && pidof nginx >/dev/null"
+      test: ["CMD-SHELL", "nginx -t && pidof nginx >/dev/null"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 3
       start_period: 20s
-
-  db:
-    image: postgres:18-alpine
-    container_name: ecommerce_db_prod
-    restart: unless-stopped
-    env_file:
-      - .env.prod
-    volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
 volumes:
   postgres_data_prod:
   static_data_prod:
   media_data_prod:
+
+networks:
+  app-net:
+    driver: bridge

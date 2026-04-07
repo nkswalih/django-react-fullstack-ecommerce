@@ -130,7 +130,7 @@ const AdminProducts = () => {
         slug: `${addForm.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now()}`,
         price: Number(addForm.price),
         stock: Number(addForm.stock),
-        images: addForm.images.length > 0 ? addForm.images : ["https://via.placeholder.com/300x300?text=No+Image"],
+        images: addForm.images.length > 0 ? addForm.images : ["data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' fill='%23e5e7eb'%3E%3Crect width='300' height='300' rx='8'/%3E%3C/svg%3E"],
         status: addForm.status === "new" ? "active" : addForm.status,
       };
 

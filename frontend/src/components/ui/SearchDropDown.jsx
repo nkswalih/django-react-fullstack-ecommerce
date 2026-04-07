@@ -116,7 +116,7 @@ const SearchDropdown = () => {
                           className="w-full p-3 flex gap-3 hover:bg-gray-50 rounded-lg text-left"
                         >
                           <img
-                            src={product.images?.[0]?.image_url || "https://via.placeholder.com/50x50"}
+                            src={product.images?.[0]?.image_url || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' fill='%23e5e7eb'%3E%3Crect width='50' height='50' rx='4'/%3E%3C/svg%3E"}
                             alt={product.name}
                             className="w-10 h-10 object-contain"
                           />

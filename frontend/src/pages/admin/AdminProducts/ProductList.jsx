@@ -125,10 +125,14 @@ const ProductList = ({
                           <div className="h-12 w-12 flex-shrink-0">
                             <img
                               className="h-12 w-12 rounded-lg object-cover border"
-                              src={product.images?.[0]?.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
+                              src={product.images?.[0]?.image_url || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' fill='%23e5e7eb'%3E%3Crect width='300' height='300' rx='8'/%3E%3C/svg%3E`}
                               alt={product.name}
-                              onError={(e) => { e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
+                              onError={(e) => { 
+                                e.target.onerror = null; // Prevents infinite loop if the fallback fails
+                                e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' fill='%23e5e7eb'%3E%3Crect width='300' height='300' rx='8'/%3E%3C/svg%3E`; 
+                              }}
                             />
+
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{product.name}</div>

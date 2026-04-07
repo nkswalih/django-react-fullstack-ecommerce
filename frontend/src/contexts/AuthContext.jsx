@@ -19,9 +19,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const forceLogout = () => {
       setUser(null);
-      if (window.location.pathname !== "/sign_in") {
-        window.location.href = "/sign_in";
-      }
     };
     window.addEventListener("auth:logout", forceLogout);
     return () => window.removeEventListener("auth:logout", forceLogout);
