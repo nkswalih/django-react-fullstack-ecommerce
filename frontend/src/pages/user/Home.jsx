@@ -4,6 +4,7 @@ import IphoneAir from '../../components/Hero Section/ProductHero2';
 import MainHero from '../../components/Hero Section/Hero';
 import AppleMac from '../../components/Hero Section/ProductHero3';
 import SimpleFooter from '../../components/SimpleFoot';
+import Latest from '../../components/Hero Section/Latest';
 
 
 const Home = () => {
@@ -17,7 +18,8 @@ const Home = () => {
       <section className="py-5">
         {/* iPhone Air Section */}
         <IphoneAir />
-        <AppleMac />
+        {/* <AppleMac /> */}
+        <Latest/>
 
       </section>
       <div className='text-black'>

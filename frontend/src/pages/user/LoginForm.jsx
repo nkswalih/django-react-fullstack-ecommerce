@@ -98,7 +98,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-neutral-200 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-[40px] overflow-hidden min-h-[650px]">
+      <div className="bg-white w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-[40px] overflow-hidden">
 
         {/* Left branding */}
         <div className="hidden md:flex md:w-1/2 bg-[#1a1a1a] p-12 flex-col justify-between relative overflow-hidden">
@@ -154,12 +154,12 @@ const Login = () => {
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                   <input type="checkbox" name="rememberMe" checked={formData.rememberMe}
-                    onChange={handleChange} className="accent-black" />
+                    onChange={handleChange} className="h-4 w-4 accent-black" />
                   Remember me
                 </label>
-                <button type="button" className="text-sm font-medium text-gray-900 hover:underline">
+                <Link to="/forgot-password" className="text-sm font-medium text-gray-900 hover:underline">
                   Forgot password?
-                </button>
+                </Link>
               </div>
 
               <div className="pt-4">

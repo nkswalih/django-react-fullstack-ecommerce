@@ -68,6 +68,8 @@ export const login    = (data) => api.post("/login/", data);
 export const register = (data) => api.post("/register/", data);
 export const logout   = ()     => api.post("/logout/");
 export const googleLogin = (payload) => api.post("/auth/google/", payload);
+export const forgotPassword = (email) => api.post("/forgot-password/", { email });
+export const resetPassword = (data) => api.post("/reset-password/", data);
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
 

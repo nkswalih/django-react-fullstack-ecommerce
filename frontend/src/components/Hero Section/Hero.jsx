@@ -55,9 +55,9 @@ const MainHero = () => {
             
             {/* Left Box (Small Image block from mockup) */}
             <div className="hidden md:flex flex-col bg-white/30 backdrop-blur-md p-3 rounded-3xl shadow-lg border border-white/50 relative hover:-translate-y-2 transition-transform duration-300">
-                <div className="w-28 h-28 bg-gradient-to-br from-[#ceffe0] to-[#9dffef] rounded-xl flex items-center justify-center overflow-hidden relative">
+                <div className="w-28 h-28 bg-green-200 rounded-xl flex items-center justify-center overflow-hidden relative">
                    <img src="https://cdn.sanity.io/images/gtd4w1cq/production/892ca1fee54f0c221d55289e8072c84df0537aa2-396x396.jpg?auto=format" alt="Earbud" className="w-[85%] h-[85%] object-cover mix-blend-multiply rounded-xl" />
-                   <button className="absolute inset-0 m-auto w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transform transition-transform hover:scale-110">
+                   <button className="absolute inset-0 m-auto w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transform transition-transform hover:scale-110" onClick={() => navigate("/product/nothing-ear-2024")}>
                        <svg className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
                    </button>
                 </div>

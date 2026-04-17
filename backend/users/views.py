@@ -9,6 +9,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.conf import settings
+from .tokens import password_reset_token
 
 from .models import User
 from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
@@ -30,9 +35,20 @@ def db_error_response():
 def set_auth_cookies(response, tokens, remember=False):
     kwargs = dict(
         httponly=True,
-        secure=settings.SESSION_COOKIE_SECURE, 
+        secure=settings.SESSION_COOKIE_SECURE,
         samesite=settings.SESSION_COOKIE_SAMESITE,
         path="/api/",
+    )
+
+    # Companion cookie to preserve the "remember me" intent across refreshes
+    response.set_cookie(
+        "remember_me",
+        "true" if remember else "",
+        httponly=False,
+        secure=kwargs["secure"],
+        samesite=kwargs["samesite"],
+        path="/api/",
+        max_age=60 * 60 * 24 * 31 if remember else None,
     )
 
     if remember:
@@ -45,7 +61,7 @@ def set_auth_cookies(response, tokens, remember=False):
         response.set_cookie(
             "refresh_token",
             tokens["refresh"],
-            max_age=60 * 60 * 24 * 30, 
+            max_age=60 * 60 * 24 * 30,
             **kwargs,
         )
     else:
@@ -153,6 +169,55 @@ class TokenRefreshView(APIView):
             return response
 
 
+class ForgetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"details": "If account exists, email sent."})
+        
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = password_reset_token.make_token(user)
+
+        reset_url = f"{settings.FRONTEND_URL}/reset-password?uid={uid}&token={token}"
+
+        send_mail(
+            subject="Reset your password",
+            message=f"Click the link to reset your password:\n{reset_url}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+
+        return Response({"detail":"If account exists. email sent"})
+    
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        uid      = request.data.get('uid')
+        token    = request.data.get('token')
+        password = request.data.get('password')
+
+        if not all([uid, token, password]):
+            return Response({"detail": "uid, token and password are required."}, status=400)
+
+        try:
+            user_id = urlsafe_base64_decode(uid).decode()   # ✅ decode, not re-encode
+            user    = User.objects.get(pk=user_id)
+        except Exception:
+            return Response({"detail": "Invalid link"}, status=400)
+
+        if not password_reset_token.check_token(user, token):
+            return Response({"detail": "Token expired or invalid"}, status=400)
+
+        user.set_password(password)
+        user.save()
+        return Response({"detail": "Password reset successful"})
+    
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
 

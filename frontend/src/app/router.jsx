@@ -19,6 +19,9 @@ const OrderConfirmation = lazy(() => import("../components/OrderPage/OrderConfir
 const AccessoriesPage = lazy(() => import("../pages/user/Accessories"));
 const EchooSupport = lazy(() => import("../pages/user/Support"));
 
+const ForgotPassword = lazy(() => import("../components/Authentication/ForgotPassword"));
+const ResetPassword = lazy(() => import("../components/Authentication/ResetPassword"));
+
 const AdminLayout = lazy(() => import("../pages/admin/AdminLayout"));
 const AdminDashboard = lazy(() => import("../pages/admin/Dashboard/AdminDashboard"));
 const AdminUsers = lazy(() => import("../pages/admin/AdminUsers"));
@@ -41,6 +44,8 @@ const AppRouter = () => {
       <Routes>
         <Route path="/sign_up" element={<Register />} />
         <Route path="/sign_in" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/terms_conditions" element={<Terms />} />
 
         <Route path="/" element={<UserLayout />}>
