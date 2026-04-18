@@ -2,12 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const IphoneAir = () => {
+const Latest = () => {
   const Navigate = useNavigate();
 
   return (
     <section
-      className="relative overflow-hidden bg-gradient-to-b from-[#eef1f4] to-[#f4f6f9] py-24 my-8 mx-4 sm:mx-8 rounded-[3rem] shadow-sm border border-white/60 min-h-[850px] flex flex-col justify-start"
+      className="relative overflow-hidden bg-gradient-to-b from-[#eef1f4] to-[#f4f6f9] py-16 md:py-24 my-8 mx-4 sm:mx-8 rounded-[3rem] shadow-sm border border-white/60 min-h-[550px] md:min-h-[850px] flex flex-col justify-start"
     >
 
       {/* Background with glassmorphism effects */}
@@ -20,28 +20,28 @@ const IphoneAir = () => {
 
         {/* Typography using SF Pro mixed weights */}
         <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight text-gray-900 mb-2">
-          iPhone <span className="font-light text-gray-500">Air</span>
+          Nothing <span className="font-light text-gray-500">4a Pro</span>
         </h1>
 
         <div className="mt-4 mb-8 space-y-1">
-          <p className="text-xl md:text-3xl font-medium tracking-tight text-gray-600">
-            The thinnest iPhone ever.
+          <p className="text-xl md:text-3xl font-gayathri font-bold tracking-tight text-gray-600">
+            ഇതിൽ ലൈറ്റ് കത്തും!
           </p>
           <p className="text-xl md:text-3xl font-thin tracking-tight text-gray-500">
-            With the power of pro inside.
+            Life Runs Easier on Nothing OS.
           </p>
         </div>
 
         {/* Action Buttons with new grey bubble style */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center font-medium mt-2 z-20 relative">
           <button
-            onClick={() => Navigate("/apple")}
+            onClick={() => Navigate("/store")}
             className="flex items-center gap-2 px-8 py-3 bg-white/60 backdrop-blur-md shadow-lg border border-white/80 text-gray-800 rounded-full hover:bg-white/80 transition-all hover:scale-105"
           >
-            Learn more
+            Show more
           </button>
           <button
-            onClick={() => Navigate("/product/iphone-air")}
+            onClick={() => Navigate("/product/nothing-phone-4a-pro-5g-1774341431105")}
             className="flex items-center gap-2 px-8 py-3 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white rounded-full hover:from-gray-400 hover:to-gray-700 transition-all hover:scale-105"
           >
             Buy
@@ -51,12 +51,12 @@ const IphoneAir = () => {
 
       {/* Floating 3D Product Image */}
       <div
-        className="absolute bottom-[-120px] left-0 w-full flex justify-center z-10 pointer-events-none"
+        className="absolute bottom-0 md:bottom-[-120px] left-0 w-full flex justify-center z-10 pointer-events-none"
       >
         <motion.img
-          src="/iphone-true.png"
-          alt="iPhone Air Mockup"
-          className="w-full h-auto object-contain max-w-[600px] md:max-w-[700px] lg:max-w-[800px] max-h-[600px] drop-shadow-[0_45px_45px_rgba(0,0,0,0.3)]"
+          src="https://cdn.shopify.com/s/files/1/0586/3270/0077/files/Phone-4a-Pro-White.png?v=1772251228"
+          alt="Model Mockup"
+          className="w-full h-auto object-contain max-w-[600px] md:max-w-[700px] lg:max-w-[800px] max-h-[620px] drop-shadow-[0_45px_45px_rgba(0,0,0,0.3)]"
           animate={{
             y: [0, -20, 0],
           }}
@@ -72,4 +72,4 @@ const IphoneAir = () => {
   );
 };
 
-export default IphoneAir;
+export default Latest;

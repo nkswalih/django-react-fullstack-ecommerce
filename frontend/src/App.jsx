@@ -14,7 +14,7 @@ function App() {
         <ToastContainer
           position="top-right"
           autoClose={1500}
-          hideProgressBar={true} // Changed to true to remove the loading bar
+          hideProgressBar={true}
           newestOnTop
           closeOnClick
           rtl={false}

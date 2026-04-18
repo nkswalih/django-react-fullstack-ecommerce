@@ -12,8 +12,9 @@ from google.auth.transport import requests as google_requests
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
-from django.conf import settings
 from .tokens import password_reset_token
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from .models import User
 from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
@@ -70,15 +71,13 @@ def set_auth_cookies(response, tokens, remember=False):
 
 
 def clear_auth_cookies(response):
-    for name in ("access_token", "refresh_token"):
-        response.cookies[name] = ""
-        response.cookies[name]["path"]     = "/api/"
-        response.cookies[name]["max-age"]  = 0
-        response.cookies[name]["expires"]  = "Thu, 01 Jan 1970 00:00:00 GMT"
-        response.cookies[name]["httponly"] = True
-        response.cookies[name]["samesite"] = settings.SESSION_COOKIE_SAMESITE
-        if settings.SESSION_COOKIE_SECURE:
-            response.cookies[name]["secure"] = True
+    kwargs = {
+        "path": "/api/",
+        "samesite": settings.SESSION_COOKIE_SAMESITE,
+    }
+    response.delete_cookie("access_token", **kwargs)
+    response.delete_cookie("refresh_token", **kwargs)
+    response.delete_cookie("remember_me", **kwargs)
 
 
 def parse_positive_int(value, default):
@@ -146,28 +145,54 @@ class TokenRefreshView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-
         token = request.COOKIES.get("refresh_token")
+        # Read the intent so we don't accidentally turn a 30-day cookie into a session cookie!
+        remember_me = request.COOKIES.get("remember_me") == "true"
+
         if not token:
             response = Response(
                 {"detail": "No refresh token."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+            clear_auth_cookies(response)
             return response
 
         try:
+            # 1. Validate the existing refresh token
             refresh = RefreshToken(token)
-            tokens  = {"access": str(refresh.access_token), "refresh": str(refresh)}
-            response = Response({"detail": "Token refreshed."})
-            set_auth_cookies(response, tokens, remember=False)
+            
+            # 2. Extract user and verify they are still active
+            user_id = refresh.payload.get('user_id')
+            user = User.objects.get(id=user_id)
+            
+            if not user.is_active or user.status != "Active":
+                raise TokenError("User account is disabled.")
+
+            # 3. Generate a completely fresh pair of tokens (restarts the 30-day clock)
+            new_refresh = RefreshToken.for_user(user)
+            tokens = {
+                "access": str(new_refresh.access_token),
+                "refresh": str(new_refresh)
+            }
+
+            # 4. Optional: Blacklist the old token
+            try:
+                refresh.blacklist()
+            except Exception:
+                pass
+
+            response = Response({"detail": "Token refreshed successfully."})
+            set_auth_cookies(response, tokens, remember=remember_me)
             return response
-        except TokenError:
+            
+        except (TokenError, User.DoesNotExist):
+            # If the token is truly dead, clear cookies so the frontend stops retrying
             response = Response(
                 {"detail": "Invalid or expired refresh token."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+            clear_auth_cookies(response)
             return response
-
 
 class ForgetPasswordView(APIView):
     permission_classes = [AllowAny]
@@ -185,12 +210,21 @@ class ForgetPasswordView(APIView):
 
         reset_url = f"{settings.FRONTEND_URL}/reset-password?uid={uid}&token={token}"
 
-        send_mail(
+        html_content = render_to_string("emails/reset_password.html", {
+            "name": user.name,
+            "reset_url": reset_url,
+        })
+
+        email_msg = EmailMultiAlternatives(
             subject="Reset your password",
-            message=f"Click the link to reset your password:\n{reset_url}",
+            body=f"Click the link to reset your password: {reset_url}",  # fallback
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
+            to=[email],
         )
+
+        email_msg.attach_alternative(html_content, "text/html")
+
+        email_msg.send()
 
         return Response({"detail":"If account exists. email sent"})
     
@@ -223,8 +257,8 @@ class GoogleLoginView(APIView):
 
     def post(self, request):
         access_token = request.data.get("access_token")
-        credential   = request.data.get("credential")
-        code         = request.data.get("code")
+        credential = request.data.get("credential")
+        code = request.data.get("code")
 
         if code:
             # Redirect flow: exchange authorization code for tokens

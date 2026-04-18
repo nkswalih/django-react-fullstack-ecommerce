@@ -55,8 +55,8 @@ const MainHero = () => {
             
             {/* Left Box (Small Image block from mockup) */}
             <div className="hidden md:flex flex-col bg-white/30 backdrop-blur-md p-3 rounded-3xl shadow-lg border border-white/50 relative hover:-translate-y-2 transition-transform duration-300">
-                <div className="w-28 h-28 bg-green-200 rounded-xl flex items-center justify-center overflow-hidden relative">
-                   <img src="https://cdn.sanity.io/images/gtd4w1cq/production/892ca1fee54f0c221d55289e8072c84df0537aa2-396x396.jpg?auto=format" alt="Earbud" className="w-[85%] h-[85%] object-cover mix-blend-multiply rounded-xl" />
+                <div className="w-28 h-28 bg-[#69cfab] rounded-xl flex items-center justify-center overflow-hidden relative">
+                   <img src="https://i2-prod.walesonline.co.uk/article30454386.ece/ALTERNATES/s1200f/0_818GlQGp45L_AC_SL1500_.jpg" alt="Earbud" className="w-[85%] h-[85%] object-cover mix-blend-normal rounded-xl" />
                    <button className="absolute inset-0 m-auto w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center transform transition-transform hover:scale-110" onClick={() => navigate("/product/nothing-ear-2024")}>
                        <svg className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
                    </button>
@@ -83,7 +83,7 @@ const MainHero = () => {
             {/* Right Socials & Quote Box */}
             <div className="hidden md:flex flex-col gap-10 w-64 items-end">
                 {/* Social Icons list with proper SVG icons */}
-                {/* <div className="flex gap-3 justify-end">
+                <div className="flex gap-3 justify-end">
                     <a href="#" className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-black hover:scale-110 transition-all">
                         <Dribbble size={18} strokeWidth={2} />
                     </a>
@@ -96,7 +96,7 @@ const MainHero = () => {
                     <a href="#" className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-black hover:scale-110 transition-all">
                         <Instagram size={18} strokeWidth={2} />
                     </a>
-                </div> */}
+                </div>
 
                 {/* Quote Text */}
                  <div className="text-left mt-6 max-w-[180px] flex flex-col items-start mr-4">
@@ -172,7 +172,7 @@ const MainHero = () => {
 
                 {/* VR image — desktop only */}
                 <div className="hidden lg:flex bg-[#f4f4f4] rounded-3xl overflow-hidden p-6 items-center justify-center relative">
-                    <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/vision-pro-hero-202401?wid=932&hei=932&fmt=jpeg&qlt=90&.v=1704255018659" alt="VR Headset user" className="w-full h-auto object-cover rounded-2xl mix-blend-multiply" />
+                    <img src="https://www.apple.com/v/apple-vision-pro/j/images/overview/hero/hero__cvgr5aj1ttsi_large.jpg" alt="VR Headset user" className="w-full h-auto object-cover rounded-2xl mix-blend-multiply" />
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@ const MainHero = () => {
 
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
-        <section className="py-16 px-4 max-w-7xl mx-auto border-t border-gray-200 mt-10">
+        <section className="py-16 px-4 max-w-7xl mx-auto border-t border-gray-200">
             <div className="flex flex-col items-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-2">Our Best Popular</h2>
                 <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">Product</h2>

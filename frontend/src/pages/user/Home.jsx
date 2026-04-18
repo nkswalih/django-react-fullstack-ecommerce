@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Footer from '../../components/Footer';
-import IphoneAir from '../../components/Hero Section/ProductHero2';
+import IphoneAir from '../../components/Hero Section/Showcase2';
 import MainHero from '../../components/Hero Section/Hero';
 import AppleMac from '../../components/Hero Section/ProductHero3';
 import SimpleFooter from '../../components/SimpleFoot';
-import Latest from '../../components/Hero Section/Latest';
+import Latest from '../../components/Hero Section/Showcase1';
 
 
 const Home = () => {

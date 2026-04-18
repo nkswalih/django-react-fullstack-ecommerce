@@ -10,7 +10,7 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       viewport={{ once: true, margin: "-100px" }}
-      className="bg-[#0f0f11] text-neutral-300 py-16 px-6 sm:px-10 lg:px-16 mt-32 rounded-t-[3rem] relative overflow-hidden font-sans border-t border-white/5 shadow-[0_[-20px]_50px_rgba(0,0,0,0.5)]"
+      className="bg-[#0f0f11] text-neutral-300 py-16 px-6 sm:px-10 lg:px-16 rounded-t-[3rem] relative overflow-hidden font-sans border-t border-white/5 shadow-[0_[-20px]_50px_rgba(0,0,0,0.5)]"
     >
       {/* Background Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-white/5 blur-[120px] rounded-full pointer-events-none"></div>
