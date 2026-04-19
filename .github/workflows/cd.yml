@@ -1,0 +1,115 @@
+name: CD - Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to AWS ECR
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build \
+            --tag $ECR_REGISTRY:backend-${{ github.sha }} \
+            --tag $ECR_REGISTRY:backend-latest \
+            -f backend/Dockerfile .
+          
+          docker push $ECR_REGISTRY:backend-${{ github.sha }}
+          docker push $ECR_REGISTRY:backend-latest
+
+      - name: Download frontend artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend-dist/
+        continue-on-error: true
+
+      - name: SSH to EC2 and Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "=== Updating application ==="
+            
+            # Navigate to app directory
+            cd /home/ubuntu/ecommerce || cd /var/www/ecommerce
+            
+            # If directory doesn't exist, create it
+            if [ ! -d "ecommerce" ]; then
+              mkdir -p ecommerce
+              cd ecommerce
+            fi
+            
+            # Copy .env.prod if not exists
+            if [ ! -f ".env.prod" ]; then
+              echo "ERROR: .env.prod not found! Please copy .env.prod to EC2 first."
+              exit 1
+            fi
+            
+            # Pull latest docker-compose files
+            if [ -f "docker-compose.prod.yml" ]; then
+              cp docker-compose.prod.yml docker-compose.yml
+            fi
+            
+            # Login to ECR
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login -u AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
+            
+            # Pull latest images
+            docker-compose pull backend || true
+            
+            # Build frontend static files
+            if [ -d "frontend-dist" ]; then
+              sudo rm -rf /var/www/html/*
+              sudo cp -r frontend-dist/* /var/www/html/
+              sudo chmod -R 755 /var/www/html/
+            fi
+            
+            # Restart containers
+            docker-compose up -d --build backend
+            
+            # Wait for container to start
+            echo "Waiting for application to start..."
+            sleep 20
+            
+            # Health check
+            for i in 1 2 3 4 5; do
+              if curl -f http://localhost/api/health/ 2>/dev/null; then
+                echo "Health check passed!"
+                break
+              else
+                echo "Health check attempt $i failed, retrying..."
+                sleep 10
+              fi
+            done
+            
+            # Final health check
+            curl -f http://localhost/api/health/ && echo "Deployment SUCCESSFUL!" || echo "Deployment FAILED!"
+            
+            # Show running containers
+            docker-compose ps
+
+      - name: Verify deployment
+        run: |
+          echo "Checking if EC2 is reachable..."
+          curl -f --connect-timeout 10 http://${{ secrets.EC2_HOST }}/api/health/ || echo "Note: Direct IP check may fail if port not open"

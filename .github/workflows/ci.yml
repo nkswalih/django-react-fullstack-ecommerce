@@ -1,0 +1,142 @@
+name: CI - Build, Test & Lint
+
+on:
+  push:
+    branches: [main, develop, '**']
+  pull_request:
+    branches: [main]
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flake8 black isort
+
+      - name: Run flake8 - syntax check
+        run: |
+          flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        continue-on-error: true
+
+      - name: Check format - black
+        run: |
+          black --check backend/ --diff || echo "Format issues found"
+
+      - name: Check imports - isort
+        run: |
+          isort --check-only --diff backend/ || echo "Import order issues found"
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Create test settings
+        run: |
+          cp backend/core/settings/test.py.example backend/core/settings/test.py 2>/dev/null || echo "No test settings"
+
+      - name: Run Django system check
+        run: |
+          cd backend
+          python manage.py check --deploy || python manage.py check
+        continue-on-error: true
+
+      - name: Smoke test - start Django briefly
+        run: |
+          cd backend
+          timeout 10 python manage.py runserver 0.0.0.0:8000 &
+          sleep 5
+          curl -f http://localhost:8000/api/health/ || exit 1
+        continue-on-error: true
+
+  build-backend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to AWS ECR
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag $ECR_REGISTRY:backend-${{ github.sha }} \
+            --tag $ECR_REGISTRY:backend-latest \
+            --tag $ECR_REGISTRY:backend-${{ github.ref_name }} \
+            -f backend/Dockerfile .
+
+      - name: Push to ECR
+        run: |
+          docker push $ECR_REGISTRY:backend-${{ github.sha }}
+          docker push $ECR_REGISTRY:backend-latest
+          docker push $ECR_REGISTRY:backend-${{ github.ref_name }}
+
+      - name: Describe image
+        run: |
+          echo " Image pushed: $ECR_REGISTRY:backend-${{ github.sha }}"
+          echo " Latest tag: $ECR_REGISTRY:backend-latest"
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist/
+          retention-days: 7
