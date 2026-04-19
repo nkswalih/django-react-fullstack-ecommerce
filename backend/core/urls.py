@@ -5,8 +5,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 
+@csrf_exempt
+@require_http_methods(["GET"])
 def healthcheck(_request):
     return JsonResponse({"status": "ok"})
 
