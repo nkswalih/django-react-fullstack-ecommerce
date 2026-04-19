@@ -65,8 +65,10 @@ services:
         condition: service_healthy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt/live/api-echoo.duckdns.org:/etc/nginx/ssl:ro
       - static_data_prod:/var/www/static:ro
       - media_data_prod:/var/www/media:ro
     networks:
