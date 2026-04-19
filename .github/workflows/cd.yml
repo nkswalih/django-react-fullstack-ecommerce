@@ -54,9 +54,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "=== DEPLOYMENT START ==="
-            echo "Current directory: $(pwd)"
-            echo "Listing files:"
-            ls -la
+
+            # FIRST: Create .env.prod from GitHub secret BEFORE pulling code
+            echo "Creating .env.prod from GitHub secret..."
+            echo "${{ secrets.env_prod }}" > /home/ubuntu/ecommerce/.env.prod
+            echo ".env.prod created from secret!"
 
             # Navigate to app directory
             cd /home/ubuntu/ecommerce
@@ -64,12 +66,12 @@ jobs:
             echo "Files in directory:"
             ls -la
 
-            # Check if .env.prod exists
+            # Verify .env.prod was created
             if [ ! -f ".env.prod" ]; then
-              echo "ERROR: .env.prod not found in /home/ubuntu/ecommerce"
+              echo "ERROR: Failed to create .env.prod"
               exit 1
             fi
-            echo ".env.prod found!"
+            echo ".env.prod verified!"
 
             # Create docker-compose.yml symlink if needed
             if [ -f "docker-compose.prod.yml" ] && [ ! -f "docker-compose.yml" ]; then
