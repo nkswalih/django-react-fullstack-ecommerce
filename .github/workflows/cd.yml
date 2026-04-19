@@ -57,7 +57,7 @@ jobs:
 
             # FIRST: Create .env.prod from GitHub secret BEFORE pulling code
             echo "Creating .env.prod from GitHub secret..."
-            echo "${{ secrets.env_prod }}" > /home/ubuntu/ecommerce/.env.prod
+            printf '%s' "${{ secrets.env_prod }}" > /home/ubuntu/ecommerce/.env.prod
             echo ".env.prod created from secret!"
 
             # Navigate to app directory
