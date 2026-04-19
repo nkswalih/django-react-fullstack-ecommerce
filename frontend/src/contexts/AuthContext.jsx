@@ -1,21 +1,24 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getProfile, logout as logoutRequest } from "../api/apiService";
+import { getProfile, logout as logoutRequest, resetInterceptorState } from "../api/apiService";
 
 const AuthContext = createContext(null);
-const AUTH_PAGES  = new Set(["/sign_in", "/sign_up"]);
 
 export const AuthProvider = ({ children }) => {
-  const [user,        setUser]    = useState(null);
+  const [user, setUser] = useState(null);
   const [authLoading, setLoading] = useState(true);
 
-  const login  = useCallback((userData) => setUser(userData), []);
+  const login = useCallback((userData) => setUser(userData), []);
 
   const logout = useCallback(async () => {
-    try { await logoutRequest(); } catch { }
-    finally { setUser(null); }
+    try {
+      await logoutRequest();
+    } catch {
+    } finally {
+      resetInterceptorState();
+      setUser(null);
+    }
   }, []);
 
-  // Force logout when interceptor detects stale/invalid cookies
   useEffect(() => {
     const forceLogout = () => {
       setUser(null);
@@ -24,13 +27,7 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener("auth:logout", forceLogout);
   }, []);
 
-  // On mount, fetch profile to rehydrate user state
   useEffect(() => {
-    if (AUTH_PAGES.has(window.location.pathname)) {
-      setLoading(false);
-      return;
-    }
-
     let active = true;
 
     (async () => {
@@ -44,19 +41,23 @@ export const AuthProvider = ({ children }) => {
       }
     })();
 
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      authLoading,
-      isAuthenticated: Boolean(user),
-      isAdmin:         user?.role === "Admin",
-      isUser:          user?.role === "User",
-      login,
-      logout,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        authLoading,
+        isAuthenticated: Boolean(user),
+        isAdmin: user?.role === "Admin",
+        isUser: user?.role === "User",
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

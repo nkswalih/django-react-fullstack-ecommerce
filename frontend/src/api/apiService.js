@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// In dev: Vite proxy forwards /api/* → Django (same origin, cookies work)
-// In prod: /api/ hits your actual domain (nginx/server handles it)
 const resolveApiBaseUrl = () => {
   const raw = import.meta.env.VITE_API_URL?.trim();
 
@@ -18,8 +16,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// ─── Token Refresh Interceptor ────────────────────────────────────────────────
-
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -28,7 +24,19 @@ const processQueue = (error) => {
   failedQueue = [];
 };
 
-const AUTH_ROUTES = ["/login/", "/register/", "/token/refresh/", "/logout/"];
+export const resetInterceptorState = () => {
+  isRefreshing = false;
+  failedQueue = [];
+};
+
+const AUTH_ROUTES = [
+  "/login/",
+  "/register/",
+  "/token/refresh/",
+  "/logout/",
+  "/profile/",
+];
+
 const isAuthRoute = (url) => AUTH_ROUTES.some((route) => url?.includes(route));
 
 api.interceptors.response.use(
@@ -41,9 +49,9 @@ api.interceptors.response.use(
     }
 
     if (isRefreshing) {
-      return new Promise((resolve, reject) => failedQueue.push({ resolve, reject }))
-        .then(() => api(original));
-        
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      }).then(() => api(original));
     }
 
     original._retry = true;
@@ -55,7 +63,7 @@ api.interceptors.response.use(
       return api(original);
     } catch (err) {
       processQueue(err);
-      window.dispatchEvent(new Event("auth:logout"));  // ← change this
+      window.dispatchEvent(new Event("auth:logout"));
       return Promise.reject(err);
     } finally {
       isRefreshing = false;
@@ -63,64 +71,48 @@ api.interceptors.response.use(
   }
 );
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
-
-export const login    = (data) => api.post("/login/", data);
+export const login = (data) => api.post("/login/", data);
 export const register = (data) => api.post("/register/", data);
-export const logout   = ()     => api.post("/logout/");
+export const logout = () => api.post("/logout/");
 export const googleLogin = (payload) => api.post("/auth/google/", payload);
 export const forgotPassword = (email) => api.post("/forgot-password/", { email });
 export const resetPassword = (data) => api.post("/reset-password/", data);
 
-// ─── Profile ──────────────────────────────────────────────────────────────────
-
-export const getProfile    = ()     => api.get("/profile/");
+export const getProfile = () => api.get("/profile/");
 export const updateProfile = (data) => api.patch("/profile/", data);
 
-// ─── Products ─────────────────────────────────────────────────────────────────
+export const getProducts = (params) => api.get("/products/", { params });
+export const getProductBySlug = (slug) => api.get(`/products/${slug}/`);
+export const createProduct = (data) => api.post("/products/", data);
+export const updateProduct = (slug, data) => api.put(`/products/${slug}/`, data);
+export const patchProduct = (slug, data) => api.patch(`/products/${slug}/`, data);
+export const deleteProduct = (slug) => api.delete(`/products/${slug}/`);
 
-export const getProducts      = (params) => api.get("/products/", { params });
-export const getProductBySlug = (slug)   => api.get(`/products/${slug}/`);
-export const createProduct    = (data)   => api.post("/products/", data);
-export const updateProduct    = (slug, data) => api.put(`/products/${slug}/`, data);
-export const patchProduct     = (slug, data) => api.patch(`/products/${slug}/`, data);
-export const deleteProduct    = (slug)   => api.delete(`/products/${slug}/`);
-
-// ─── Cart ─────────────────────────────────────────────────────────────────────
-
-export const getCart        = ()         => api.get("/cart/");
-export const addToCart      = (data)     => api.post("/cart/", data);
+export const getCart = () => api.get("/cart/");
+export const addToCart = (data) => api.post("/cart/", data);
 export const updateCartItem = (id, data) => api.patch(`/cart/${id}/`, data);
-export const removeCartItem = (id)       => api.delete(`/cart/${id}/`);
-export const clearCart      = ()         => api.delete("/cart/clear/");
+export const removeCartItem = (id) => api.delete(`/cart/${id}/`);
+export const clearCart = () => api.delete("/cart/clear/");
 
-// ─── Wishlist ─────────────────────────────────────────────────────────────────
-
-export const getWishlist        = ()          => api.get("/wishlist/");
-export const addToWishlist      = (productId) => api.post("/wishlist/", { product: productId });
+export const getWishlist = () => api.get("/wishlist/");
+export const addToWishlist = (productId) => api.post("/wishlist/", { product: productId });
 export const removeFromWishlist = (productId) => api.delete("/wishlist/", { data: { product: productId } });
 
-// ─── Orders ───────────────────────────────────────────────────────────────────
+export const getMyOrders = () => api.get("/orders/");
+export const getOrderById = (id) => api.get(`/orders/${id}/`);
+export const createOrder = (data) => api.post("/orders/", data);
+export const cancelOrder = (id) => api.patch(`/orders/${id}/cancel/`);
 
-export const getMyOrders  = ()         => api.get("/orders/");
-export const getOrderById = (id)       => api.get(`/orders/${id}/`);
-export const createOrder  = (data)     => api.post("/orders/", data);
-export const cancelOrder  = (id)       => api.patch(`/orders/${id}/cancel/`);
+export const createRazorpayOrder = (data) => api.post("/razorpay/create-order/", data);
+export const verifyRazorpayPayment = (data) => api.post("/razorpay/verify/", data);
 
-// RazorPay
-export const createRazorpayOrder = (data)   => api.post('/razorpay/create-order/', data);
-export const verifyRazorpayPayment = (data) => api.post('/razorpay/verify/', data);
-
-// ─── Admin ────────────────────────────────────────────────────────────────────
-
-export const adminGetUsers   = (params)   => api.get("/admin/users/", { params });
-export const adminPatchUser  = (id, data) => api.patch(`/admin/users/${id}/`, data);
-export const adminDeleteUser = (id)       => api.delete(`/admin/users/${id}/`);
-export const adminGetOrders  = (params)   => api.get("/admin/orders/", { params });
+export const adminGetUsers = (params) => api.get("/admin/users/", { params });
+export const adminPatchUser = (id, data) => api.patch(`/admin/users/${id}/`, data);
+export const adminDeleteUser = (id) => api.delete(`/admin/users/${id}/`);
+export const adminGetOrders = (params) => api.get("/admin/orders/", { params });
 export const adminPatchOrder = (id, data) => api.patch(`/admin/orders/${id}/`, data);
 
-// Aliases
-export const getUsers  = adminGetUsers;
+export const getUsers = adminGetUsers;
 export const getOrders = adminGetOrders;
 
 export { api as client };

@@ -149,7 +149,7 @@ const SearchDropdown = () => {
             </Popover.Panel>
           </Transition>
 
-          {open && <div className="fixed inset-0 z-40 bg-black/10 backdrop-blur-md" onClick={close} />}
+          {/* {open && <div className="fixed inset-0 z-40 bg-black/10 backdrop-blur-md" onClick={close} />} */}
         </>
       )}
     </Popover>

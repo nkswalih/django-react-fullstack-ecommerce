@@ -1,3 +1,4 @@
+import logging
 from django.db import OperationalError
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -19,8 +20,12 @@ from django.template.loader import render_to_string
 from .models import User
 from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
 
+logger = logging.getLogger(__name__)
 
-# ─── Helpers ──────────────────────────────────────────────────────────────────
+ACCESS_TOKEN_MAX_AGE = 60 * 15
+REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7
+REFRESH_TOKEN_REMEMBER_MAX_AGE = 60 * 60 * 24 * 30
+
 
 def is_admin(user):
     return user.is_authenticated and user.role == "Admin"
@@ -38,46 +43,45 @@ def set_auth_cookies(response, tokens, remember=False):
         httponly=True,
         secure=settings.SESSION_COOKIE_SECURE,
         samesite=settings.SESSION_COOKIE_SAMESITE,
-        path="/api/",
+        path="/",
     )
 
-    # Companion cookie to preserve the "remember me" intent across refreshes
+    refresh_max_age = REFRESH_TOKEN_REMEMBER_MAX_AGE if remember else REFRESH_TOKEN_MAX_AGE
+
+    response.set_cookie(
+        "refresh_token",
+        tokens["refresh"],
+        max_age=refresh_max_age,
+        **kwargs,
+    )
+
+    response.set_cookie(
+        "access_token",
+        tokens["access"],
+        max_age=ACCESS_TOKEN_MAX_AGE,
+        **kwargs,
+    )
+
     response.set_cookie(
         "remember_me",
         "true" if remember else "",
         httponly=False,
-        secure=kwargs["secure"],
-        samesite=kwargs["samesite"],
-        path="/api/",
-        max_age=60 * 60 * 24 * 31 if remember else None,
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=settings.SESSION_COOKIE_SAMESITE,
+        path="/",
+        max_age=REFRESH_TOKEN_REMEMBER_MAX_AGE if remember else 0,
     )
 
-    if remember:
-        response.set_cookie(
-            "access_token",
-            tokens["access"],
-            max_age=60 * 60 * 24 * 7,
-            **kwargs,
-        )
-        response.set_cookie(
-            "refresh_token",
-            tokens["refresh"],
-            max_age=60 * 60 * 24 * 30,
-            **kwargs,
-        )
-    else:
-        response.set_cookie("access_token",  tokens["access"],  **kwargs)
-        response.set_cookie("refresh_token", tokens["refresh"], **kwargs)
+
+def clear_access_token(response):
+    response.delete_cookie("access_token", path="/", domain=None)
+    response.delete_cookie("remember_me", path="/", domain=None)
 
 
 def clear_auth_cookies(response):
-    kwargs = {
-        "path": "/api/",
-        "samesite": settings.SESSION_COOKIE_SAMESITE,
-    }
-    response.delete_cookie("access_token", **kwargs)
-    response.delete_cookie("refresh_token", **kwargs)
-    response.delete_cookie("remember_me", **kwargs)
+    response.delete_cookie("access_token", path="/", domain=None)
+    response.delete_cookie("refresh_token", path="/", domain=None)
+    response.delete_cookie("remember_me", path="/", domain=None)
 
 
 def parse_positive_int(value, default):
@@ -95,8 +99,6 @@ def get_tokens(user):
     }
 
 
-# ─── Auth Views ───────────────────────────────────────────────────────────────
-
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -108,7 +110,7 @@ class RegisterView(APIView):
         except OperationalError:
             return db_error_response()
 
-        tokens   = get_tokens(user)
+        tokens = get_tokens(user)
         response = Response({"user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
         set_auth_cookies(response, tokens)
         return response
@@ -126,7 +128,7 @@ class LoginView(APIView):
             return db_error_response()
 
         remember = str(request.data.get("remember", "false")).lower() == "true"
-        tokens   = get_tokens(user)
+        tokens = get_tokens(user)
         response = Response({"user": UserSerializer(user).data})
         set_auth_cookies(response, tokens, remember)
         return response
@@ -140,13 +142,12 @@ class LogoutView(APIView):
         clear_auth_cookies(response)
         return response
 
-# RefreshToken
+
 class TokenRefreshView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         token = request.COOKIES.get("refresh_token")
-        # Read the intent so we don't accidentally turn a 30-day cookie into a session cookie!
         remember_me = request.COOKIES.get("remember_me") == "true"
 
         if not token:
@@ -154,39 +155,33 @@ class TokenRefreshView(APIView):
                 {"detail": "No refresh token."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-            clear_auth_cookies(response)
+            clear_access_token(response)
             return response
 
         try:
-            # 1. Validate the existing refresh token
             refresh = RefreshToken(token)
-            
-            # 2. Extract user and verify they are still active
-            user_id = refresh.payload.get('user_id')
+            user_id = refresh.payload.get("user_id")
             user = User.objects.get(id=user_id)
-            
+
             if not user.is_active or user.status != "Active":
                 raise TokenError("User account is disabled.")
 
-            # 3. Generate a completely fresh pair of tokens (restarts the 30-day clock)
             new_refresh = RefreshToken.for_user(user)
             tokens = {
                 "access": str(new_refresh.access_token),
-                "refresh": str(new_refresh)
+                "refresh": str(new_refresh),
             }
 
-            # 4. Optional: Blacklist the old token
             try:
                 refresh.blacklist()
-            except Exception:
-                pass
+            except Exception as blacklist_err:
+                logger.warning(f"Failed to blacklist refresh token: {blacklist_err}")
 
             response = Response({"detail": "Token refreshed successfully."})
             set_auth_cookies(response, tokens, remember=remember_me)
             return response
-            
+
         except (TokenError, User.DoesNotExist):
-            # If the token is truly dead, clear cookies so the frontend stops retrying
             response = Response(
                 {"detail": "Invalid or expired refresh token."},
                 status=status.HTTP_401_UNAUTHORIZED,
@@ -194,17 +189,18 @@ class TokenRefreshView(APIView):
             clear_auth_cookies(response)
             return response
 
+
 class ForgetPasswordView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        email = request.data.get('email')
+        email = request.data.get("email")
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response({"details": "If account exists, email sent."})
-        
+
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = password_reset_token.make_token(user)
 
@@ -217,31 +213,31 @@ class ForgetPasswordView(APIView):
 
         email_msg = EmailMultiAlternatives(
             subject="Reset your password",
-            body=f"Click the link to reset your password: {reset_url}",  # fallback
+            body=f"Click the link to reset your password: {reset_url}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[email],
         )
 
         email_msg.attach_alternative(html_content, "text/html")
-
         email_msg.send()
 
-        return Response({"detail":"If account exists. email sent"})
-    
+        return Response({"details": "If account exists. email sent"})
+
+
 class ResetPasswordView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        uid      = request.data.get('uid')
-        token    = request.data.get('token')
-        password = request.data.get('password')
+        uid = request.data.get("uid")
+        token = request.data.get("token")
+        password = request.data.get("password")
 
         if not all([uid, token, password]):
             return Response({"detail": "uid, token and password are required."}, status=400)
 
         try:
-            user_id = urlsafe_base64_decode(uid).decode()   # ✅ decode, not re-encode
-            user    = User.objects.get(pk=user_id)
+            user_id = urlsafe_base64_decode(uid).decode()
+            user = User.objects.get(pk=user_id)
         except Exception:
             return Response({"detail": "Invalid link"}, status=400)
 
@@ -251,7 +247,8 @@ class ResetPasswordView(APIView):
         user.set_password(password)
         user.save()
         return Response({"detail": "Password reset successful"})
-    
+
+
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
 
@@ -260,8 +257,9 @@ class GoogleLoginView(APIView):
         credential = request.data.get("credential")
         code = request.data.get("code")
 
+        id_info = None
+
         if code:
-            # Redirect flow: exchange authorization code for tokens
             try:
                 token_resp = http_requests.post(
                     "https://oauth2.googleapis.com/token",
@@ -272,7 +270,7 @@ class GoogleLoginView(APIView):
                         "redirect_uri": request.data.get("redirect_uri", ""),
                         "grant_type": "authorization_code",
                     },
-                    timeout=5,
+                    timeout=3,
                 )
                 if token_resp.status_code != 200:
                     return Response(
@@ -301,7 +299,7 @@ class GoogleLoginView(APIView):
                 resp = http_requests.get(
                     "https://www.googleapis.com/oauth2/v3/userinfo",
                     headers={"Authorization": f"Bearer {access_token}"},
-                    timeout=5,
+                    timeout=3,
                 )
                 if resp.status_code != 200:
                     return Response(
@@ -334,6 +332,12 @@ class GoogleLoginView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        if not id_info:
+            return Response(
+                {"detail": "Invalid Google response."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         if not id_info.get("email_verified"):
             return Response(
                 {"detail": "Google email not verified."},
@@ -341,23 +345,24 @@ class GoogleLoginView(APIView):
             )
 
         google_id = id_info["sub"]
-        email     = id_info["email"]
-        name      = id_info.get("name", email.split("@")[0])
-        avatar    = id_info.get("picture")
+        email = id_info["email"]
+        name = id_info.get("name", email.split("@")[0])
+        avatar = id_info.get("picture")
 
-        try:
-            user = User.objects.get(google_id=google_id)
-        except User.DoesNotExist:
-            try:
-                user = User.objects.get(email=email)
+        existing_user = User.objects.filter(google_id=google_id).first()
+        if existing_user:
+            user = existing_user
+        else:
+            user = User.objects.filter(email=email).first()
+            if user:
                 user.google_id = google_id
-                user.avatar    = avatar or user.avatar
+                user.avatar = avatar or user.avatar
                 user.save(update_fields=["google_id", "avatar", "updated_at"])
-            except User.DoesNotExist:
+            else:
                 user = User.objects.create_user(email=email, name=name, password=None)
                 user.google_id = google_id
-                user.avatar    = avatar
-                user.status    = "Active"
+                user.avatar = avatar
+                user.status = "Active"
                 user.save(update_fields=["google_id", "avatar", "status", "updated_at"])
 
         if user.status != "Active" or not user.is_active:
@@ -366,13 +371,11 @@ class GoogleLoginView(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        tokens   = get_tokens(user)
+        tokens = get_tokens(user)
         response = Response({"user": UserSerializer(user).data})
         set_auth_cookies(response, tokens, remember=False)
         return response
 
-
-# ─── Profile ──────────────────────────────────────────────────────────────────
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -393,8 +396,6 @@ class ProfileView(APIView):
             return db_error_response()
 
 
-# ─── Admin ────────────────────────────────────────────────────────────────────
-
 class AdminUserListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -402,17 +403,17 @@ class AdminUserListView(APIView):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            users  = User.objects.all().order_by("-created_at")
+            users = User.objects.all().order_by("-created_at")
             params = request.GET
 
             if "limit" in params or "offset" in params:
-                limit  = parse_positive_int(params.get("limit"), 10)
+                limit = parse_positive_int(params.get("limit"), 10)
                 offset = parse_positive_int(params.get("offset"), 0)
                 return Response({
                     "results": UserSerializer(users[offset:offset + limit] if limit else users.none(), many=True).data,
-                    "total":   users.count(),
-                    "limit":   limit,
-                    "offset":  offset,
+                    "total": users.count(),
+                    "limit": limit,
+                    "offset": offset,
                 })
 
             return Response(UserSerializer(users, many=True).data)
@@ -427,7 +428,7 @@ class AdminUserDetailView(APIView):
         if not is_admin(request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            user       = User.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()

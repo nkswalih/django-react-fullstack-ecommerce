@@ -1,9 +1,9 @@
 import { ArrowUpRightIcon, EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
-import { register as registerApi, googleLogin as googleLoginApi } from "../../api/apiService";
+import { register as registerApi } from "../../api/apiService";
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", terms: false });
@@ -11,39 +11,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-      const code = searchParams.get("code");
-      const scope = searchParams.get("scope");
-      // Only treat this as a redirect callback if we have an auth code
-      if (code) {
-        const handleRedirect = async () => {
-          setLoading(true);
-          try {
-            const res = await googleLoginApi({
-              code,
-              redirect_uri: window.location.origin + "/sign_in",
-            });
-            const { user } = res.data;
-            login(user);
-            toast.success(`Welcome, ${user.name}!`);
-            navigate(user.role === "Admin" ? "/admin" : "/");
-          } catch (error) {
-            const msg = error.response?.data?.detail || "Google login failed.";
-            toast.error(msg);
-            // Clean URL and stay on sign_in
-            navigate("/sign_in", { replace: true });
-          } finally {
-            setLoading(false);
-          }
-        };
-        handleRedirect();
-      }
-    }, [searchParams]);
 
   const handleGoogleLogin = () => {
-    // Redirect to Google OAuth — avoids popup COOP issues entirely
     const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
     const redirectUri = encodeURIComponent(window.location.origin + "/sign_in");
     const scope = encodeURIComponent("openid email profile");
@@ -53,13 +22,15 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.terms) { toast.error("Please accept the Terms & Conditions"); return; }
+    if (!formData.terms) {
+      toast.error("Please accept the Terms & Conditions");
+      return;
+    }
     setLoading(true);
 
     try {
@@ -75,7 +46,6 @@ const Register = () => {
 
       toast.success(`Welcome to EchOo, ${user.name}!`);
       navigate("/");
-
     } catch (error) {
       const errors = error.response?.data;
       if (errors?.email) toast.error(`Email: ${errors.email[0]}`);
@@ -91,8 +61,6 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-neutral-200 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-[40px] overflow-hidden">
-
-        {/* Left branding — unchanged */}
         <div className="hidden md:flex md:w-1/2 bg-[#1a1a1a] p-12 flex-col justify-between relative overflow-hidden">
           <div className="z-10">
             <p className="text-gray-400 text-sm mb-20">Join the EchOo community – start your journey today.</p>
@@ -109,13 +77,14 @@ const Register = () => {
           </div>
         </div>
 
-        {/* Right form */}
         <div className="w-full md:w-1/2 p-8 lg:p-16 flex flex-col relative">
           <div className="flex justify-between items-center mb-10">
             <img alt="EchOo." src="/Echoo-transparent.png" className="h-8 w-auto" />
             <Link to="/sign_in" className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors">
               Sign In
-              <div className="bg-gray-100 p-1 rounded-full ml-1"><ArrowUpRightIcon className="size-3" /></div>
+              <div className="bg-gray-100 p-1 rounded-full ml-1">
+                <ArrowUpRightIcon className="size-3" />
+              </div>
             </Link>
           </div>
 
@@ -124,49 +93,71 @@ const Register = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
-                name="name" type="text" required placeholder="Full Name"
-                value={formData.name} onChange={handleChange}
+                name="name"
+                type="text"
+                required
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
               />
               <input
-                name="email" type="email" required placeholder="Email Address"
-                value={formData.email} onChange={handleChange}
+                name="email"
+                type="email"
+                required
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
               />
               <div className="relative">
                 <input
-                  name="password" type={showPassword ? "text" : "password"} required
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
                   placeholder="Password (min 6 characters)"
-                  value={formData.password} onChange={handleChange}
+                  value={formData.password}
+                  onChange={handleChange}
                   className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
                 />
-                <button type="button" onClick={() => setShowPassword(p => !p)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
                   {showPassword ? <EyeIcon className="size-5" /> : <EyeSlashIcon className="size-5" />}
                 </button>
               </div>
 
               <div className="flex items-start gap-3 py-2">
-                <input id="terms" name="terms" type="checkbox"
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
                   className="h-4 w-4 accent-black border-gray-300 rounded-md"
-                  onChange={handleChange} checked={formData.terms} />
+                  onChange={handleChange}
+                  checked={formData.terms}
+                />
                 <label htmlFor="terms" className="text-sm text-gray-500 leading-tight">
                   I agree to the <Link to="/terms_conditions" className="text-gray-900 font-medium hover:underline">Terms & Conditions</Link> and Privacy Policy.
                 </label>
               </div>
 
               <div className="pt-4">
-                <button type="submit"
+                <button
+                  type="submit"
                   disabled={!formData.name || !formData.email || !formData.password || !formData.terms || loading}
-                  className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white rounded-full text-base font-semibold hover:from-gray-400 hover:to-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-gradient-to-b from-gray-500 to-gray-800 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.3),_0px_4px_8px_rgba(0,0,0,0.4)] ring-1 ring-gray-600 text-white rounded-full text-base font-semibold hover:from-gray-400 hover:to-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <span className="translate-x-3">{loading ? "Creating account..." : "Create account"}</span>
-                  <div className="ml-auto bg-white/20 p-1 rounded-full"><ArrowUpRightIcon className="size-4" /></div>
+                  <div className="ml-auto bg-white/20 p-1 rounded-full">
+                    <ArrowUpRightIcon className="size-4" />
+                  </div>
                 </button>
-                {/* --- GOOGLE SIGNUP SECTION --- */}
                 <div className="relative flex items-center py-2">
-                    <div className="flex-grow border-t border-gray-200"></div>
-                    <span className="flex-shrink mx-4 text-gray-400 text-sm font-light">Or sign up with</span>
-                    <div className="flex-grow border-t border-gray-200"></div>
+                  <div className="flex-grow border-t border-gray-200"></div>
+                  <span className="flex-shrink mx-4 text-gray-400 text-sm font-light">Or sign up with</span>
+                  <div className="flex-grow border-t border-gray-200"></div>
                 </div>
 
                 <button
@@ -182,7 +173,6 @@ const Register = () => {
                   </svg>
                   Google
                 </button>
-                {/* --- END GOOGLE LOGIN --- */}
               </div>
             </form>
           </div>
