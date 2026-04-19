@@ -44,14 +44,13 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 
-    #order history doesn't break if product is deleted/edited
-    product_name = models.CharField(max_length=255)
-    product_image = models.URLField()
-    product_brand = models.CharField(max_length=100)
-    product_slug  = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=500)
+    product_image = models.URLField(max_length=500)
+    product_brand = models.CharField(max_length=200)
+    product_slug = models.CharField(max_length=500)
 
-    storage = models.CharField(max_length=50, blank=True)
-    ram = models.CharField(max_length=50, blank=True)
+    storage = models.CharField(max_length=100, blank=True)
+    ram = models.CharField(max_length=100, blank=True)
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     item_total = models.DecimalField(max_digits=12, decimal_places=2)
