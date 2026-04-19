@@ -60,6 +60,9 @@ jobs:
             printf '%s' "${{ secrets.env_prod }}" > /home/ubuntu/ecommerce/.env.prod
             echo ".env.prod created from secret!"
 
+            # ALSO create .env.dev (copy from .env.prod) so docker-compose uses it
+            cp /home/ubuntu/ecommerce/.env.prod /home/ubuntu/ecommerce/.env.dev
+
             # Navigate to app directory
             cd /home/ubuntu/ecommerce
             echo "Changed to: $(pwd)"
@@ -73,19 +76,14 @@ jobs:
             fi
             echo ".env.prod verified!"
 
-            # Create docker-compose.yml symlink if needed
-            if [ -f "docker-compose.prod.yml" ] && [ ! -f "docker-compose.yml" ]; then
-              cp docker-compose.prod.yml docker-compose.yml
-            fi
-
             # Login to ECR
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login -u AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
 
-            # Stop current containers (if any)
-            docker-compose down || true
+            # Stop current containers (if any) - USE PROD FILE
+            docker-compose -f docker-compose.prod.yml down || true
 
-            # Pull latest image from ECR (NOT rebuild)
-            docker-compose pull backend
+            # Pull latest image from ECR (NOT rebuild) - USE PROD FILE
+            docker-compose -f docker-compose.prod.yml pull backend
 
             # Deploy frontend static files
             if [ -d "frontend-dist" ]; then
@@ -95,8 +93,8 @@ jobs:
               echo "Frontend files deployed!"
             fi
 
-            # Start containers (using pulled image, no rebuild)
-            docker-compose up -d
+            # Start containers (using pulled image, no rebuild) - USE PROD FILE
+            docker-compose -f docker-compose.prod.yml up -d
 
             # Wait for container to start
             echo "Waiting for application to start..."
@@ -113,8 +111,8 @@ jobs:
               fi
             done
 
-            # Show running containers
-            docker-compose ps
+            # Show running containers - USE PROD FILE
+            docker-compose -f docker-compose.prod.yml ps
             echo "=== DEPLOYMENT COMPLETE ==="
 
       - name: Verify deployment
